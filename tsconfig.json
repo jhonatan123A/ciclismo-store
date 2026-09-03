@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ciclismo/shared-types": ["packages/shared-types/src"],
+      "@ciclismo/ui-kit": ["packages/ui-kit/src"],
+      "@ciclismo/utils": ["packages/utils/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", ".next"]
+}
