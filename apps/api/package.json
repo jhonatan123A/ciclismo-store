@@ -6,7 +6,7 @@
     "dev": "nodemon --exec ts-node src/main.ts",
     "build": "tsc",
     "start": "node dist/main.js",
-    "start:prod": "NODE_ENV=production node dist/main.js",
+    "start:prod": "node dist/main.js",
     "lint": "eslint src/**/*.ts",
     "clean": "rm -rf dist",
     "db:generate": "prisma generate --schema=./src/lib/prisma/schema.prisma",
