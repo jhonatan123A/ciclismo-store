@@ -4,8 +4,6 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  // Deshabilitar el telemetría
-  telemetry: false,
 };
 
 module.exports = nextConfig;
