@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import Link from 'next/link';
-import { ArrowLeft, Check, Loader2 } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
@@ -121,7 +121,7 @@ export default function CheckoutPage() {
               {/* Estado de PayPal */}
               {isPending && (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
+                  <div className="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
                   <span className="ml-3 text-gray-400">Cargando PayPal...</span>
                 </div>
               )}
@@ -154,17 +154,31 @@ export default function CheckoutPage() {
                             description: 'Compra BESTIGE',
                           },
                         ],
+                        intent: 'CAPTURE',
                       });
                     }}
-                    onApprove={(data, actions) => {
+                    onApprove={async (data, actions) => {
                       console.log('Pago aprobado:', data);
                       setIsProcessing(true);
-                      return actions.order?.capture().then((details) => {
+                      
+                      if (!actions.order) {
+                        console.error('actions.order no está disponible');
+                        setIsProcessing(false);
+                        alert('Error al procesar el pago. Intenta nuevamente.');
+                        return;
+                      }
+
+                      try {
+                        const details = await actions.order.capture();
                         console.log('Captura completada:', details);
                         setIsProcessing(false);
                         clearCart();
                         setIsComplete(true);
-                      });
+                      } catch (error) {
+                        console.error('Error en captura:', error);
+                        setIsProcessing(false);
+                        alert('Error al capturar el pago. Por favor, intenta nuevamente.');
+                      }
                     }}
                     onError={(err) => {
                       console.error('Error en PayPal:', err);
@@ -178,7 +192,7 @@ export default function CheckoutPage() {
                   />
                   {isProcessing && (
                     <div className="flex items-center justify-center mt-4">
-                      <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                      <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
                       <span className="ml-2 text-gray-400">Procesando pago...</span>
                     </div>
                   )}
