@@ -4,12 +4,18 @@ import { useState } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import { products } from '@/lib/products';
 import Link from 'next/link';
-import { ArrowLeft, ShoppingCart, Check, Loader2 } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+// Importar estilos de Swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Thumbs } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/thumbs';
 
 export default function RunningProductPage() {
   const product = products.find(p => p.slug === 'banda-running');
   const [selectedSize, setSelectedSize] = useState('M');
-  const [selectedColor, setSelectedColor] = useState('Negro');
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
@@ -36,7 +42,7 @@ export default function RunningProductPage() {
         originalPrice: product.originalPrice,
         quantity: 1,
         size: selectedSize,
-        color: selectedColor,
+        color: 'Negro', // Solo color negro disponible
         image: product.images[0] || '/images/products/placeholder.jpg',
         category: product.category,
       });
@@ -47,24 +53,73 @@ export default function RunningProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-24 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black pt-24 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Breadcrumb */}
         <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
           Volver a la tienda
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Imagen del producto */}
-          <div className="glass rounded-2xl overflow-hidden">
-            <img
-              src={product.images[0] || '/images/products/placeholder.jpg'}
-              alt={product.name}
-              className="w-full h-[400px] object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
-              }}
-            />
+          {/* Carrusel de imágenes */}
+          <div className="space-y-4">
+            <div className="glass rounded-2xl overflow-hidden p-2">
+              <Swiper
+                modules={[Navigation, Pagination]}
+                navigation={{
+                  prevEl: '.swiper-button-prev',
+                  nextEl: '.swiper-button-next',
+                }}
+                pagination={{ 
+                  clickable: true,
+                  bulletClass: 'swiper-pagination-bullet !bg-gray-600',
+                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-blue-500',
+                }}
+                spaceBetween={10}
+                slidesPerView={1}
+                className="relative aspect-square"
+              >
+                {product.images.map((img, index) => (
+                  <SwiperSlide key={index}>
+                    <div className="w-full h-full flex items-center justify-center">
+                      <img
+                        src={img}
+                        alt={`${product.name} - Imagen ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
+                        }}
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+
+                {/* Botones de navegación personalizados */}
+                <button className="swiper-button-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all">
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button className="swiper-button-next absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all">
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </Swiper>
+            </div>
+
+            {/* Miniaturas (thumbnails) */}
+            <div className="grid grid-cols-3 gap-3">
+              {product.images.map((img, index) => (
+                <div key={index} className="glass rounded-xl overflow-hidden aspect-square cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all">
+                  <img
+                    src={img}
+                    alt={`Miniatura ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Detalles del producto */}
@@ -101,24 +156,16 @@ export default function RunningProductPage() {
               </div>
             </div>
 
-            {/* Selección de color */}
+            {/* Color - Solo Negro disponible */}
             <div className="mb-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-3">Selecciona tu color</h3>
+              <h3 className="text-sm font-medium text-gray-400 mb-3">Color disponible</h3>
               <div className="flex flex-wrap gap-2">
-                {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`px-4 py-2 rounded-lg border transition-colors ${
-                      selectedColor === color
-                        ? 'border-blue-500 bg-blue-500/20 text-white'
-                        : 'border-white/20 hover:border-white/50 text-gray-400'
-                    }`}
-                  >
-                    {color}
-                  </button>
-                ))}
+                <div className="px-4 py-2 rounded-lg border border-blue-500/30 bg-blue-500/10 text-white flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full bg-black border border-white/20" />
+                  Negro
+                </div>
               </div>
+              <p className="text-xs text-gray-500 mt-2">Más colores disponibles próximamente</p>
             </div>
 
             {/* Botón Agregar al carrito */}

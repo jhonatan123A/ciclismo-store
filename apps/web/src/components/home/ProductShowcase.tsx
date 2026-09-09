@@ -8,29 +8,29 @@ export function ProductShowcase() {
   const products = [
     {
       id: 'cycling',
-      name: 'Banda de Ciclismo',
-      description: 'Protección + rendimiento. Tecnología patentada contra caídas.',
+      name: 'Bestige Ciclismo',
+      description: 'Tecnología diseñada para conectar con tu piel y acompañar tu rendimiento sobre la bicicleta.',
       href: '/products/cycling',
       icon: <Shield className="w-6 h-6" />,
       color: 'from-blue-600/20 to-purple-600/20',
       border: 'border-blue-500/30',
-      tag: '🚴‍♂️ Protección + Rendimiento',
-      price: '$399.000',
-      originalPrice: '$529.000',
-      discount: '-24%',
+      tag: '🚴‍♂️ Performance Cycling',
+      price: '$640.000',
+      originalPrice: '$486.400',
+      discount: '-24% - Precio Lanzamiento $486.000 - Valor Futuro de Coleccion: $640.000',
     },
     {
       id: 'running',
-      name: 'Banda de Running',
-      description: 'Rendimiento y recuperación. Activación muscular avanzada.',
+      name: 'Bestige Running',
+      description: 'Tecnología diseñada para conectar con tu piel y potenciar cada zancada.',
       href: '/products/running',
       icon: <Zap className="w-6 h-6" />,
       color: 'from-green-600/20 to-blue-600/20',
       border: 'border-green-500/30',
-      tag: '🏃‍♂️ Rendimiento + Recuperación',
+      tag: '🏃‍♂️ Performance Running',
       price: '$399.000',
       originalPrice: '$529.000',
-      discount: '-24%',
+      discount: '-24% - Precio Lanzamiento $399.000 - Valor Futuro de Coleccion: $529.000',
     },
   ];
 
@@ -46,7 +46,7 @@ export function ProductShowcase() {
         >
           <div className="flex justify-center mb-4">
             <span className="px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium">
-              ✨ Tecnología de Vanguardia
+            1️⃣Innovación que conecta con tu movimiento
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -56,7 +56,7 @@ export function ProductShowcase() {
             </span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Tecnología somatosensorial de vanguardia para deportistas de alto rendimiento
+            Tecnología somatosensorial diseñada para interactuar con tu cuerpo y acompañar la precisión natural de tu movimiento
           </p>
         </motion.div>
 
@@ -93,7 +93,9 @@ export function ProductShowcase() {
                 </div>
 
                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
-                  <span>🧬 Tecnología somatosensorial</span>
+                  <span>Tecnología somatosensorial
+                    
+                  </span>
                   <span className="w-1 h-1 bg-gray-600 rounded-full" />
                   <span>📐 Tallas: XS, S, M, L</span>
                 </div>

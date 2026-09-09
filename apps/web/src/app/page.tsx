@@ -32,13 +32,13 @@ export default function Home() {
               {/* Badges */}
               <div className="flex flex-wrap gap-3 mb-6">
                 <span className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-400 text-sm font-medium backdrop-blur-sm">
-                  🚀 Lanzamiento 2026
+                  Lanzamiento 2026
                 </span>
                 <span className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-sm font-medium backdrop-blur-sm">
-                  Primeras 100 unidades
+                  Una señal a tu cuerpo
                 </span>
                 <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-sm font-medium backdrop-blur-sm">
-                  Tecnología Italiana
+                  Tecnología Italiana patentada
                 </span>
               </div>
 
@@ -60,34 +60,34 @@ export default function Home() {
                   href="/products/cycling"
                   className="group inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-300 shadow-lg shadow-blue-600/25"
                 >
-                  <span>Descubrir Ciclismo</span>
+                  <span>Tecnologia para Ciclismo</span>
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   href="/products/running"
                   className="group inline-flex items-center px-8 py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-medium transition-all duration-300 border border-white/10 backdrop-blur-sm"
                 >
-                  <span>Descubrir Running</span>
+                  <span>Tecnologia para Running</span>
                 </Link>
               </div>
 
               {/* Stats */}
               <div className="mt-12 flex flex-wrap gap-8">
                 <div>
-                  <div className="text-2xl font-bold text-white">2</div>
-                  <div className="text-sm text-gray-500">Productos</div>
+                  <div className="text-2xl font-bold text-white"></div>
+                  <div className="text-sm text-gray-500"></div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-white">4</div>
-                  <div className="text-sm text-gray-500">Tallas</div>
+                  <div className="text-2xl font-bold text-white"></div>
+                  <div className="text-sm text-gray-500"></div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-white">3</div>
-                  <div className="text-sm text-gray-500">Colores</div>
+                  <div className="text-2xl font-bold text-white"></div>
+                  <div className="text-sm text-gray-500"></div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-white">-24%</div>
-                  <div className="text-sm text-gray-500">Lanzamiento</div>
+                  <div className="text-2xl font-bold text-white"></div>
+                  <div className="text-sm text-gray-500"></div>
                 </div>
               </div>
             </motion.div>

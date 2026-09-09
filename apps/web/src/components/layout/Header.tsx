@@ -23,7 +23,7 @@ export function Header() {
         <div className="flex justify-between items-center h-20">
           {/* Logo BESTIGE con imagen */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center overflow-hidden">
+            <div className="relative w-38 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center overflow-hidden">
               <img 
                 src="/images/brand/logo.png" 
                 alt="BESTIGE" 
@@ -33,7 +33,7 @@ export function Header() {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
-              <span className="text-white font-bold text-lg absolute">B</span>
+              <span className="text-white font-bold text-lg absolute"></span>
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold text-white tracking-tight">
