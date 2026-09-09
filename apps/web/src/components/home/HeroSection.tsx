@@ -28,7 +28,7 @@ export function HeroSection() {
                 🚀 Lanzamiento 2026
               </span>
               <span className="px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm font-medium">
-                Primeras 100 unidades
+                
               </span>
             </div>
 

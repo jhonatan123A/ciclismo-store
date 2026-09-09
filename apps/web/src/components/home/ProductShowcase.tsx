@@ -12,12 +12,12 @@ export function ProductShowcase() {
       description: 'Tecnología diseñada para conectar con tu piel y acompañar tu rendimiento sobre la bicicleta.',
       href: '/products/cycling',
       icon: <Shield className="w-6 h-6" />,
-      color: 'from-blue-600/20 to-purple-600/20',
-      border: 'border-blue-500/30',
+      color: 'from-red-600/20 to-red-500/10',
+      border: 'border-red-500/30',
       tag: '🚴‍♂️ Performance Cycling',
       price: '$640.000',
       originalPrice: '$486.400',
-      discount: '-24% - Precio Lanzamiento $486.000 - Valor Futuro de Coleccion: $640.000',
+      discount: '-24% - Precio Lanzamiento $486.000 - Valor Futuro de Colección: $640.000',
     },
     {
       id: 'running',
@@ -25,17 +25,17 @@ export function ProductShowcase() {
       description: 'Tecnología diseñada para conectar con tu piel y potenciar cada zancada.',
       href: '/products/running',
       icon: <Zap className="w-6 h-6" />,
-      color: 'from-green-600/20 to-blue-600/20',
+      color: 'from-green-600/20 to-green-500/10',
       border: 'border-green-500/30',
       tag: '🏃‍♂️ Performance Running',
       price: '$399.000',
       originalPrice: '$529.000',
-      discount: '-24% - Precio Lanzamiento $399.000 - Valor Futuro de Coleccion: $529.000',
+      discount: '-24% - Precio Lanzamiento $399.000 - Valor Futuro de Colección: $529.000',
     },
   ];
 
   return (
-    <section className="py-24 bg-black/50">
+    <section className="py-24 bg-black/30">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -45,13 +45,13 @@ export function ProductShowcase() {
           className="text-center mb-16"
         >
           <div className="flex justify-center mb-4">
-            <span className="px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium">
-            1️⃣Innovación que conecta con tu movimiento
+            <span className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full text-red-400 text-sm font-medium">
+              1️⃣ Innovación que conecta con tu movimiento
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Nuestros{' '}
-            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-red-500 to-green-500 bg-clip-text text-transparent">
               Productos
             </span>
           </h2>
@@ -75,7 +75,7 @@ export function ProductShowcase() {
 
               <div className="relative">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-white/10 rounded-lg text-blue-400">
+                  <div className="p-2 bg-white/10 rounded-lg text-red-400">
                     {product.icon}
                   </div>
                   <span className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white text-xs font-medium">
@@ -93,19 +93,18 @@ export function ProductShowcase() {
                 </div>
 
                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
-                  <span>Tecnología somatosensorial
-                    
-                  </span>
+                  <span>Tecnología somatosensorial</span>
                   <span className="w-1 h-1 bg-gray-600 rounded-full" />
                   <span>📐 Tallas: XS, S, M, L</span>
                 </div>
 
+                {/* BOTÓN MEJORADO CON MOVIMIENTO */}
                 <Link
                   href={product.href}
-                  className="inline-flex items-center justify-between w-full px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-medium transition-all duration-300 group-hover:shadow-lg"
+                  className="inline-flex items-center justify-between w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-medium transition-all duration-300 group-hover:shadow-lg group-hover:shadow-red-500/25 group-hover:scale-[1.02]"
                 >
-                  <span>Ver producto</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <span>Ver la tecnología</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform group-hover:rotate-12" />
                 </Link>
               </div>
             </motion.div>

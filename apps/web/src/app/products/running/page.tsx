@@ -5,13 +5,11 @@ import { useCartStore } from '@/lib/cart-store';
 import { products } from '@/lib/products';
 import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
-// Importar estilos de Swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Thumbs } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/thumbs';
 
 export default function RunningProductPage() {
   const product = products.find(p => p.slug === 'banda-running');
@@ -22,7 +20,7 @@ export default function RunningProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-black pt-24 px-4">
+      <div className="min-h-screen pt-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl text-white">Producto no encontrado</h1>
           <Link href="/" className="text-blue-400 hover:underline">Volver a la tienda</Link>
@@ -42,7 +40,7 @@ export default function RunningProductPage() {
         originalPrice: product.originalPrice,
         quantity: 1,
         size: selectedSize,
-        color: 'Negro', // Solo color negro disponible
+        color: 'Negro',
         image: product.images[0] || '/images/products/placeholder.jpg',
         category: product.category,
       });
@@ -53,9 +51,8 @@ export default function RunningProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-24 px-4 md:px-8">
+    <div className="min-h-screen pt-24 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Breadcrumb */}
         <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
           Volver a la tienda
@@ -64,7 +61,7 @@ export default function RunningProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Carrusel de imágenes */}
           <div className="space-y-4">
-            <div className="glass rounded-2xl overflow-hidden p-2">
+            <div className="glass-premium rounded-2xl overflow-hidden p-2">
               <Swiper
                 modules={[Navigation, Pagination]}
                 navigation={{
@@ -95,7 +92,6 @@ export default function RunningProductPage() {
                   </SwiperSlide>
                 ))}
 
-                {/* Botones de navegación personalizados */}
                 <button className="swiper-button-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all">
                   <ChevronLeft className="w-6 h-6" />
                 </button>
@@ -105,10 +101,9 @@ export default function RunningProductPage() {
               </Swiper>
             </div>
 
-            {/* Miniaturas (thumbnails) */}
             <div className="grid grid-cols-3 gap-3">
               {product.images.map((img, index) => (
-                <div key={index} className="glass rounded-xl overflow-hidden aspect-square cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all">
+                <div key={index} className="glass-premium rounded-xl overflow-hidden aspect-square cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all">
                   <img
                     src={img}
                     alt={`Miniatura ${index + 1}`}
@@ -128,7 +123,7 @@ export default function RunningProductPage() {
               🏃‍♂️ Running
             </span>
             <h1 className="text-3xl font-bold text-white mb-2">{product.name}</h1>
-            <p className="text-gray-400 mb-4">{product.description}</p>
+            <p className="text-gray-300 mb-4">{product.description}</p>
 
             <div className="flex items-center gap-3 mb-6">
               <span className="text-3xl font-bold text-white">${product.price.toLocaleString()}</span>
@@ -136,9 +131,8 @@ export default function RunningProductPage() {
               <span className="text-sm text-green-400 font-medium">-{product.discount}%</span>
             </div>
 
-            {/* Selección de talla */}
             <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-400 mb-3">Selecciona tu talla</h3>
+              <h3 className="text-sm font-medium text-gray-300 mb-3">Selecciona tu talla</h3>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
                   <button
@@ -156,9 +150,8 @@ export default function RunningProductPage() {
               </div>
             </div>
 
-            {/* Color - Solo Negro disponible */}
             <div className="mb-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-3">Color disponible</h3>
+              <h3 className="text-sm font-medium text-gray-300 mb-3">Color disponible</h3>
               <div className="flex flex-wrap gap-2">
                 <div className="px-4 py-2 rounded-lg border border-blue-500/30 bg-blue-500/10 text-white flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-black border border-white/20" />
@@ -168,7 +161,6 @@ export default function RunningProductPage() {
               <p className="text-xs text-gray-500 mt-2">Más colores disponibles próximamente</p>
             </div>
 
-            {/* Botón Agregar al carrito */}
             <button
               onClick={handleAddToCart}
               disabled={isAdding || isAdded}
@@ -177,7 +169,7 @@ export default function RunningProductPage() {
                 flex items-center justify-center gap-2
                 ${isAdded 
                   ? 'bg-green-500 text-white' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02]'
+                  : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white hover:scale-[1.02]'
                 }
                 disabled:opacity-70 disabled:cursor-not-allowed
               `}
