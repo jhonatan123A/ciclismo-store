@@ -120,6 +120,7 @@ export function NeonBackground() {
     }
 
     function animate() {
+      if (!ctx) return;  // ← ÚNICO CAMBIO: verificación de ctx
       time += 0.005;
       ctx.clearRect(0, 0, width, height);
 

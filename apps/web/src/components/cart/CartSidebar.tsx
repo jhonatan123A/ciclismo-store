@@ -7,10 +7,16 @@ import Link from 'next/link';
 
 export function CartSidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { items, removeItem, updateQuantity, getTotalItems, getTotalPrice, getSavings, clearCart } = useCartStore();
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
   const savings = getSavings();
+
+  // Marcar como montado en el cliente
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Cerrar con Escape
   useEffect(() => {
@@ -20,6 +26,18 @@ export function CartSidebar() {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
+
+  // Prevenir error de hidratación: no renderizar hasta estar montado
+  if (!mounted) {
+    return (
+      <button
+        className="relative text-white hover:text-blue-400 transition-colors"
+        aria-label="Abrir carrito"
+      >
+        <ShoppingBag className="w-6 h-6" />
+      </button>
+    );
+  }
 
   return (
     <>
