@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Particles from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import type { Container, ISourceOptions } from '@tsparticles/engine';
+import type { ISourceOptions } from '@tsparticles/engine';
 
 export function AnimatedBackground() {
   const [init, setInit] = useState(false);
