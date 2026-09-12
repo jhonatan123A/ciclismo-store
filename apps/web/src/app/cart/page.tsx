@@ -21,7 +21,7 @@ export default function CartPage() {
             <p className="text-gray-400 mb-6">Explora nuestros productos y comienza tu experiencia BESTIGE</p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-medium transition-all duration-300 shadow-lg shadow-[#FF7A5C]/25"
             >
               <ArrowLeft className="w-4 h-4" />
               Volver a la tienda
@@ -44,7 +44,7 @@ export default function CartPage() {
           </h1>
           <button
             onClick={clearCart}
-            className="text-sm text-gray-500 hover:text-red-400 transition-colors"
+            className="text-sm text-gray-500 hover:text-[#FF7A5C] transition-colors"
           >
             Vaciar carrito
           </button>
@@ -86,7 +86,7 @@ export default function CartPage() {
                       </span>
                     )}
                     {item.originalPrice > item.price && (
-                      <span className="text-xs text-green-400 font-medium">
+                      <span className="text-xs text-[#7DD3FC] font-medium">
                         -{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}%
                       </span>
                     )}
@@ -108,9 +108,9 @@ export default function CartPage() {
                     </button>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="ml-auto p-2 bg-white/10 hover:bg-red-500/20 rounded-lg transition-colors"
+                      className="ml-auto p-2 bg-white/10 hover:bg-[#FF7A5C]/20 rounded-lg transition-colors"
                     >
-                      <Trash2 className="w-5 h-5 text-red-400" />
+                      <Trash2 className="w-5 h-5 text-[#FF7A5C]" />
                     </button>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default function CartPage() {
                   <span>${(totalPrice + savings).toLocaleString()}</span>
                 </div>
                 {savings > 0 && (
-                  <div className="flex justify-between text-green-400">
+                  <div className="flex justify-between text-[#7DD3FC]">
                     <span>Ahorro</span>
                     <span>-${savings.toLocaleString()}</span>
                   </div>
@@ -143,7 +143,7 @@ export default function CartPage() {
 
               <Link
                 href="/checkout"
-                className="block w-full mt-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-center transition-colors"
+                className="block w-full mt-6 py-4 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-semibold text-center transition-all duration-300 shadow-lg shadow-[#FF7A5C]/25"
               >
                 Proceder al Pago
               </Link>

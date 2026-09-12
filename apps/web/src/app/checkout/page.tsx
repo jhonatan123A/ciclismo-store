@@ -29,7 +29,7 @@ export default function CheckoutPage() {
             <p className="text-gray-400 mb-6">Agrega productos para continuar</p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-medium transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Volver a la tienda
@@ -45,8 +45,8 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-black pt-24 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <div className="glass rounded-2xl p-12">
-            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-green-400" />
+            <div className="w-20 h-20 bg-[#7DD3FC]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Check className="w-10 h-10 text-[#7DD3FC]" />
             </div>
             <h2 className="text-3xl font-bold text-white mb-2">¡Pago Completado!</h2>
             <p className="text-gray-400 mb-6">
@@ -54,7 +54,7 @@ export default function CheckoutPage() {
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-medium transition-colors"
             >
               Volver a la tienda
             </Link>
@@ -114,20 +114,20 @@ export default function CheckoutPage() {
           <div className="lg:col-span-1">
             <div className="glass rounded-xl p-6 sticky top-24">
               <h3 className="text-xl font-bold text-white mb-4">Total</h3>
-              <div className="text-3xl font-bold text-white mb-6">
+              <div className="text-3xl font-bold bg-gradient-to-r from-[#FF7A5C] to-[#7DD3FC] bg-clip-text text-transparent mb-6">
                 ${totalPrice.toLocaleString()}
               </div>
 
               {/* Estado de PayPal */}
               {isPending && (
                 <div className="flex items-center justify-center py-8">
-                  <div className="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-4 border-[#FF7A5C] border-t-transparent rounded-full animate-spin" />
                   <span className="ml-3 text-gray-400">Cargando PayPal...</span>
                 </div>
               )}
 
               {isRejected && (
-                <div className="text-red-400 text-center py-4">
+                <div className="text-[#FF5A5F] text-center py-4">
                   <p>Error al cargar PayPal</p>
                   <p className="text-sm text-gray-400">Verifica tu conexión a Internet</p>
                 </div>
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
                   />
                   {isProcessing && (
                     <div className="flex items-center justify-center mt-4">
-                      <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-[#FF7A5C] border-t-transparent rounded-full animate-spin" />
                       <span className="ml-2 text-gray-400">Procesando pago...</span>
                     </div>
                   )}

@@ -17,15 +17,16 @@ export function NeonBackground() {
     canvas.width = width;
     canvas.height = height;
 
-    // Colores neón: cian y verde azulado
+    // Colores BESTIGE: naranja coral, rojo coral, cyan, azul
     const neonColors = [
-      'rgba(6, 182, 212, 0.06)',   // Cian
-      'rgba(20, 184, 166, 0.06)',  // Verde azulado
-      'rgba(6, 182, 212, 0.04)',   // Cian claro
-      'rgba(20, 184, 166, 0.04)',  // Verde azulado claro
+      'rgba(255, 122, 92, 0.06)',   // Naranja coral
+      'rgba(255, 90, 95, 0.06)',    // Rojo coral
+      'rgba(125, 211, 252, 0.05)',  // Cyan
+      'rgba(56, 189, 248, 0.05)',   // Azul brillante
+      'rgba(230, 57, 70, 0.04)',    // Rojo profundo
     ];
 
-    // Crear círculos de humo neón
+    // Crear círculos de humo
     const circles: Array<{
       x: number;
       y: number;
@@ -50,7 +51,7 @@ export function NeonBackground() {
       });
     }
 
-    // Partículas de neón
+    // Partículas
     const particles: Array<{
       x: number;
       y: number;
@@ -69,11 +70,11 @@ export function NeonBackground() {
         speedX: (Math.random() - 0.5) * 0.4,
         speedY: (Math.random() - 0.5) * 0.4,
         opacity: 0.1 + Math.random() * 0.3,
-        color: Math.random() > 0.5 ? '#06b6d4' : '#14b8a6',
+        color: Math.random() > 0.5 ? '#FF7A5C' : '#7DD3FC',
       });
     }
 
-    // Ondas de neón
+    // Ondas
     const waves: Array<{
       y: number;
       amplitude: number;
@@ -91,7 +92,7 @@ export function NeonBackground() {
         frequency: 0.003 + Math.random() * 0.005,
         speed: 0.2 + Math.random() * 0.3,
         phase: Math.random() * Math.PI * 2,
-        color: i % 2 === 0 ? 'rgba(6, 182, 212, 0.03)' : 'rgba(20, 184, 166, 0.03)',
+        color: i % 2 === 0 ? 'rgba(255, 122, 92, 0.03)' : 'rgba(125, 211, 252, 0.03)',
         width: 1.5 + Math.random() * 1.5,
       });
     }
@@ -120,7 +121,7 @@ export function NeonBackground() {
     }
 
     function animate() {
-      if (!ctx) return;  // ← ÚNICO CAMBIO: verificación de ctx
+      if (!ctx) return;
       time += 0.005;
       ctx.clearRect(0, 0, width, height);
 
@@ -134,7 +135,7 @@ export function NeonBackground() {
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, width, height);
 
-      // Dibujar círculos de humo neón
+      // Dibujar círculos de humo
       circles.forEach((circle) => {
         circle.x += circle.speedX;
         circle.y += circle.speedY;
@@ -148,7 +149,7 @@ export function NeonBackground() {
         drawNeonGlow(ctx, circle.x, circle.y, circle.radius, circle.color);
       });
 
-      // Dibujar partículas de neón
+      // Dibujar partículas
       particles.forEach((p) => {
         p.x += p.speedX;
         p.y += p.speedY;
@@ -173,7 +174,7 @@ export function NeonBackground() {
         ctx.fill();
       });
 
-      // Dibujar ondas de neón
+      // Dibujar ondas
       waves.forEach((wave) => {
         ctx.beginPath();
         ctx.moveTo(0, wave.y);

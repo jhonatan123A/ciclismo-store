@@ -31,7 +31,7 @@ export default function RootLayout({
           />
           {/* Gradiente superpuesto para darle profundidad */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-purple-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FF7A5C]/20 via-transparent to-[#7DD3FC]/20" />
         </div>
 
         <PayPalProvider>
@@ -43,4 +43,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-} 
+}

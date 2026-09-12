@@ -23,7 +23,7 @@ export function Header() {
         <div className="flex justify-between items-center h-20">
           {/* Logo BESTIGE con imagen */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-38 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center overflow-hidden">
+            <div className="relative w-38 h-20 bg-gradient-to-br from-[#FF7A5C] via-[#FF5A5F] to-[#E63946] rounded-xl flex items-center justify-center overflow-hidden">
               <img 
                 src="/images/brand/logo.png" 
                 alt="BESTIGE" 
@@ -54,7 +54,7 @@ export function Header() {
                 className="text-sm text-gray-400 hover:text-white transition-colors relative group"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#FF7A5C] via-[#FF5A5F] to-[#7DD3FC] transition-all group-hover:w-full" />
               </Link>
             ))}
           </nav>

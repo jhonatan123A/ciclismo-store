@@ -49,6 +49,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // PALETA OFICIAL BESTIGE
+        bestige: {
+          orange: '#FF7A5C',
+          coral: '#FF5A5F',
+          red: '#E63946',
+          cyan: '#7DD3FC',
+          blue: '#38BDF8',
+          'blue-deep': '#2563EB',
+          black: '#0A0A0A',
+          gray: '#1A1A1A',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

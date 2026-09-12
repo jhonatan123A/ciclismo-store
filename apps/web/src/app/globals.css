@@ -10,19 +10,19 @@
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 4%;
     --popover-foreground: 0 0% 100%;
-    --primary: 210 100% 50%;
+    --primary: 12 100% 68%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 60%;
-    --accent: 210 100% 50%;
+    --accent: 199 89% 68%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 100% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 210 100% 50%;
+    --ring: 12 100% 68%;
     --radius: 0.75rem;
   }
 }
@@ -40,7 +40,7 @@ body {
 }
 
 /* ============================================
-   SCROLLBAR BESTIGE (Azul → Morado → Rosa)
+   SCROLLBAR BESTIGE (Naranja → Rojo → Cyan)
    ============================================ */
 ::-webkit-scrollbar {
   width: 6px;
@@ -52,12 +52,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #FF7A5C, #FF5A5F, #7DD3FC);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+  background: linear-gradient(135deg, #FF5A5F, #E63946, #38BDF8);
 }
 
 /* ============================================
@@ -96,10 +96,10 @@ body {
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 20px rgba(255, 122, 92, 0.2);
   }
   50% {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.3), 0 0 60px rgba(236, 72, 153, 0.15);
+    box-shadow: 0 0 40px rgba(255, 90, 95, 0.3), 0 0 60px rgba(125, 211, 252, 0.15);
   }
 }
 
@@ -123,19 +123,19 @@ body {
 
 @keyframes neonPulse {
   0%, 100% {
-    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    text-shadow: 0 0 10px rgba(255, 122, 92, 0.3);
   }
   50% {
-    text-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.3);
+    text-shadow: 0 0 30px rgba(255, 122, 92, 0.6), 0 0 60px rgba(255, 90, 95, 0.3);
   }
 }
 
 @keyframes borderGlow {
   0%, 100% {
-    border-color: rgba(59, 130, 246, 0.2);
+    border-color: rgba(255, 122, 92, 0.2);
   }
   50% {
-    border-color: rgba(236, 72, 153, 0.3);
+    border-color: rgba(125, 211, 252, 0.3);
   }
 }
 
@@ -195,9 +195,9 @@ body {
 
 .glass-hover:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: rgba(255, 122, 92, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.05);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 122, 92, 0.05);
 }
 
 /* Glass premium con glow BESTIGE */
@@ -212,16 +212,16 @@ body {
 
 .glass-bestige:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(59, 130, 246, 0.2);
-  box-shadow: 0 8px 40px rgba(59, 130, 246, 0.1), 0 0 60px rgba(139, 92, 246, 0.05);
+  border-color: rgba(255, 122, 92, 0.2);
+  box-shadow: 0 8px 40px rgba(255, 122, 92, 0.1), 0 0 60px rgba(125, 211, 252, 0.05);
 }
 
 /* ============================================
    GRADIENTES DE TEXTO BESTIGE
    ============================================ */
-/* Premium: Azul → Morado → Rosa (el principal) */
+/* Premium: Naranja → Rojo coral → Cyan (el principal) */
 .gradient-text-premium {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 30%, #8b5cf6 60%, #ec4899 100%);
+  background: linear-gradient(135deg, #FF7A5C 0%, #FF5A5F 30%, #E63946 60%, #7DD3FC 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -229,9 +229,9 @@ body {
   animation: shimmerText 4s linear infinite;
 }
 
-/* Azul → Morado (para títulos secundarios) */
+/* Naranja → Rojo coral (para títulos secundarios) */
 .gradient-text-blue-purple {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 40%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #FF7A5C 0%, #FF5A5F 40%, #E63946 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -245,9 +245,9 @@ body {
   background-clip: text;
 }
 
-/* Cian → Azul (para tecnología) */
+/* Cyan → Azul (para tecnología) */
 .gradient-text-cyan-blue {
-  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 60%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 60%, #2563EB 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -257,9 +257,9 @@ body {
    BADGES BESTIGE
    ============================================ */
 .badge-blue {
-  background: rgba(59, 130, 246, 0.12);
-  border: 1px solid rgba(59, 130, 246, 0.20);
-  color: #60a5fa;
+  background: rgba(255, 122, 92, 0.12);
+  border: 1px solid rgba(255, 122, 92, 0.20);
+  color: #FF7A5C;
   padding: 0.25rem 1rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -269,9 +269,9 @@ body {
 }
 
 .badge-purple {
-  background: rgba(139, 92, 246, 0.12);
-  border: 1px solid rgba(139, 92, 246, 0.20);
-  color: #a78bfa;
+  background: rgba(255, 90, 95, 0.12);
+  border: 1px solid rgba(255, 90, 95, 0.20);
+  color: #FF5A5F;
   padding: 0.25rem 1rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -281,9 +281,9 @@ body {
 }
 
 .badge-pink {
-  background: rgba(236, 72, 153, 0.12);
-  border: 1px solid rgba(236, 72, 153, 0.20);
-  color: #f472b6;
+  background: rgba(230, 57, 70, 0.12);
+  border: 1px solid rgba(230, 57, 70, 0.20);
+  color: #E63946;
   padding: 0.25rem 1rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -305,9 +305,9 @@ body {
 }
 
 .badge-cyan {
-  background: rgba(6, 182, 212, 0.12);
-  border: 1px solid rgba(6, 182, 212, 0.20);
-  color: #22d3ee;
+  background: rgba(125, 211, 252, 0.12);
+  border: 1px solid rgba(125, 211, 252, 0.20);
+  color: #7DD3FC;
   padding: 0.25rem 1rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -320,14 +320,14 @@ body {
    BOTONES BESTIGE (con neón)
    ============================================ */
 .btn-bestige {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #FF7A5C 0%, #FF5A5F 50%, #E63946 100%);
   color: white;
   padding: 0.75rem 2rem;
   border-radius: 9999px;
   font-weight: 600;
   transition: all 0.3s ease;
   border: none;
-  box-shadow: 0 4px 30px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 30px rgba(255, 122, 92, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -346,7 +346,7 @@ body {
 
 .btn-bestige:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 40px rgba(59, 130, 246, 0.4), 0 0 60px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 40px rgba(255, 90, 95, 0.4), 0 0 60px rgba(125, 211, 252, 0.2);
 }
 
 .btn-bestige:hover::before {
@@ -365,9 +365,9 @@ body {
 
 .btn-bestige-outline:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: rgba(255, 122, 92, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 8px 30px rgba(255, 122, 92, 0.15);
 }
 
 .btn-bestige-gold {
@@ -390,32 +390,32 @@ body {
    EFECTOS DE GLOW Y BRILLO BESTIGE
    ============================================ */
 .glow-blue {
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 30px rgba(255, 122, 92, 0.15);
 }
 
 .glow-blue:hover {
-  box-shadow: 0 0 50px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 0 50px rgba(255, 122, 92, 0.25);
 }
 
 .glow-purple {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 30px rgba(255, 90, 95, 0.15);
 }
 
 .glow-purple:hover {
-  box-shadow: 0 0 50px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 50px rgba(255, 90, 95, 0.25);
 }
 
 .glow-pink {
-  box-shadow: 0 0 30px rgba(236, 72, 153, 0.12);
+  box-shadow: 0 0 30px rgba(125, 211, 252, 0.12);
 }
 
 .glow-bestige {
-  box-shadow: 0 0 40px rgba(59, 130, 246, 0.10), 0 0 80px rgba(139, 92, 246, 0.05);
+  box-shadow: 0 0 40px rgba(255, 122, 92, 0.10), 0 0 80px rgba(125, 211, 252, 0.05);
   transition: all 0.4s ease;
 }
 
 .glow-bestige:hover {
-  box-shadow: 0 0 60px rgba(59, 130, 246, 0.20), 0 0 120px rgba(139, 92, 246, 0.10);
+  box-shadow: 0 0 60px rgba(255, 122, 92, 0.20), 0 0 120px rgba(125, 211, 252, 0.10);
 }
 
 /* ============================================
@@ -438,7 +438,7 @@ body {
   inset: -1px;
   border-radius: 1rem;
   padding: 1px;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #FF7A5C, #FF5A5F, #7DD3FC);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -452,30 +452,30 @@ body {
 
 .card-neon:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.05);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 122, 92, 0.05);
 }
 
 /* ============================================
    UTILIDADES ADICIONALES BESTIGE
    ============================================ */
 .bg-bestige-gradient {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.03));
+  background: linear-gradient(135deg, rgba(255, 122, 92, 0.05), rgba(255, 90, 95, 0.05), rgba(125, 211, 252, 0.03));
 }
 
 .border-bestige {
-  border-color: rgba(59, 130, 246, 0.2);
+  border-color: rgba(255, 122, 92, 0.2);
 }
 
 .text-bestige-blue {
-  color: #3b82f6;
+  color: #FF7A5C;
 }
 
 .text-bestige-purple {
-  color: #8b5cf6;
+  color: #FF5A5F;
 }
 
 .text-bestige-pink {
-  color: #ec4899;
+  color: #E63946;
 }
 
 .text-bestige-gold {
@@ -483,23 +483,23 @@ body {
 }
 
 .text-bestige-cyan {
-  color: #06b6d4;
+  color: #7DD3FC;
 }
 
 /* Neón efectos para títulos */
 .title-neon {
   color: #ffffff;
-  text-shadow: 0 0 10px rgba(59, 130, 246, 0.15), 0 0 20px rgba(139, 92, 246, 0.1);
+  text-shadow: 0 0 10px rgba(255, 122, 92, 0.15), 0 0 20px rgba(255, 90, 95, 0.1);
 }
 
 .title-neon:hover {
-  text-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2), 0 0 60px rgba(236, 72, 153, 0.1);
+  text-shadow: 0 0 20px rgba(255, 122, 92, 0.3), 0 0 40px rgba(255, 90, 95, 0.2), 0 0 60px rgba(125, 211, 252, 0.1);
 }
 
 /* Badge de precio BESTIGE */
 .price-badge {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(255, 122, 92, 0.15), rgba(125, 211, 252, 0.15));
+  border: 1px solid rgba(125, 211, 252, 0.2);
   backdrop-filter: blur(8px);
   padding: 0.25rem 1rem;
   border-radius: 9999px;
@@ -518,7 +518,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.06), transparent 60%);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 122, 92, 0.06), transparent 60%);
   pointer-events: none;
   transition: transform 0.6s ease;
 }
@@ -531,9 +531,9 @@ body {
    FONDO CON NEÓN (para usar en layout)
    ============================================ */
 .neon-overlay {
-  background: radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%),
-              radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.02) 0%, transparent 40%);
+  background: radial-gradient(ellipse at 20% 50%, rgba(255, 122, 92, 0.03) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 50%, rgba(125, 211, 252, 0.03) 0%, transparent 60%),
+              radial-gradient(ellipse at 50% 100%, rgba(255, 90, 95, 0.02) 0%, transparent 40%);
 }
 
 /* Efecto de humo/neón en fondo */
@@ -545,9 +545,9 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 40%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
-              radial-gradient(ellipse at 70% 60%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, rgba(236, 72, 153, 0.02) 0%, transparent 40%);
+  background: radial-gradient(ellipse at 30% 40%, rgba(255, 122, 92, 0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 60%, rgba(125, 211, 252, 0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 80%, rgba(255, 90, 95, 0.02) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
 }

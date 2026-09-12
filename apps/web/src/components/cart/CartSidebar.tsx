@@ -31,7 +31,7 @@ export function CartSidebar() {
   if (!mounted) {
     return (
       <button
-        className="relative text-white hover:text-blue-400 transition-colors"
+        className="relative text-white hover:text-[#FF7A5C] transition-colors"
         aria-label="Abrir carrito"
       >
         <ShoppingBag className="w-6 h-6" />
@@ -44,12 +44,12 @@ export function CartSidebar() {
       {/* Botón para abrir */}
       <button
         onClick={() => setIsOpen(true)}
-        className="relative text-white hover:text-blue-400 transition-colors"
+        className="relative text-white hover:text-[#FF7A5C] transition-colors"
         aria-label="Abrir carrito"
       >
         <ShoppingBag className="w-6 h-6" />
         {totalItems > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#FF7A5C] text-white text-xs rounded-full flex items-center justify-center">
             {totalItems}
           </span>
         )}
@@ -98,7 +98,7 @@ export function CartSidebar() {
             <p className="text-gray-400 text-sm">Explora nuestros productos y comienza tu experiencia BESTIGE</p>
             <button
               onClick={() => setIsOpen(false)}
-              className="mt-6 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="mt-6 px-8 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-medium transition-colors"
             >
               Ver productos
             </button>
@@ -139,7 +139,7 @@ export function CartSidebar() {
                       <span className="text-xs text-gray-400 line-through">
                         ${(item.originalPrice * item.quantity).toLocaleString('es-CO')}
                       </span>
-                      <span className="text-xs text-green-400 font-medium">
+                      <span className="text-xs text-[#7DD3FC] font-medium">
                         -{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}%
                       </span>
                     </div>
@@ -163,10 +163,10 @@ export function CartSidebar() {
                       </button>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="ml-auto p-1 hover:bg-red-500/20 rounded transition-colors"
+                        className="ml-auto p-1 hover:bg-[#FF7A5C]/20 rounded transition-colors"
                         aria-label="Eliminar producto"
                       >
-                        <Trash2 className="w-4 h-4 text-red-400" />
+                        <Trash2 className="w-4 h-4 text-[#FF7A5C]" />
                       </button>
                     </div>
                   </div>
@@ -179,7 +179,7 @@ export function CartSidebar() {
               {/* Resumen */}
               <div className="space-y-2 text-sm">
                 {savings > 0 && (
-                  <div className="flex justify-between text-green-400">
+                  <div className="flex justify-between text-[#7DD3FC]">
                     <span>Ahorro</span>
                     <span>${savings.toLocaleString('es-CO')}</span>
                   </div>
@@ -202,7 +202,7 @@ export function CartSidebar() {
                   Ver Carrito
                 </button>
                 <button
-                  className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors"
+                  className="flex-1 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-semibold transition-colors"
                 >
                   Proceder al Pago
                 </button>
@@ -210,7 +210,7 @@ export function CartSidebar() {
 
               <button
                 onClick={clearCart}
-                className="w-full text-center text-xs text-gray-500 hover:text-red-400 transition-colors"
+                className="w-full text-center text-xs text-gray-500 hover:text-[#FF7A5C] transition-colors"
               >
                 Vaciar carrito
               </button>

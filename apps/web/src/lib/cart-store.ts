@@ -62,7 +62,6 @@ export const useCartStore = create<CartStore>()(
           };
           set({ items: [...items, item] });
         }
-        // Abrir el carrito al agregar
         set({ isOpen: true });
       },
 
