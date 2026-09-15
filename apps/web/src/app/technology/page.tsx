@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Brain, Zap, Activity, Waves, ShoppingBag, Watch, Shirt, Shield } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Brain, Zap, Activity, Waves, ShoppingBag, Watch, Shirt, Shield } from 'lucide-react';
 
 export default function TechnologyPage() {
   const steps = [
@@ -11,114 +11,102 @@ export default function TechnologyPage() {
       title: 'Estímulo Sensorial',
       description: 'Contacto directo y adaptativo de la estructura textil con la piel.',
       icon: <Waves className="w-5 h-5" />,
-      color: '#FF7A5C',
     },
     {
       number: '02',
       title: 'Recepción e Información',
       description: 'Captación de estímulos táctiles que viajan hacia el sistema nervioso central.',
       icon: <Activity className="w-5 h-5" />,
-      color: '#7DD3FC',
     },
     {
       number: '03',
       title: 'Percepción y Conciencia',
       description: 'Procesamiento de la información para aumentar la conciencia del movimiento y la propiocepción del atleta.',
       icon: <Brain className="w-5 h-5" />,
-      color: '#FF5A5F',
     },
     {
       number: '04',
       title: 'Respuesta Muscular',
       description: 'Optimización del control, la coordinación y la activación muscular efectiva durante el esfuerzo.',
       icon: <Zap className="w-5 h-5" />,
-      color: '#38BDF8',
     },
   ];
 
   const comingSoon = [
-    { id: 'gloves', name: 'Guantes', icon: <Shield className="w-5 h-5" /> },
-    { id: 'tshirts', name: 'Camisetas', icon: <Shirt className="w-5 h-5" /> },
-    { id: 'socks', name: 'Medias', icon: <Watch className="w-5 h-5" /> },
-    { id: 'jersey', name: 'Jersey', icon: <ShoppingBag className="w-5 h-5" /> },
+    { id: 'gloves', name: 'Guantes', icon: <Shield className="w-4 h-4" /> },
+    { id: 'tshirts', name: 'Camisetas', icon: <Shirt className="w-4 h-4" /> },
+    { id: 'socks', name: 'Medias', icon: <Watch className="w-4 h-4" /> },
+    { id: 'jersey', name: 'Jersey', icon: <ShoppingBag className="w-4 h-4" /> },
   ];
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 md:px-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen pt-24 pb-16 px-6 md:px-10 bg-black">
+      <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors mb-8 text-xs"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Volver a la tienda
+          Volver
         </Link>
 
-        {/* HERO de Tecnología */}
+        {/* HERO */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="mb-24"
         >
-          <div className="flex justify-center mb-6">
-            <span className="px-4 py-1.5 bg-[#FF7A5C]/10 border border-[#FF7A5C]/20 rounded-full text-[#FF7A5C] text-[10px] font-medium tracking-widest uppercase">
-              BESTIGE · Somatosensory Technology
-            </span>
-          </div>
+          <p className="text-eyebrow text-[#FF7A5C] mb-6 flex items-center gap-3">
+            <span className="w-8 h-[1px] bg-[#FF7A5C]" />
+            Somatosensory Technology
+          </p>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight tracking-tight">
-            La tecnología que conecta
+          <h1 className="display-hero text-[clamp(2.5rem,7vw,6rem)] text-white mb-8 max-w-4xl">
+            La tecnología que
             <br />
-            <span className="bg-gradient-to-r from-[#FF7A5C] via-[#FF5A5F] to-[#7DD3FC] bg-clip-text text-transparent">
-              la piel con el movimiento
-            </span>
+            conecta la piel
+            <br />
+            <span className="text-white/50">con el movimiento.</span>
           </h1>
 
-          <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed font-light">
-            En <span className="text-white font-medium">Bestige</span> redefinimos la interacción entre el atleta y su equipamiento mediante el desarrollo de{' '}
-            <span className="text-[#FF7A5C] font-medium">Tecnología Somatosensorial</span>.
+          <p className="text-white/50 max-w-2xl text-sm md:text-base leading-relaxed">
+            En <span className="text-white font-medium">Bestige</span> redefinimos la interacción entre el atleta y su equipamiento mediante el desarrollo de <span className="text-[#FF7A5C] font-medium">Tecnología Somatosensorial</span>.
           </p>
         </motion.div>
 
-        {/* Sección de introducción */}
+        {/* Introducción */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/10 backdrop-blur-sm mb-16 overflow-hidden"
+          className="p-8 md:p-12 rounded-2xl border border-white/10 bg-white/[0.02] mb-24"
         >
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#FF7A5C]/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-[#7DD3FC]/10 rounded-full blur-3xl" />
-
-          <div className="relative">
-            <p className="text-gray-300 text-sm leading-relaxed mb-4">
-              Diseñamos prendas técnicas de alto rendimiento equipadas con <span className="text-white font-medium">superficies y estructuras integradas</span> que generan estímulos táctiles estratégicos sobre la piel.
-            </p>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Esta interacción continua aporta <span className="text-[#7DD3FC] font-medium">información sensorial clave</span> para optimizar la percepción biomecánica y potenciar la relación <span className="text-white font-medium">músculo-prenda</span> en cada entrenamiento o competencia.
-            </p>
-          </div>
+          <p className="text-white/50 text-sm md:text-base leading-relaxed mb-4">
+            Diseñamos prendas técnicas de alto rendimiento equipadas con <span className="text-white font-medium">superficies y estructuras integradas</span> que generan estímulos táctiles estratégicos sobre la piel.
+          </p>
+          <p className="text-white/50 text-sm md:text-base leading-relaxed">
+            Esta interacción continua aporta <span className="text-white font-medium">información sensorial clave</span> para optimizar la percepción biomecánica y potenciar la relación <span className="text-white font-medium">músculo-prenda</span> en cada entrenamiento o competencia.
+          </p>
         </motion.div>
 
-        {/* Sección: Mecanismo de Acción */}
+        {/* Mecanismo de acción */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-24"
         >
-          <div className="text-center mb-10">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Sparkles className="w-4 h-4 text-[#FF7A5C]" />
-              <h2 className="text-2xl md:text-3xl font-bold text-white">Mecanismo de Acción</h2>
-              <Sparkles className="w-4 h-4 text-[#7DD3FC]" />
-            </div>
-            <p className="text-gray-400 text-xs max-w-2xl mx-auto leading-relaxed">
-              El ecosistema somatosensorial de Bestige opera a través de un circuito continuo de retroalimentación fisiológica
+          <div className="mb-10 pb-6 border-b border-white/10">
+            <p className="text-eyebrow text-white/40 mb-3">Mecanismo de acción</p>
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
+              Un circuito continuo de retroalimentación
+            </h2>
+            <p className="text-white/40 text-sm max-w-2xl leading-relaxed">
+              El ecosistema somatosensorial de Bestige opera a través de un circuito continuo de retroalimentación fisiológica.
             </p>
           </div>
 
@@ -130,77 +118,60 @@ export default function TechnologyPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="relative p-5 rounded-xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/10 backdrop-blur-sm overflow-hidden group hover:border-white/20 transition-all duration-300"
+                className="p-6 md:p-7 rounded-xl border border-white/10 bg-white/[0.02] hover:border-white/25 hover:bg-white/[0.04] transition-all group"
               >
-                <div
-                  className="absolute top-0 left-0 right-0 h-[2px] opacity-50 group-hover:opacity-100 transition-opacity"
-                  style={{ background: `linear-gradient(to right, ${step.color}, transparent)` }}
-                />
-
-                <div className="flex items-start gap-4">
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold border"
-                    style={{
-                      borderColor: `${step.color}40`,
-                      background: `${step.color}10`,
-                      color: step.color,
-                    }}
-                  >
-                    {step.number}
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span style={{ color: step.color }}>{step.icon}</span>
-                      <h3 className="text-sm font-semibold text-white">{step.title}</h3>
-                    </div>
-                    <p className="text-gray-400 text-xs leading-relaxed">{step.description}</p>
-                  </div>
+                <div className="flex items-start justify-between mb-6">
+                  <span className="text-eyebrow text-[#FF7A5C]">{step.number}</span>
+                  <span className="text-white/30 group-hover:text-[#FF7A5C] transition-colors">
+                    {step.icon}
+                  </span>
                 </div>
+                <h3 className="text-white font-bold text-base mb-2">{step.title}</h3>
+                <p className="text-white/40 text-xs leading-relaxed">{step.description}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* Cita final */}
+        {/* Cita */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center py-10 border-t border-white/5"
+          className="text-center py-16 border-t border-b border-white/10 mb-24"
         >
-          <div className="inline-block px-6 py-4 rounded-2xl bg-gradient-to-r from-[#FF7A5C]/5 to-[#7DD3FC]/5 border border-white/10 backdrop-blur-sm">
-            <p className="text-white font-bold text-lg tracking-wide mb-1">BESTIGE</p>
-            <p className="text-gray-400 text-xs italic tracking-widest">
-              Sentir para rendir
-            </p>
-          </div>
+          <p className="text-eyebrow text-[#FF7A5C] mb-4">BESTIGE</p>
+          <p className="text-3xl md:text-5xl font-bold text-white italic">
+            Sentir para rendir.
+          </p>
         </motion.div>
 
-        {/* CTA Final */}
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mt-10"
+          className="text-center mb-24"
         >
-          <p className="text-gray-400 text-xs mb-4">
-            Descubre la tecnología somatosensorial en acción
+          <p className="text-eyebrow text-white/40 mb-6">
+            Descubre la tecnología en acción
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/products/cycling"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-full text-xs font-medium transition-all duration-300 shadow-lg shadow-[#FF7A5C]/20"
+              className="inline-flex items-center gap-3 px-7 py-3.5 bg-white text-black rounded-full text-[10px] tracking-[0.2em] uppercase font-semibold hover:bg-white/90 transition-all group"
             >
               Ciclismo
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
               href="/products/running"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7DD3FC] to-[#38BDF8] hover:from-[#38BDF8] hover:to-[#2563EB] text-white rounded-full text-xs font-medium transition-all duration-300 shadow-lg shadow-[#7DD3FC]/20"
+              className="inline-flex items-center gap-3 px-7 py-3.5 bg-transparent border border-white/20 text-white rounded-full text-[10px] tracking-[0.2em] uppercase font-semibold hover:bg-white/5 hover:border-white/40 transition-all group"
             >
               Running
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
         </motion.div>
@@ -209,18 +180,13 @@ export default function TechnologyPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mt-20 max-w-4xl mx-auto"
         >
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-[#FF7A5C]" />
-              <h3 className="text-lg font-semibold text-white">Próximamente</h3>
-              <Sparkles className="w-4 h-4 text-[#7DD3FC]" />
-            </div>
-            <p className="text-xs text-gray-400 font-light max-w-2xl mx-auto">
-              Seguimos trabajando para traer más productos con nuestra Tecnología Somatosensorial x Bestige
+          <div className="pb-8 border-b border-white/10 mb-10">
+            <p className="text-eyebrow text-white/40 mb-3">Próximamente</p>
+            <p className="text-white/50 text-sm max-w-2xl leading-relaxed">
+              Seguimos trabajando para traer más productos con nuestra tecnología somatosensorial.
             </p>
           </div>
 
@@ -230,18 +196,20 @@ export default function TechnologyPage() {
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
                 viewport={{ once: true }}
-                className="relative p-5 bg-white/[0.02] backdrop-blur-sm border border-white/[0.06] rounded-xl overflow-hidden group hover:border-[#FF7A5C]/30 transition-all duration-300"
+                className="group p-6 rounded-xl border border-white/10 bg-white/[0.02] hover:border-white/25 hover:bg-white/[0.04] transition-all"
               >
-                <div className="flex flex-col items-center text-center gap-3">
-                  <div className="p-2.5 bg-gradient-to-br from-[#FF7A5C]/10 to-[#7DD3FC]/10 rounded-lg text-gray-400 group-hover:text-[#FF7A5C] transition-colors">
+                <div className="flex flex-col gap-5">
+                  <div className="text-white/30 group-hover:text-[#FF7A5C] transition-colors">
                     {item.icon}
                   </div>
-                  <h4 className="text-sm font-medium text-white">{item.name}</h4>
-                  <span className="text-[10px] text-[#FF7A5C] font-medium px-2 py-0.5 bg-[#FF7A5C]/10 rounded-full border border-[#FF7A5C]/20">
-                    Próximamente
-                  </span>
+                  <div>
+                    <h4 className="text-white text-sm font-medium mb-1">{item.name}</h4>
+                    <span className="text-[9px] text-white/30 tracking-[0.25em] uppercase">
+                      Próximamente
+                    </span>
+                  </div>
                 </div>
               </motion.div>
             ))}

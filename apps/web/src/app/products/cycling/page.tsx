@@ -20,9 +20,9 @@ export default function CyclingProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen pt-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-xl text-white">Producto no encontrado</h1>
+      <div className="min-h-screen pt-24 px-6 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl text-white mb-4">Producto no encontrado</h1>
           <Link href="/" className="text-[#FF7A5C] hover:underline text-sm">Volver a la tienda</Link>
         </div>
       </div>
@@ -51,38 +51,42 @@ export default function CyclingProductPage() {
   };
 
   return (
-    <div className="min-h-screen pt-20 pb-8 px-4 md:px-6">
-      <div className="max-w-5xl mx-auto">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors mb-4 text-xs">
+    <div className="min-h-screen pt-24 pb-16 px-6 md:px-10">
+      <div className="max-w-7xl mx-auto">
+        {/* Breadcrumb */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-8 text-[11px] tracking-[0.2em] uppercase"
+        >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Volver a la tienda
+          Volver
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Carrusel de imágenes - más pequeño */}
-          <div className="space-y-2">
-            <div className="glass-premium rounded-xl overflow-hidden p-1.5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+          {/* CARRUSEL */}
+          <div className="space-y-3">
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A]">
               <Swiper
                 modules={[Navigation, Pagination]}
                 navigation={{
-                  prevEl: '.swiper-button-prev',
-                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev-custom',
+                  nextEl: '.swiper-button-next-custom',
                 }}
                 pagination={{
                   clickable: true,
-                  bulletClass: 'swiper-pagination-bullet !bg-gray-600 !w-1 !h-1',
-                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-[#FF7A5C] !w-3 !rounded-full',
+                  bulletClass: 'swiper-pagination-bullet !bg-white/20 !w-1.5 !h-1.5',
+                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-[#FF7A5C] !w-5 !rounded-full',
                 }}
-                spaceBetween={8}
+                spaceBetween={0}
                 slidesPerView={1}
-                className="relative aspect-square max-w-[380px] mx-auto"
+                className="relative aspect-square"
               >
                 {product.images.map((img, index) => (
                   <SwiperSlide key={index}>
                     <div className="w-full h-full flex items-center justify-center">
                       <img
                         src={img}
-                        alt={`${product.name} - Imagen ${index + 1}`}
+                        alt={`${product.name} - ${index + 1}`}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
@@ -92,18 +96,22 @@ export default function CyclingProductPage() {
                   </SwiperSlide>
                 ))}
 
-                <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all border border-white/10">
-                  <ChevronLeft className="w-3.5 h-3.5" />
+                <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-black backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all border border-white/10">
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
-                <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all border border-white/10">
-                  <ChevronRight className="w-3.5 h-3.5" />
+                <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-black backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all border border-white/10">
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </Swiper>
             </div>
 
-            <div className="grid grid-cols-3 gap-1.5 max-w-[380px] mx-auto">
+            {/* Miniaturas */}
+            <div className="grid grid-cols-3 gap-3">
               {product.images.map((img, index) => (
-                <div key={index} className="glass-premium rounded-lg overflow-hidden aspect-square cursor-pointer hover:ring-1 hover:ring-[#FF7A5C] transition-all">
+                <div
+                  key={index}
+                  className="rounded-xl overflow-hidden aspect-square border border-white/10 hover:border-[#FF7A5C]/50 transition-all cursor-pointer bg-[#0A0A0A]"
+                >
                   <img
                     src={img}
                     alt={`Miniatura ${index + 1}`}
@@ -117,31 +125,56 @@ export default function CyclingProductPage() {
             </div>
           </div>
 
-          {/* Detalles del producto - más pequeños */}
-          <div className="max-w-md">
-            <span className="inline-block px-2.5 py-0.5 bg-[#FF7A5C]/20 border border-[#FF7A5C]/30 rounded-full text-[#FF7A5C] text-[9px] font-medium mb-2">
-              🚴‍♂️ Ciclismo
-            </span>
-            <h1 className="text-xl md:text-2xl font-bold text-white mb-1.5 leading-tight">{product.name}</h1>
-            <p className="text-gray-400 mb-3 text-xs leading-relaxed">{product.description}</p>
+          {/* DETALLES */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <p className="text-eyebrow text-[#FF7A5C] mb-4 flex items-center gap-3">
+              <span className="w-6 h-[1px] bg-[#FF7A5C]" />
+              Performance Cycling
+            </p>
 
-            <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-2xl font-bold text-white">${product.price.toLocaleString()}</span>
-              <span className="text-xs text-gray-400 line-through">${product.originalPrice.toLocaleString()}</span>
-              <span className="text-xs text-[#7DD3FC] font-medium">-{product.discount}%</span>
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+              {product.name}
+            </h1>
+
+            <p className="text-white/50 text-sm leading-relaxed mb-8">
+              {product.description}
+            </p>
+
+            {/* Precio */}
+            <div className="mb-8 pb-8 border-b border-white/10">
+              <div className="flex items-baseline gap-3 mb-2">
+                <span className="text-3xl font-bold text-white">
+                  ${product.price.toLocaleString('es-CO')}
+                </span>
+                <span className="text-sm text-white/40 line-through">
+                  ${product.originalPrice.toLocaleString('es-CO')}
+                </span>
+                <span className="text-xs text-[#FF7A5C] font-medium tracking-wider">
+                  -{product.discount}%
+                </span>
+              </div>
+              <p className="text-[10px] text-white/40 tracking-wide">
+                Precio lanzamiento — Valor futuro de colección: ${product.originalPrice.toLocaleString('es-CO')}
+              </p>
             </div>
 
-            <div className="mb-4">
-              <h3 className="text-[10px] font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Selecciona tu talla</h3>
-              <div className="flex flex-wrap gap-1.5">
+            {/* Talla */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-eyebrow text-white/60">Talla</h3>
+                <button className="text-[10px] text-white/40 hover:text-white transition-colors tracking-wider uppercase">
+                  Guía de tallas
+                </button>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
                 {product.sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`w-10 h-8 rounded-md border transition-all text-xs font-medium ${
+                    className={`h-12 rounded-lg border text-xs font-semibold tracking-wider transition-all ${
                       selectedSize === size
-                        ? 'border-[#FF7A5C] bg-[#FF7A5C]/20 text-white shadow-md shadow-[#FF7A5C]/20'
-                        : 'border-white/20 hover:border-white/50 text-gray-400'
+                        ? 'border-white bg-white text-black'
+                        : 'border-white/15 hover:border-white/40 text-white/70'
                     }`}
                   >
                     {size}
@@ -150,52 +183,56 @@ export default function CyclingProductPage() {
               </div>
             </div>
 
-            <div className="mb-5">
-              <h3 className="text-[10px] font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Color disponible</h3>
-              <div className="flex flex-wrap gap-1.5">
-                <div className="px-2.5 py-1.5 rounded-md border border-[#FF7A5C]/30 bg-[#FF7A5C]/10 text-white flex items-center gap-1.5 text-xs">
-                  <span className="w-2.5 h-2.5 rounded-full bg-black border border-white/20" />
+            {/* Color */}
+            <div className="mb-8">
+              <h3 className="text-eyebrow text-white/60 mb-4">Color</h3>
+              <div className="flex items-center gap-3">
+                <div className="px-4 py-2.5 rounded-lg border border-white/30 bg-white/5 text-white flex items-center gap-2.5 text-xs tracking-wider">
+                  <span className="w-3 h-3 rounded-full bg-black border border-white/30" />
                   Negro
                 </div>
               </div>
-              <p className="text-[9px] text-gray-500 mt-1.5">Más colores disponibles próximamente</p>
+              <p className="text-[10px] text-white/30 mt-2 tracking-wide">
+                Más colores disponibles próximamente
+              </p>
             </div>
 
+            {/* Botón carrito */}
             <button
               onClick={handleAddToCart}
               disabled={isAdding || isAdded}
               className={`
-                w-full py-2.5 rounded-lg font-semibold text-sm transition-all duration-300
-                flex items-center justify-center gap-1.5
+                w-full py-4 rounded-full font-semibold text-xs tracking-[0.2em] uppercase transition-all duration-300
+                flex items-center justify-center gap-2
                 ${isAdded
                   ? 'bg-green-500 text-white'
-                  : 'bg-gradient-to-r from-[#FF7A5C] via-[#FF5A5F] to-[#E63946] hover:from-[#FF5A5F] hover:via-[#E63946] hover:to-[#C1121F] text-white hover:shadow-lg hover:shadow-[#FF7A5C]/30'
+                  : 'bg-white text-black hover:bg-gray-100'
                 }
                 disabled:opacity-70 disabled:cursor-not-allowed
               `}
             >
               {isAdding ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Agregando...</span>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Agregando...
                 </>
               ) : isAdded ? (
                 <>
-                  <Check className="w-3.5 h-3.5" />
-                  <span>¡Agregado!</span>
+                  <Check className="w-4 h-4" />
+                  ¡Agregado!
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                  <span>Añadir al Carrito</span>
+                  <ShoppingCart className="w-4 h-4" />
+                  Añadir al carrito
                 </>
               )}
             </button>
 
-            {/* Solo Envío Gratis */}
-            <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-gray-400">
-              <Truck className="w-3 h-3 text-[#FF7A5C]" />
-              <span>Envío gratis a toda Colombia</span>
+            {/* Envío */}
+            <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
+              <Truck className="w-3.5 h-3.5 text-[#FF7A5C]" />
+              Envío gratis a toda Colombia
             </div>
           </div>
         </div>

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import Link from 'next/link';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Lock, Truck, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
@@ -22,19 +23,25 @@ export default function CheckoutPage() {
 
   if (items.length === 0 && !isComplete) {
     return (
-      <div className="min-h-screen bg-black pt-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="glass rounded-2xl p-12">
-            <h2 className="text-2xl text-white font-medium mb-2">Carrito vacío</h2>
-            <p className="text-gray-400 mb-6">Agrega productos para continuar</p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-medium transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Volver a la tienda
-            </Link>
-          </div>
+      <div className="min-h-screen pt-24 pb-16 px-6 flex items-center justify-center">
+        <div className="max-w-md w-full text-center">
+          <p className="text-eyebrow text-[#FF7A5C] mb-6 flex items-center justify-center gap-3">
+            <span className="w-8 h-[1px] bg-[#FF7A5C]" />
+            Checkout
+          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Carrito vacío
+          </h1>
+          <p className="text-white/40 text-sm mb-10 leading-relaxed">
+            Agrega productos para continuar con el checkout.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-3 px-7 py-3.5 bg-white text-black rounded-full text-[10px] tracking-[0.2em] uppercase font-semibold hover:bg-gray-100 transition-all"
+          >
+            <ArrowLeft className="w-3 h-3" />
+            Volver a la tienda
+          </Link>
         </div>
       </div>
     );
@@ -42,48 +49,69 @@ export default function CheckoutPage() {
 
   if (isComplete) {
     return (
-      <div className="min-h-screen bg-black pt-24 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="glass rounded-2xl p-12">
-            <div className="w-20 h-20 bg-[#7DD3FC]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-[#7DD3FC]" />
-            </div>
-            <h2 className="text-3xl font-bold text-white mb-2">¡Pago Completado!</h2>
-            <p className="text-gray-400 mb-6">
-              Tu pedido ha sido procesado correctamente. Recibirás un correo de confirmación.
-            </p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#FF7A5C] to-[#FF5A5F] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-xl font-medium transition-colors"
-            >
-              Volver a la tienda
-            </Link>
+      <div className="min-h-screen pt-24 pb-16 px-6 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full text-center"
+        >
+          <div className="w-20 h-20 rounded-full bg-[#FF7A5C]/10 border border-[#FF7A5C]/30 flex items-center justify-center mx-auto mb-8">
+            <Check className="w-8 h-8 text-[#FF7A5C]" />
           </div>
-        </div>
+          <p className="text-eyebrow text-[#FF7A5C] mb-4">Pago confirmado</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            ¡Gracias por tu compra!
+          </h1>
+          <p className="text-white/50 text-sm mb-10 leading-relaxed">
+            Tu pedido ha sido procesado correctamente. Recibirás un correo de confirmación con el número de seguimiento.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-3 px-7 py-3.5 bg-white text-black rounded-full text-[10px] tracking-[0.2em] uppercase font-semibold hover:bg-gray-100 transition-all"
+          >
+            Volver al inicio
+            <ArrowRight className="w-3 h-3" />
+          </Link>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black pt-24 px-4">
+    <div className="min-h-screen pt-24 pb-16 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Link
-            href="/cart"
-            className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-          >
-            <ArrowLeft className="w-6 h-6 text-gray-400" />
-          </Link>
-          <h1 className="text-3xl font-bold text-white">Checkout</h1>
+        <Link
+          href="/cart"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Volver al carrito
+        </Link>
+
+        {/* Header */}
+        <div className="mb-10 pb-6 border-b border-white/10">
+          <p className="text-eyebrow text-[#FF7A5C] mb-3 flex items-center gap-3">
+            <span className="w-6 h-[1px] bg-[#FF7A5C]" />
+            Checkout seguro
+          </p>
+          <h1 className="text-3xl md:text-5xl font-bold text-white">
+            Finalizar compra
+          </h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Resumen del pedido */}
           <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-xl font-semibold text-white mb-4">Resumen del pedido</h2>
+            <h2 className="text-eyebrow text-white/60 mb-4">Tu pedido</h2>
+
             {items.map((item) => (
-              <div key={item.id} className="flex gap-4 p-4 glass rounded-xl">
-                <div className="w-16 h-16 rounded-lg bg-white/5 overflow-hidden flex-shrink-0">
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02]"
+              >
+                <div className="w-20 h-20 rounded-lg bg-white/5 overflow-hidden flex-shrink-0">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -93,54 +121,89 @@ export default function CheckoutPage() {
                     }}
                   />
                 </div>
-                <div className="flex-1">
-                  <h4 className="text-white font-medium">{item.name}</h4>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <span>Talla: {item.size}</span>
-                    <span className="w-1 h-1 bg-gray-600 rounded-full" />
-                    <span>Color: {item.color}</span>
-                    <span className="w-1 h-1 bg-gray-600 rounded-full" />
-                    <span>Cantidad: {item.quantity}</span>
+                <div className="flex-1 min-w-0 flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-white font-medium text-sm mb-1.5">{item.name}</h4>
+                    <div className="flex items-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
+                      <span>Talla {item.size}</span>
+                      <span className="w-1 h-1 bg-white/20 rounded-full" />
+                      <span>{item.color}</span>
+                      <span className="w-1 h-1 bg-white/20 rounded-full" />
+                      <span>Cantidad {item.quantity}</span>
+                    </div>
                   </div>
-                  <div className="text-white font-semibold mt-1">
-                    ${(item.price * item.quantity).toLocaleString()}
-                  </div>
+                  <span className="text-white font-semibold text-sm mt-2">
+                    ${(item.price * item.quantity).toLocaleString('es-CO')}
+                  </span>
                 </div>
-              </div>
+              </motion.div>
             ))}
+
+            {/* Trust badges */}
+            <div className="grid grid-cols-3 gap-3 mt-8">
+              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/10 bg-white/[0.02]">
+                <Lock className="w-4 h-4 text-[#FF7A5C] mb-2" />
+                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Pago seguro</span>
+              </div>
+              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/10 bg-white/[0.02]">
+                <Truck className="w-4 h-4 text-[#FF7A5C] mb-2" />
+                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Envío gratis</span>
+              </div>
+              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/10 bg-white/[0.02]">
+                <ShieldCheck className="w-4 h-4 text-[#FF7A5C] mb-2" />
+                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Garantía 30 días</span>
+              </div>
+            </div>
           </div>
 
           {/* Pago */}
           <div className="lg:col-span-1">
-            <div className="glass rounded-xl p-6 sticky top-24">
-              <h3 className="text-xl font-bold text-white mb-4">Total</h3>
-              <div className="text-3xl font-bold bg-gradient-to-r from-[#FF7A5C] to-[#7DD3FC] bg-clip-text text-transparent mb-6">
-                ${totalPrice.toLocaleString()}
+            <div className="lg:sticky lg:top-24 p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <p className="text-eyebrow text-white/40 mb-5">Resumen total</p>
+
+              {/* Subtotal y envío */}
+              <div className="space-y-2.5 text-sm pb-5 border-b border-white/10 mb-6">
+                <div className="flex justify-between text-white/60">
+                  <span className="text-xs tracking-wider">Subtotal</span>
+                  <span>${totalPrice.toLocaleString('es-CO')}</span>
+                </div>
+                <div className="flex justify-between text-white/60">
+                  <span className="text-xs tracking-wider">Envío</span>
+                  <span className="text-[#FF7A5C]">Gratis</span>
+                </div>
+              </div>
+
+              <div className="flex items-baseline justify-between pb-6">
+                <span className="text-white/40 text-xs tracking-[0.2em] uppercase">Total</span>
+                <span className="text-white text-2xl font-bold">
+                  ${totalPrice.toLocaleString('es-CO')}
+                </span>
               </div>
 
               {/* Estado de PayPal */}
               {isPending && (
                 <div className="flex items-center justify-center py-8">
-                  <div className="w-8 h-8 border-4 border-[#FF7A5C] border-t-transparent rounded-full animate-spin" />
-                  <span className="ml-3 text-gray-400">Cargando PayPal...</span>
+                  <div className="w-5 h-5 border-2 border-[#FF7A5C] border-t-transparent rounded-full animate-spin" />
+                  <span className="ml-3 text-white/40 text-xs tracking-wider">Cargando PayPal...</span>
                 </div>
               )}
 
               {isRejected && (
-                <div className="text-[#FF5A5F] text-center py-4">
-                  <p>Error al cargar PayPal</p>
-                  <p className="text-sm text-gray-400">Verifica tu conexión a Internet</p>
+                <div className="text-center py-4 rounded-lg border border-red-500/20 bg-red-500/5 mb-4">
+                  <p className="text-red-400 text-xs mb-1">Error al cargar PayPal</p>
+                  <p className="text-white/40 text-[10px]">Verifica tu conexión a Internet</p>
                 </div>
               )}
 
               {isResolved && (
                 <>
                   <PayPalButtons
-                    style={{ 
+                    style={{
                       layout: 'vertical',
-                      color: 'gold',
-                      shape: 'rect',
+                      color: 'white',
+                      shape: 'pill',
                       label: 'paypal',
+                      height: 45,
                     }}
                     createOrder={(data, actions) => {
                       console.log('Creando orden...');
@@ -160,7 +223,7 @@ export default function CheckoutPage() {
                     onApprove={async (data, actions) => {
                       console.log('Pago aprobado:', data);
                       setIsProcessing(true);
-                      
+
                       if (!actions.order) {
                         console.error('actions.order no está disponible');
                         setIsProcessing(false);
@@ -192,15 +255,18 @@ export default function CheckoutPage() {
                   />
                   {isProcessing && (
                     <div className="flex items-center justify-center mt-4">
-                      <div className="w-5 h-5 border-2 border-[#FF7A5C] border-t-transparent rounded-full animate-spin" />
-                      <span className="ml-2 text-gray-400">Procesando pago...</span>
+                      <div className="w-4 h-4 border-2 border-[#FF7A5C] border-t-transparent rounded-full animate-spin" />
+                      <span className="ml-2 text-white/40 text-xs">Procesando pago...</span>
                     </div>
                   )}
                 </>
               )}
 
-              <p className="text-xs text-gray-500 text-center mt-4">
-                Al realizar el pago aceptas nuestros términos y condiciones
+              <p className="text-[10px] text-white/30 text-center mt-6 leading-relaxed tracking-wide">
+                Al realizar el pago aceptas nuestros{' '}
+                <Link href="/terminos" className="text-white/50 hover:text-white underline transition-colors">
+                  términos y condiciones
+                </Link>
               </p>
             </div>
           </div>

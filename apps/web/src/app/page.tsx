@@ -1,119 +1,231 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Waves, Sliders, BarChart3, Leaf, X } from 'lucide-react';
 import Link from 'next/link';
 import { ProductShowcase } from '@/components/home/ProductShowcase';
 
 export default function Home() {
+  const [showUI, setShowUI] = useState(false);
+  const [hideVideoOnScroll, setHideVideoOnScroll] = useState(false);
+  const [closedManually, setClosedManually] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowUI(true);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Oculta el video en miniatura automáticamente al hacer scroll hacia abajo
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 150) {
+        setHideVideoOnScroll(true);
+      } else {
+        setHideVideoOnScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const features = [
+    {
+      icon: <Waves className="w-5 h-5" />,
+      title: 'ESTIMULA',
+      description: 'Tu sistema somatosensorial',
+    },
+    {
+      icon: <Sliders className="w-5 h-5" />,
+      title: 'MEJORA',
+      description: 'Tu estabilidad',
+    },
+    {
+      icon: <BarChart3 className="w-5 h-5" />,
+      title: 'OPTIMIZA',
+      description: 'Tu rendimiento',
+    },
+    {
+      icon: <Leaf className="w-5 h-5" />,
+      title: 'DISEÑO TÉCNICO',
+      description: 'Para la vida real',
+    },
+  ];
+
   return (
-    <div className="min-h-screen">
-      {/* Hero Section - Sin fondos extra, usa el fondo del layout */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Badges con colores BESTIGE */}
-              <div className="flex flex-wrap gap-3 mb-6">
-                <span className="px-4 py-2 bg-[#FF7A5C]/20 border border-[#FF7A5C]/30 rounded-full text-[#FF7A5C] text-sm font-medium backdrop-blur-sm">
-                  BE
-                </span>
-                <span className="px-4 py-2 bg-[#7DD3FC]/20 border border-[#7DD3FC]/30 rounded-full text-[#7DD3FC] text-sm font-medium backdrop-blur-sm">
-                  Una señal a tu cuerpo
-                </span>
-                <span className="px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white/80 text-sm font-medium backdrop-blur-sm">
-                  Tecnología Italiana
-                </span>
-              </div>
+    <div className="min-h-screen bg-black text-white relative">
+      {/* HERO SECTION PRINCIPAL */}
+      <section className="relative h-screen w-full overflow-hidden flex flex-col justify-between bg-zinc-950">
+        
+        {/* FONDO ELEGANTE CON POSTER / GRADIENTE */}
+        <div className="absolute inset-0 z-0 opacity-40">
+          <img 
+            src="/images/hero/hero-poster.jpg" 
+            alt="Hero background" 
+            className="w-full h-full object-cover filter blur-sm"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
+        </div>
 
-              {/* Título con gradiente naranja coral → rojo coral → cyan */}
-              <div className="space-y-2">
-                <p className="text-sm text-gray-300 font-light tracking-[0.3em] uppercase">
-                  BESTIGE • MOVE DIFFERENTLY
-                </p>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tight">
-                  <span className="text-white">No es solo</span>
-                  <br />
-                  <span className="bg-gradient-to-r from-[#FF7A5C] via-[#FF5A5F] to-[#7DD3FC] bg-clip-text text-transparent">
-                    una prenda.
-                  </span>
-                  <br />
-                  <span className="text-white text-4xl md:text-5xl lg:text-6xl">Es una señal.</span>
-                </h1>
-              </div>
-
-              <p className="mt-6 text-xl md:text-2xl text-gray-200 max-w-2xl leading-relaxed">
-                Tecnología somatosensorial que conecta con tu piel y potencia tu rendimiento.
-                <br />
-                <span className="text-gray-300 text-base">
-                  Innovación italiana patentada para activación muscular, estabilidad y recuperación.
-                </span>
-              </p>
-
-              {/* Botones con colores BESTIGE */}
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Link
-                  href="/products/cycling"
-                  className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#FF7A5C] to-[#E63946] hover:from-[#FF5A5F] hover:to-[#E63946] text-white rounded-full font-medium transition-all duration-300 shadow-lg shadow-[#FF7A5C]/25"
+        {/* CONTENIDO TEXTUAL */}
+        <div 
+          className={`relative z-10 flex-1 flex items-center w-full pt-32 pb-16 transition-all duration-1000 ease-out ${
+            showUI 
+              ? 'opacity-100 translate-y-0 pointer-events-auto' 
+              : 'opacity-0 translate-y-10 pointer-events-none'
+          }`}
+        >
+          <div className="container mx-auto px-6 md:px-10 max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              
+              {/* Columna izquierda: Título + CTA */}
+              <div className="lg:col-span-7">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={showUI ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <span>Tecnología para Ciclismo</span>
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  href="/products/running"
-                  className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#7DD3FC] to-[#2563EB] hover:from-[#38BDF8] hover:to-[#2563EB] text-white rounded-full font-medium transition-all duration-300 shadow-lg shadow-[#7DD3FC]/25"
+                  <p className="text-eyebrow text-[#FF7A5C] mb-6 flex items-center gap-3">
+                    <span className="w-8 h-[1px] bg-[#FF7A5C]" />
+                    Somatosensorial
+                  </p>
+
+                  <h1 className="display-hero text-[clamp(3rem,8vw,7.5rem)] text-white mb-8 leading-[0.95]">
+                    No solo vistes una
+                    <br />
+                    prenda
+                    <br />
+                    <span className="italic font-light text-white/90 normal-case tracking-tight">Conectas con tu cuerpo</span>
+                  </h1>
+
+                  <p className="text-white/80 text-sm md:text-base leading-relaxed max-w-md mb-8 font-light">
+                    Prendas técnicas que activan tu sistema somatosensorial para un mayor control, estabilidad y rendimiento.
+                  </p>
+
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href="/nosotros"
+                      className="group inline-flex items-center gap-3 px-7 py-3.5 bg-white text-black rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase hover:bg-gray-100 transition-all duration-300 shadow-2xl"
+                    >
+                      <span>Descubrir la ciencia</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+
+                    <Link
+                      href="/products/cycling"
+                      className="group inline-flex items-center gap-3 px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase border border-white/30 hover:border-white/60 backdrop-blur-md transition-all duration-300"
+                    >
+                      <span>Ver productos</span>
+                    </Link>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Columna derecha: Claims */}
+              <div className="lg:col-span-5 lg:text-right">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={showUI ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="space-y-5 lg:border-r border-white/20 lg:pr-8"
                 >
-                  <span>Tecnología para Running</span>
-                </Link>
+                  <div className="flex items-center justify-end gap-3 border-l-2 lg:border-l-0 lg:border-r-0 border-white/20 pl-4 lg:pl-0">
+                    <p className="text-label text-white/80">Mejora la resistencia a la fatiga sobre la distancia</p>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                  </div>
+                  <div className="flex items-center justify-end gap-3 border-l-2 lg:border-l-0 lg:border-r-0 border-white/20 pl-4 lg:pl-0">
+                    <p className="text-label text-white/80">Más Conexión</p>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                  </div>
+                  <div className="flex items-center justify-end gap-3 border-l-2 lg:border-l-0 lg:border-r-0 border-[#FF7A5C] pl-4 lg:pl-0">
+                    <p className="text-label text-[#FF7A5C]">Más Rendimiento</p>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF7A5C] scale-125" />
+                  </div>
+                </motion.div>
               </div>
 
-              {/* Stats con colores BESTIGE */}
-              <div className="mt-16 flex flex-wrap gap-10">
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-[#FF7A5C]">2</div>
-                  <div className="text-sm text-gray-400">Productos</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-white">4</div>
-                  <div className="text-sm text-gray-400">Tallas</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-[#7DD3FC]">-24%</div>
-                  <div className="text-sm text-gray-400">Lanzamiento</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-[#38BDF8] animate-pulse">⚡</div>
-                  <div className="text-sm text-gray-400">Tecnología viva</div>
-                </div>
-              </div>
-
-              {/* Frase final */}
-              <div className="mt-12 flex items-center gap-3 text-sm">
-                <span className="w-8 h-8 rounded-full bg-gradient-to-r from-[#FF7A5C] to-[#7DD3FC] flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </span>
-                <span className="text-gray-300 font-light tracking-wide">
-                  BESTIGE — Más que una prenda, una conexión.
-                </span>
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        {/* Scroll indicator con colores BESTIGE */}
+        {/* BARRA INFERIOR DE FEATURES */}
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 text-sm flex flex-col items-center gap-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={showUI ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className={`relative z-10 w-full border-t border-white/10 backdrop-blur-md bg-black/40 transition-all duration-1000 ${
+            showUI ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
         >
-          <span>Desplaza</span>
-          <div className="w-0.5 h-10 bg-gradient-to-b from-[#FF7A5C] via-[#7DD3FC] to-transparent rounded-full" />
+          <div className="container mx-auto px-6 md:px-10 max-w-7xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="px-4 md:px-6 py-5 flex items-center gap-3 group hover:bg-white/5 transition-colors cursor-pointer"
+                >
+                  <div className="text-white/70 group-hover:text-[#FF7A5C] transition-colors flex-shrink-0">
+                    {feature.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-white text-[10px] font-semibold tracking-[0.2em] uppercase truncate">
+                      {feature.title}
+                    </p>
+                    <p className="text-white/50 text-[10px] truncate">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </section>
+
+      {/* REPRODUCTOR DE VIDEO COMPACTO Y NÍTIDO (TIPO WIDGET REEL FLOTANTE) */}
+      <AnimatePresence>
+        {!hideVideoOnScroll && !closedManually && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="fixed bottom-24 right-6 md:bottom-28 md:right-10 z-50 w-44 md:w-56 aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-black backdrop-blur-lg group"
+          >
+            {/* Botón para cerrar manualmente */}
+            <button
+              onClick={() => setClosedManually(true)}
+              className="absolute top-3 right-3 z-20 bg-black/60 hover:bg-black text-white p-1.5 rounded-full backdrop-blur-md transition-all"
+              aria-label="Cerrar video"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Video en su relación de aspecto original perfecta sin recortar */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/images/hero/hero-poster.jpg"
+              className="w-full h-full object-cover rounded-2xl"
+            >
+              <source src="/videos/hero-bg.mp4" type="video/mp4" />
+            </video>
+
+            {/* Etiqueta flotante */}
+            <div className="absolute bottom-3 left-3 right-3 z-10 pointer-events-none">
+              <span className="inline-block px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-full text-[9px] font-medium tracking-wider text-white/90 border border-white/10 uppercase">
+                Vista previa 360°
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Product Showcase */}
       <ProductShowcase />
