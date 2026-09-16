@@ -4,6 +4,8 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PayPalProvider } from '@/providers/PayPalProvider';
 import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
+import { TermsModal } from '@/components/legal/TermsModal';
+import { CookiesBanner } from '@/components/legal/CookiesBanner';
 
 export const metadata: Metadata = {
   title: 'BESTIGE — Tecnología Somatosensorial',
@@ -60,9 +62,20 @@ export default function RootLayout({
 
         <SmoothScrollProvider>
           <PayPalProvider>
+            {/* Modal de Términos y Condiciones - aparece al entrar */}
+            <TermsModal />
+
+            {/* Header con navegación */}
             <Header />
+
+            {/* Contenido de la página */}
             <main className="relative z-10 min-h-screen">{children}</main>
+
+            {/* Footer con links legales */}
             <Footer />
+
+            {/* Banner de Cookies - aparece después del modal */}
+            <CookiesBanner />
           </PayPalProvider>
         </SmoothScrollProvider>
       </body>

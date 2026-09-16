@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Instagram, Mail, ArrowUpRight } from 'lucide-react';
+import { Instagram, Mail } from 'lucide-react';
+import { openCookiesBanner } from '@/hooks/useCookieConsent';
 
 export function Footer() {
   return (
@@ -27,7 +28,7 @@ export function Footer() {
                 <Instagram className="w-3.5 h-3.5" />
               </a>
               <a
-                href="mailto:Bestigeperformance@gmail.com"
+                href="mailto:bestigesomatosensorial@gmail.com"
                 className="w-8 h-8 rounded-full border border-white/10 hover:border-white/30 flex items-center justify-center text-white/60 hover:text-white transition-all"
                 aria-label="Email"
               >
@@ -80,8 +81,26 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/privacidad" className="text-white/40 hover:text-white text-xs transition-colors">
+                  Política de privacidad
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookies" className="text-white/40 hover:text-white text-xs transition-colors">
+                  Política de cookies
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => openCookiesBanner()}
+                  className="text-white/40 hover:text-white text-xs transition-colors text-left"
+                >
+                  Preferencias de cookies
+                </button>
+              </li>
+              <li>
                 <a
-                  href="mailto:Bestigeperformance@gmail.com"
+                  href="mailto:bestigesomatosensorial@gmail.com"
                   className="text-white/40 hover:text-white text-xs transition-colors"
                 >
                   Contacto
@@ -96,13 +115,28 @@ export function Footer() {
           <p className="text-white/30 text-[10px] tracking-wider text-center md:text-left">
             © {new Date().getFullYear()} BESTIGE · FITHAB INNOVATION CI SAS · Todos los derechos reservados.
           </p>
-          <div className="flex items-center gap-4 text-[10px] tracking-wider">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] tracking-wider">
             <Link href="/terminos" className="text-white/30 hover:text-white/60 transition-colors">
               Términos
             </Link>
             <span className="w-1 h-1 bg-white/20 rounded-full" />
-            <a href="mailto:Bestigeperformance@gmail.com" className="text-white/30 hover:text-white/60 transition-colors">
-              Bestigeperformance@gmail.com
+            <Link href="/privacidad" className="text-white/30 hover:text-white/60 transition-colors">
+              Privacidad
+            </Link>
+            <span className="w-1 h-1 bg-white/20 rounded-full" />
+            <Link href="/cookies" className="text-white/30 hover:text-white/60 transition-colors">
+              Cookies
+            </Link>
+            <span className="w-1 h-1 bg-white/20 rounded-full" />
+            <button
+              onClick={() => openCookiesBanner()}
+              className="text-white/30 hover:text-white/60 transition-colors"
+            >
+              Preferencias
+            </button>
+            <span className="w-1 h-1 bg-white/20 rounded-full" />
+            <a href="mailto:bestigesomatosensorial@gmail.com" className="text-white/30 hover:text-white/60 transition-colors">
+              bestigesomatosensorial@gmail.com
             </a>
           </div>
         </div>

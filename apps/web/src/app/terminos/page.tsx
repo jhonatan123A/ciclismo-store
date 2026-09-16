@@ -75,8 +75,8 @@ export default function TerminosPage() {
               <li><span className="text-white/80">Marca comercial:</span> Bestige</li>
               <li>
                 <span className="text-white/80">Correo oficial:</span>{' '}
-                <a href="mailto:Bestigeperformance@gmail.com" className="text-[#FF7A5C] hover:underline">
-                  Bestigeperformance@gmail.com
+                <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF7A5C] hover:underline">
+                  bestigesomatosensorial@gmail.com
                 </a>
               </li>
               <li><span className="text-white/80">Web:</span> bestige-somatosensory-norbertowilches.com</li>
@@ -327,8 +327,8 @@ export default function TerminosPage() {
             </ul>
             <p className="mt-4">El usuario podrá ejercer sus derechos mediante el correo:</p>
             <p className="mt-2">
-              <a href="mailto:Bestigeperformance@gmail.com" className="text-[#FF7A5C] hover:underline">
-                Bestigeperformance@gmail.com
+              <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF7A5C] hover:underline">
+                bestigesomatosensorial@gmail.com
               </a>
             </p>
           </section>
@@ -345,8 +345,8 @@ export default function TerminosPage() {
             <ul className="space-y-2 pl-5 mt-4 border-l border-white/10">
               <li>
                 <span className="text-white/80">Correo:</span>{' '}
-                <a href="mailto:Bestigeperformance@gmail.com" className="text-[#FF7A5C] hover:underline">
-                  Bestigeperformance@gmail.com
+                <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF7A5C] hover:underline">
+                  bestigesomatosensorial@gmail.com
                 </a>
               </li>
               <li>
