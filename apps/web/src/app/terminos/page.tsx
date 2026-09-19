@@ -5,13 +5,23 @@ import Link from 'next/link';
 import { ArrowLeft, FileText } from 'lucide-react';
 
 export default function TerminosPage() {
+  // Colores triádicos para los números de sección
+  const sectionColors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B'];
+
   return (
-    <div className="min-h-screen pt-24 pb-16 px-6 md:px-10">
+    <div className="relative min-h-screen pt-24 pb-16 px-6 md:px-10 overflow-hidden">
+      {/* Glow triádico de fondo */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute top-20 -left-40 w-96 h-96 bg-[#FF5A36]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -right-40 w-96 h-96 bg-[#38BDF8]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-[#E8B94A]/5 rounded-full blur-3xl" />
+      </div>
+
       <div className="max-w-3xl mx-auto">
         {/* Breadcrumb */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-[#FF5A36] transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Volver
@@ -24,19 +34,19 @@ export default function TerminosPage() {
           transition={{ duration: 0.8 }}
           className="mb-16 pb-10 border-b border-white/10"
         >
-          <p className="text-eyebrow text-[#FF7A5C] mb-6 flex items-center gap-3">
-            <span className="w-8 h-[1px] bg-[#FF7A5C]" />
+          <p className="text-eyebrow text-[#FF5A36] mb-6 flex items-center gap-3">
+            <span className="w-8 h-[1px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
             Legal
           </p>
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-[1.05] tracking-tight">
-            Términos y Condiciones
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-[1.05] tracking-tight">
+            <span className="text-white">Términos y Condiciones</span>
             <br />
-            <span className="text-white/60">de Uso y Compra</span>
+            <span className="gradient-text-triad">de Uso y Compra</span>
           </h1>
           <div className="flex items-center gap-3 text-[10px] tracking-[0.2em] uppercase text-white/40">
             <FileText className="w-3.5 h-3.5" />
             <span>Versión 1.0</span>
-            <span className="w-1 h-1 bg-white/20 rounded-full" />
+            <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
             <span>14 Septiembre 2026</span>
           </div>
         </motion.div>
@@ -63,7 +73,7 @@ export default function TerminosPage() {
           {/* 1. INFORMACIÓN GENERAL */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">01</span>
+              <span className="text-eyebrow text-[#FF5A36]">01</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Información general de la empresa
               </h2>
@@ -75,7 +85,7 @@ export default function TerminosPage() {
               <li><span className="text-white/80">Marca comercial:</span> Bestige</li>
               <li>
                 <span className="text-white/80">Correo oficial:</span>{' '}
-                <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF7A5C] hover:underline">
+                <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF5A36] hover:underline">
                   bestigesomatosensorial@gmail.com
                 </a>
               </li>
@@ -89,7 +99,7 @@ export default function TerminosPage() {
           {/* 2. ACEPTACIÓN */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">02</span>
+              <span className="text-eyebrow text-[#38BDF8]">02</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Aceptación de los términos
               </h2>
@@ -111,7 +121,7 @@ export default function TerminosPage() {
           {/* 3. IDENTIDAD */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">03</span>
+              <span className="text-eyebrow text-[#E8B94A]">03</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Identidad y propósito de Bestige
               </h2>
@@ -130,7 +140,7 @@ export default function TerminosPage() {
           {/* 4. USO DEL SITIO */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">04</span>
+              <span className="text-eyebrow text-[#C17A4B]">04</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Uso del sitio web
               </h2>
@@ -154,7 +164,7 @@ export default function TerminosPage() {
           {/* 5. PROPIEDAD INTELECTUAL */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">05</span>
+              <span className="text-eyebrow text-[#FF5A36]">05</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Propiedad intelectual
               </h2>
@@ -182,7 +192,7 @@ export default function TerminosPage() {
           {/* 6. INFORMACIÓN DE PRODUCTOS */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">06</span>
+              <span className="text-eyebrow text-[#38BDF8]">06</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Información de los productos
               </h2>
@@ -207,7 +217,7 @@ export default function TerminosPage() {
           {/* 7. NATURALEZA DEL PRODUCTO */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">07</span>
+              <span className="text-eyebrow text-[#E8B94A]">07</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Naturaleza del producto y alcance tecnológico
               </h2>
@@ -233,7 +243,7 @@ export default function TerminosPage() {
           {/* 8. COMPRA */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">08</span>
+              <span className="text-eyebrow text-[#C17A4B]">08</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Compra y responsabilidad del usuario
               </h2>
@@ -257,7 +267,7 @@ export default function TerminosPage() {
           {/* 9. PAGOS */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">09</span>
+              <span className="text-eyebrow text-[#FF5A36]">09</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Pagos y facturación
               </h2>
@@ -273,7 +283,7 @@ export default function TerminosPage() {
           {/* 10. ENVÍOS */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">10</span>
+              <span className="text-eyebrow text-[#38BDF8]">10</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Envíos y entrega
               </h2>
@@ -296,7 +306,7 @@ export default function TerminosPage() {
           {/* 11. CAMBIOS */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">11</span>
+              <span className="text-eyebrow text-[#E8B94A]">11</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Cambios, garantías y devoluciones
               </h2>
@@ -309,7 +319,7 @@ export default function TerminosPage() {
           {/* 12. DATOS */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">12</span>
+              <span className="text-eyebrow text-[#C17A4B]">12</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Tratamiento de datos personales
               </h2>
@@ -327,7 +337,7 @@ export default function TerminosPage() {
             </ul>
             <p className="mt-4">El usuario podrá ejercer sus derechos mediante el correo:</p>
             <p className="mt-2">
-              <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF7A5C] hover:underline">
+              <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF5A36] hover:underline">
                 bestigesomatosensorial@gmail.com
               </a>
             </p>
@@ -336,7 +346,7 @@ export default function TerminosPage() {
           {/* 13. CONTACTO */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">13</span>
+              <span className="text-eyebrow text-[#FF5A36]">13</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Contacto oficial
               </h2>
@@ -345,7 +355,7 @@ export default function TerminosPage() {
             <ul className="space-y-2 pl-5 mt-4 border-l border-white/10">
               <li>
                 <span className="text-white/80">Correo:</span>{' '}
-                <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF7A5C] hover:underline">
+                <a href="mailto:bestigesomatosensorial@gmail.com" className="text-[#FF5A36] hover:underline">
                   bestigesomatosensorial@gmail.com
                 </a>
               </li>
@@ -358,7 +368,7 @@ export default function TerminosPage() {
           {/* 14. LEGISLACIÓN */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-eyebrow text-[#FF7A5C]">14</span>
+              <span className="text-eyebrow text-[#38BDF8]">14</span>
               <h2 className="text-white font-bold text-base md:text-lg tracking-tight">
                 Legislación aplicable
               </h2>
@@ -373,7 +383,7 @@ export default function TerminosPage() {
 
           {/* ACEPTACIÓN */}
           <section className="pt-10 border-t border-white/10">
-            <p className="text-eyebrow text-[#FF7A5C] mb-3">Aceptación</p>
+            <p className="text-eyebrow gradient-text-triad mb-3">Aceptación</p>
             <p className="text-white/70">
               Al realizar una compra, registrarse o utilizar los canales oficiales de Bestige, el usuario manifiesta haber leído, comprendido y aceptado los presentes términos y condiciones.
             </p>
@@ -384,7 +394,7 @@ export default function TerminosPage() {
         <div className="text-center mt-20 pt-10 border-t border-white/5">
           <Link
             href="/"
-            className="inline-flex items-center gap-3 px-7 py-3.5 bg-white text-black rounded-full text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-gray-100 transition-all duration-300"
+            className="inline-flex items-center gap-3 px-7 py-3.5 btn-orange text-[10px] font-semibold tracking-[0.2em] uppercase"
           >
             Volver al inicio
           </Link>

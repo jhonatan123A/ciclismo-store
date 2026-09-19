@@ -19,7 +19,6 @@ export function CookiesBanner() {
 
   const { consent, hasConsented, isLoaded, acceptAll, rejectAll, saveCustom } = useCookieConsent();
 
-  // Cargar preferencias actuales cuando se abre
   useEffect(() => {
     if (consent) {
       setPreferences({
@@ -30,15 +29,13 @@ export function CookiesBanner() {
     }
   }, [consent]);
 
-  // Escuchar cuando se quiere abrir el banner desde el footer
   const handleOpenFromFooter = useCallback(() => {
     setIsVisible(true);
-    setView('config'); // Abrir directamente en la vista de configuración
+    setView('config');
   }, []);
 
   useOpenCookiesBannerListener(handleOpenFromFooter);
 
-  // Mostrar automáticamente si no ha consentido
   useEffect(() => {
     if (!isLoaded) return;
     if (hasConsented) return;
@@ -63,13 +60,13 @@ export function CookiesBanner() {
   };
 
   const handleClose = () => {
-    // Solo cerrar si ya había consentido antes (no en la primera visita)
     if (hasConsented) {
       setIsVisible(false);
       setView('banner');
     }
   };
 
+  // Cada tipo de cookie con su color triádico
   const cookieTypes = [
     {
       id: 'essential',
@@ -77,6 +74,7 @@ export function CookiesBanner() {
       title: 'Esenciales',
       description: 'Necesarias para el funcionamiento básico del sitio: carrito de compras, sesión de usuario, seguridad y procesamiento de pagos.',
       required: true,
+      color: '#FF5A36',
     },
     {
       id: 'performance',
@@ -84,6 +82,7 @@ export function CookiesBanner() {
       title: 'Rendimiento',
       description: 'Nos ayudan a entender cómo los visitantes usan el sitio (Google Analytics, métricas anónimas) para mejorar la experiencia.',
       required: false,
+      color: '#38BDF8',
     },
     {
       id: 'functional',
@@ -91,6 +90,7 @@ export function CookiesBanner() {
       title: 'Funcionalidad',
       description: 'Recuerdan tus preferencias (idioma, región, tamaño de letra) para ofrecerte una experiencia personalizada.',
       required: false,
+      color: '#E8B94A',
     },
     {
       id: 'marketing',
@@ -98,6 +98,7 @@ export function CookiesBanner() {
       title: 'Marketing',
       description: 'Permiten mostrarte anuncios personalizados de BESTIGE en otras plataformas (Meta, Google Ads) y medir su efectividad.',
       required: false,
+      color: '#C17A4B',
     },
   ];
 
@@ -111,13 +112,16 @@ export function CookiesBanner() {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="fixed bottom-0 left-0 right-0 z-[150] p-4 md:p-6"
         >
-          <div className="max-w-6xl mx-auto bg-[#0A0A0A]/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative max-w-6xl mx-auto bg-[#0A0A0A]/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+            {/* Línea superior triádica */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
+
             {/* Banner principal */}
             {view === 'banner' && (
               <div className="p-6 md:p-8">
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="w-12 h-12 rounded-full bg-[#FF7A5C]/10 border border-[#FF7A5C]/20 flex items-center justify-center text-[#FF7A5C] flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF5A36]/20 to-[#38BDF8]/20 border border-[#FF5A36]/30 flex items-center justify-center text-[#FF5A36] flex-shrink-0 shadow-[0_0_20px_rgba(255,90,54,0.3)]">
                       <Cookie className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
@@ -125,17 +129,17 @@ export function CookiesBanner() {
                         <h3 className="text-white font-bold text-base tracking-tight">
                           Respetamos tu privacidad
                         </h3>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#FF7A5C]/10 border border-[#FF7A5C]/20 text-[#FF7A5C] tracking-widest uppercase font-medium">
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-gradient-to-r from-[#FF5A36]/10 via-[#38BDF8]/10 to-[#E8B94A]/10 border border-[#FF5A36]/20 text-[#FF5A36] tracking-widest uppercase font-medium">
                           Cookies
                         </span>
                       </div>
                       <p className="text-white/60 text-xs leading-relaxed">
                         Utilizamos cookies para mejorar tu experiencia, analizar el tráfico y personalizar contenido. Puedes aceptar todas, rechazar las no esenciales o configurar tus preferencias. Lee nuestra{' '}
-                        <Link href="/cookies" className="text-[#FF7A5C] hover:underline">
+                        <Link href="/cookies" className="text-[#FF5A36] hover:text-[#38BDF8] underline transition-colors">
                           política de cookies
                         </Link>{' '}
                         y{' '}
-                        <Link href="/privacidad" className="text-[#FF7A5C] hover:underline">
+                        <Link href="/privacidad" className="text-[#FF5A36] hover:text-[#38BDF8] underline transition-colors">
                           política de privacidad
                         </Link>
                         .
@@ -146,7 +150,7 @@ export function CookiesBanner() {
                   <div className="flex flex-col sm:flex-row gap-2 lg:flex-shrink-0">
                     <button
                       onClick={() => setView('config')}
-                      className="px-5 py-3 border border-white/15 hover:border-white/30 text-white/70 hover:text-white rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all"
+                      className="px-5 py-3 border border-[#FF5A36]/30 hover:border-[#FF5A36]/60 text-white/70 hover:text-white rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all hover:bg-[#FF5A36]/5"
                     >
                       Configurar
                     </button>
@@ -158,7 +162,7 @@ export function CookiesBanner() {
                     </button>
                     <button
                       onClick={handleAcceptAll}
-                      className="px-5 py-3 bg-white text-black hover:bg-gray-100 rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all whitespace-nowrap"
+                      className="px-5 py-3 btn-orange whitespace-nowrap"
                     >
                       Aceptar todas
                     </button>
@@ -175,7 +179,7 @@ export function CookiesBanner() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setView('banner')}
-                      className="text-white/60 hover:text-white transition-colors"
+                      className="text-white/60 hover:text-[#FF5A36] transition-colors"
                       aria-label="Volver"
                     >
                       ←
@@ -187,7 +191,7 @@ export function CookiesBanner() {
                   {hasConsented && (
                     <button
                       onClick={handleClose}
-                      className="text-white/40 hover:text-white transition-colors"
+                      className="text-white/40 hover:text-[#FF5A36] transition-colors"
                       aria-label="Cerrar"
                     >
                       <X className="w-5 h-5" />
@@ -209,11 +213,14 @@ export function CookiesBanner() {
                   {cookieTypes.map((type) => (
                     <div key={type.id} className="px-6 md:px-8 py-5">
                       <div className="flex items-start gap-4">
-                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          type.required
-                            ? 'bg-[#FF7A5C]/10 border border-[#FF7A5C]/20 text-[#FF7A5C]'
-                            : 'bg-white/5 border border-white/10 text-white/60'
-                        }`}>
+                        <div
+                          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border"
+                          style={{
+                            backgroundColor: `${type.color}15`,
+                            borderColor: `${type.color}40`,
+                            color: type.color,
+                          }}
+                        >
                           {type.icon}
                         </div>
                         <div className="flex-1">
@@ -223,7 +230,14 @@ export function CookiesBanner() {
                                 {type.title}
                               </h4>
                               {type.required && (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#FF7A5C]/10 border border-[#FF7A5C]/20 text-[#FF7A5C] tracking-widest uppercase font-medium">
+                                <span
+                                  className="text-[9px] px-2 py-0.5 rounded-full tracking-widest uppercase font-medium border"
+                                  style={{
+                                    backgroundColor: `${type.color}10`,
+                                    borderColor: `${type.color}30`,
+                                    color: type.color,
+                                  }}
+                                >
                                   Siempre activas
                                 </span>
                               )}
@@ -236,9 +250,17 @@ export function CookiesBanner() {
                                 })}
                                 className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${
                                   preferences[type.id as keyof typeof preferences]
-                                    ? 'bg-[#FF7A5C]'
+                                    ? ''
                                     : 'bg-white/10'
                                 }`}
+                                style={{
+                                  backgroundColor: preferences[type.id as keyof typeof preferences]
+                                    ? type.color
+                                    : undefined,
+                                  boxShadow: preferences[type.id as keyof typeof preferences]
+                                    ? `0 0 15px ${type.color}80`
+                                    : undefined,
+                                }}
                                 aria-label={`Activar ${type.title}`}
                               >
                                 <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
@@ -274,7 +296,7 @@ export function CookiesBanner() {
                   </button>
                   <button
                     onClick={handleAcceptAll}
-                    className="flex-1 px-5 py-3 bg-[#FF7A5C] text-white hover:bg-[#FF5A5F] rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all"
+                    className="flex-1 px-5 py-3 btn-orange"
                   >
                     Aceptar todas
                   </button>

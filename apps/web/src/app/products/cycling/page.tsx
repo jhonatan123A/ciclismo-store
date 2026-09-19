@@ -23,7 +23,7 @@ export default function CyclingProductPage() {
       <div className="min-h-screen pt-24 px-6 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-xl text-white mb-4">Producto no encontrado</h1>
-          <Link href="/" className="text-[#FF7A5C] hover:underline text-sm">Volver a la tienda</Link>
+          <Link href="/" className="text-[#FF5A36] hover:underline text-sm">Volver a la tienda</Link>
         </div>
       </div>
     );
@@ -51,12 +51,19 @@ export default function CyclingProductPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-6 md:px-10">
+    <div className="relative min-h-screen pt-24 pb-16 px-6 md:px-10 overflow-hidden">
+      {/* Glow triádico de fondo */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute top-20 -left-40 w-96 h-96 bg-[#FF5A36]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -right-40 w-96 h-96 bg-[#38BDF8]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-[#E8B94A]/5 rounded-full blur-3xl" />
+      </div>
+
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-8 text-[11px] tracking-[0.2em] uppercase"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-[#FF5A36] transition-colors mb-8 text-[11px] tracking-[0.2em] uppercase"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Volver
@@ -65,7 +72,7 @@ export default function CyclingProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* CARRUSEL */}
           <div className="space-y-3">
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A]">
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A] card-neural">
               <Swiper
                 modules={[Navigation, Pagination]}
                 navigation={{
@@ -75,7 +82,7 @@ export default function CyclingProductPage() {
                 pagination={{
                   clickable: true,
                   bulletClass: 'swiper-pagination-bullet !bg-white/20 !w-1.5 !h-1.5',
-                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-[#FF7A5C] !w-5 !rounded-full',
+                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-[#FF5A36] !w-5 !rounded-full',
                 }}
                 spaceBetween={0}
                 slidesPerView={1}
@@ -96,10 +103,10 @@ export default function CyclingProductPage() {
                   </SwiperSlide>
                 ))}
 
-                <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-black backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all border border-white/10">
+                <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#FF5A36]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#FF5A36] transition-all border border-white/10 hover:border-[#FF5A36]/50">
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-black backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all border border-white/10">
+                <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#FF5A36]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#FF5A36] transition-all border border-white/10 hover:border-[#FF5A36]/50">
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </Swiper>
@@ -110,7 +117,7 @@ export default function CyclingProductPage() {
               {product.images.map((img, index) => (
                 <div
                   key={index}
-                  className="rounded-xl overflow-hidden aspect-square border border-white/10 hover:border-[#FF7A5C]/50 transition-all cursor-pointer bg-[#0A0A0A]"
+                  className="rounded-xl overflow-hidden aspect-square border border-white/10 hover:border-[#FF5A36]/50 transition-all cursor-pointer bg-[#0A0A0A] hover:shadow-[0_0_30px_rgba(255,90,54,0.2)]"
                 >
                   <img
                     src={img}
@@ -127,8 +134,8 @@ export default function CyclingProductPage() {
 
           {/* DETALLES */}
           <div className="lg:sticky lg:top-24 lg:self-start">
-            <p className="text-eyebrow text-[#FF7A5C] mb-4 flex items-center gap-3">
-              <span className="w-6 h-[1px] bg-[#FF7A5C]" />
+            <p className="text-eyebrow text-[#FF5A36] mb-4 flex items-center gap-3">
+              <span className="w-6 h-[1px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
               Performance Cycling
             </p>
 
@@ -149,7 +156,7 @@ export default function CyclingProductPage() {
                 <span className="text-sm text-white/40 line-through">
                   ${product.originalPrice.toLocaleString('es-CO')}
                 </span>
-                <span className="text-xs text-[#FF7A5C] font-medium tracking-wider">
+                <span className="text-xs text-[#FF5A36] font-medium tracking-wider">
                   -{product.discount}%
                 </span>
               </div>
@@ -162,7 +169,7 @@ export default function CyclingProductPage() {
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-eyebrow text-white/60">Talla</h3>
-                <button className="text-[10px] text-white/40 hover:text-white transition-colors tracking-wider uppercase">
+                <button className="text-[10px] text-white/40 hover:text-[#FF5A36] transition-colors tracking-wider uppercase">
                   Guía de tallas
                 </button>
               </div>
@@ -173,8 +180,8 @@ export default function CyclingProductPage() {
                     onClick={() => setSelectedSize(size)}
                     className={`h-12 rounded-lg border text-xs font-semibold tracking-wider transition-all ${
                       selectedSize === size
-                        ? 'border-white bg-white text-black'
-                        : 'border-white/15 hover:border-white/40 text-white/70'
+                        ? 'border-[#FF5A36] bg-[#FF5A36] text-white shadow-[0_0_25px_rgba(255,90,54,0.4)]'
+                        : 'border-white/15 hover:border-[#FF5A36]/50 text-white/70 hover:text-white'
                     }`}
                   >
                     {size}
@@ -187,7 +194,7 @@ export default function CyclingProductPage() {
             <div className="mb-8">
               <h3 className="text-eyebrow text-white/60 mb-4">Color</h3>
               <div className="flex items-center gap-3">
-                <div className="px-4 py-2.5 rounded-lg border border-white/30 bg-white/5 text-white flex items-center gap-2.5 text-xs tracking-wider">
+                <div className="px-4 py-2.5 rounded-lg border border-[#FF5A36]/40 bg-[#FF5A36]/5 text-white flex items-center gap-2.5 text-xs tracking-wider shadow-[0_0_20px_rgba(255,90,54,0.15)]">
                   <span className="w-3 h-3 rounded-full bg-black border border-white/30" />
                   Negro
                 </div>
@@ -206,7 +213,7 @@ export default function CyclingProductPage() {
                 flex items-center justify-center gap-2
                 ${isAdded
                   ? 'bg-green-500 text-white'
-                  : 'bg-white text-black hover:bg-gray-100'
+                  : 'btn-orange'
                 }
                 disabled:opacity-70 disabled:cursor-not-allowed
               `}
@@ -231,7 +238,7 @@ export default function CyclingProductPage() {
 
             {/* Envío */}
             <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
-              <Truck className="w-3.5 h-3.5 text-[#FF7A5C]" />
+              <Truck className="w-3.5 h-3.5 text-[#FF5A36]" />
               Envío gratis a toda Colombia
             </div>
           </div>

@@ -6,6 +6,8 @@ import { PayPalProvider } from '@/providers/PayPalProvider';
 import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
 import { TermsModal } from '@/components/legal/TermsModal';
 import { CookiesBanner } from '@/components/legal/CookiesBanner';
+import { NeuralFrame } from '@/components/neural/NeuralFrame';
+import { NeuralBackground } from '@/components/neural/NeuralBackground';
 
 export const metadata: Metadata = {
   title: 'BESTIGE — Tecnología Somatosensorial',
@@ -28,9 +30,11 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className="bg-black text-white antialiased min-h-screen relative overflow-x-hidden font-display">
-        {/* FONDO PREMIUM GLOBAL (sutil, se ve detrás de todo) */}
+        {/* FONDO NEURONAL (nueva red de nodos dorados) */}
+        <NeuralBackground />
+
+        {/* FONDO PREMIUM GLOBAL (tu diseño original) */}
         <div className="fixed inset-0 w-screen h-screen -z-20 bg-black">
-          {/* Gradiente radial naranja BESTIGE (arriba izquierda) */}
           <div
             className="absolute inset-0"
             style={{
@@ -42,7 +46,6 @@ export default function RootLayout({
             }}
           />
 
-          {/* Efecto de viñeta (oscurece los bordes) */}
           <div
             className="absolute inset-0"
             style={{
@@ -51,7 +54,6 @@ export default function RootLayout({
             }}
           />
 
-          {/* Textura de ruido sutil para look premium */}
           <div
             className="absolute inset-0 opacity-[0.025] mix-blend-overlay pointer-events-none"
             style={{
@@ -59,6 +61,9 @@ export default function RootLayout({
             }}
           />
         </div>
+
+        {/* MARCO HUD PERIMETRAL (nuevo) */}
+        <NeuralFrame />
 
         <SmoothScrollProvider>
           <PayPalProvider>

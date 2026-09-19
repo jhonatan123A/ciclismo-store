@@ -51,11 +51,11 @@ module.exports = {
         },
         // PALETA OFICIAL BESTIGE
         bestige: {
-          orange: '#FF7A5C',
-          coral: '#FF5A5F',
-          red: '#E63946',
-          cyan: '#7DD3FC',
-          blue: '#38BDF8',
+          orange: '#22D3EE',
+          coral: '#06B6D4',
+          red: '#0891B2',
+          cyan: '#38BDF8',
+          blue: '#A855F7',
           'blue-deep': '#2563EB',
           black: '#0A0A0A',
           gray: '#1A1A1A',

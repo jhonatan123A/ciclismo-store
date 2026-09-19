@@ -18,6 +18,7 @@ export function ProductShowcase() {
       originalPrice: '$640.000',
       discount: '-24%',
       fullPrice: '$640.000',
+      accentColor: '#FF5A36',
     },
     {
       id: 'running',
@@ -31,19 +32,27 @@ export function ProductShowcase() {
       originalPrice: '$529.000',
       discount: '-24%',
       fullPrice: '$529.000',
+      accentColor: '#38BDF8',
     },
   ];
 
   const comingSoon = [
-    { id: 'gloves', name: 'Guantes', icon: <Shield className="w-4 h-4" /> },
-    { id: 'tshirts', name: 'Camisetas', icon: <Shirt className="w-4 h-4" /> },
-    { id: 'socks', name: 'Medias', icon: <Watch className="w-4 h-4" /> },
-    { id: 'jersey', name: 'Jersey', icon: <ShoppingBag className="w-4 h-4" /> },
+    { id: 'gloves', name: 'Guantes', icon: <Shield className="w-4 h-4" />, color: '#FF5A36' },
+    { id: 'tshirts', name: 'Camisetas', icon: <Shirt className="w-4 h-4" />, color: '#38BDF8' },
+    { id: 'socks', name: 'Medias', icon: <Watch className="w-4 h-4" />, color: '#E8B94A' },
+    { id: 'jersey', name: 'Jersey', icon: <ShoppingBag className="w-4 h-4" />, color: '#C17A4B' },
   ];
 
   return (
-    <section className="py-24 bg-black">
-      <div className="container mx-auto px-6 md:px-10 max-w-7xl">
+    <section className="py-24 bg-black relative overflow-hidden">
+      {/* Glow triádico de fondo */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#FF5A36]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#38BDF8]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#E8B94A]/3 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-6 md:px-10 max-w-7xl relative z-10">
         {/* Header de la sección */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -52,14 +61,14 @@ export function ProductShowcase() {
           viewport={{ once: true }}
           className="mb-16"
         >
-          <p className="text-eyebrow text-[#FF7A5C] mb-5 flex items-center gap-3">
-            <span className="w-8 h-[1px] bg-[#FF7A5C]" />
+          <p className="text-eyebrow gradient-text-triad mb-5 flex items-center gap-3">
+            <span className="w-8 h-[1px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
             Nuestros productos
           </p>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-5 leading-tight max-w-3xl">
             Tecnología somatosensorial
             <br />
-            <span className="text-white/50">para amateurs y profesionales</span>
+            <span className="gradient-text-premium">para amateurs y profesionales</span>
           </h2>
           <p className="text-white/40 text-sm max-w-2xl leading-relaxed">
             Diseñada para interactuar con tu cuerpo y acompañar la precisión natural de tu movimiento.
@@ -75,7 +84,7 @@ export function ProductShowcase() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.15 }}
               viewport={{ once: true }}
-              className="group relative rounded-2xl overflow-hidden border border-white/10 hover:border-white/25 bg-[#0A0A0A] transition-all duration-500 flex flex-col"
+              className="group relative rounded-2xl overflow-hidden border border-white/10 hover:border-white/25 bg-[#0A0A0A] transition-all duration-500 flex flex-col card-neural"
             >
               {/* IMAGEN CON ANIMACIÓN FLOTANTE */}
               <div className="relative w-full h-80 overflow-hidden flex items-center justify-center p-2">
@@ -103,7 +112,10 @@ export function ProductShowcase() {
 
                 {/* Tag superior */}
                 <div className="absolute top-5 left-5 flex items-center gap-2 z-10">
-                  <div className="p-1.5 bg-black/60 backdrop-blur-md rounded-lg text-[#FF7A5C] border border-white/10">
+                  <div
+                    className="p-1.5 bg-black/60 backdrop-blur-md rounded-lg border border-white/10"
+                    style={{ color: product.accentColor }}
+                  >
                     {product.icon}
                   </div>
                   <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full text-white/80 text-[10px] font-medium tracking-[0.15em] uppercase">
@@ -126,7 +138,12 @@ export function ProductShowcase() {
                   <div className="flex items-baseline gap-2 mb-2">
                     <span className="text-3xl font-bold text-white">{product.price}</span>
                     <span className="text-sm text-white/30 line-through">{product.originalPrice}</span>
-                    <span className="text-xs text-[#FF7A5C] font-medium tracking-wider">{product.discount}</span>
+                    <span
+                      className="text-xs font-medium tracking-wider"
+                      style={{ color: product.accentColor }}
+                    >
+                      {product.discount}
+                    </span>
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span className="text-[10px] text-white/40 tracking-[0.15em] uppercase">
@@ -180,10 +197,21 @@ export function ProductShowcase() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
                 viewport={{ once: true }}
-                className="group p-6 rounded-xl border border-white/10 bg-white/[0.02] hover:border-white/25 hover:bg-white/[0.04] transition-all"
+                className="group relative p-6 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all overflow-hidden"
               >
-                <div className="flex flex-col gap-5">
-                  <div className="text-white/30 group-hover:text-[#FF7A5C] transition-colors">
+                {/* Glow de color al hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                  style={{
+                    background: `radial-gradient(circle at 50% 0%, ${item.color}15, transparent 70%)`,
+                  }}
+                />
+
+                <div className="relative flex flex-col gap-5">
+                  <div
+                    className="transition-colors"
+                    style={{ color: item.color }}
+                  >
                     {item.icon}
                   </div>
                   <div>
@@ -193,6 +221,15 @@ export function ProductShowcase() {
                     </span>
                   </div>
                 </div>
+
+                {/* Línea de acento inferior */}
+                <div
+                  className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-500"
+                  style={{
+                    background: `linear-gradient(90deg, ${item.color}, transparent)`,
+                    boxShadow: `0 0 10px ${item.color}`,
+                  }}
+                />
               </motion.div>
             ))}
           </div>

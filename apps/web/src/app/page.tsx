@@ -10,6 +10,7 @@ export default function Home() {
   const [showUI, setShowUI] = useState(false);
   const [hideVideoOnScroll, setHideVideoOnScroll] = useState(false);
   const [closedManually, setClosedManually] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,7 +20,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Oculta el video en miniatura automáticamente al hacer scroll hacia abajo
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 150) {
@@ -33,42 +33,79 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    let ticking = false;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setMousePos({
+            x: e.clientX / window.innerWidth,
+            y: e.clientY / window.innerHeight,
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   const features = [
     {
       icon: <Waves className="w-5 h-5" />,
       title: 'ESTIMULA',
       description: 'Tu sistema somatosensorial',
+      color: '#FF5A36',
     },
     {
       icon: <Sliders className="w-5 h-5" />,
       title: 'MEJORA',
       description: 'Tu estabilidad',
+      color: '#38BDF8',
     },
     {
       icon: <BarChart3 className="w-5 h-5" />,
       title: 'OPTIMIZA',
       description: 'Tu rendimiento',
+      color: '#E8B94A',
     },
     {
       icon: <Leaf className="w-5 h-5" />,
       title: 'DISEÑO TÉCNICO',
       description: 'Para la vida real',
+      color: '#C17A4B',
     },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white relative">
       {/* HERO SECTION PRINCIPAL */}
-      <section className="relative h-screen w-full overflow-hidden flex flex-col justify-between bg-zinc-950">
+      <section className="relative h-screen w-full overflow-hidden flex flex-col justify-between bg-black">
         
-        {/* FONDO ELEGANTE CON POSTER / GRADIENTE */}
-        <div className="absolute inset-0 z-0 opacity-40">
+        {/* FONDO CON POSTER + GRADIENTES TRIADICOS REACTIVOS AL MOUSE */}
+        <div className="absolute inset-0 z-0">
           <img 
             src="/images/hero/hero-poster.jpg" 
             alt="Hero background" 
-            className="w-full h-full object-cover filter blur-sm"
+            className="w-full h-full object-cover opacity-50"
+            style={{
+              transform: `scale(1.05) translate(${(mousePos.x - 0.5) * 20}px, ${(mousePos.y - 0.5) * 20}px)`,
+              transition: 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `
+                radial-gradient(ellipse 700px 500px at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255, 90, 54, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 700px 500px at ${(1 - mousePos.x) * 100}% ${(1 - mousePos.y) * 100}%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 800px 600px at 50% 50%, rgba(232, 185, 74, 0.05) 0%, transparent 60%)
+              `,
+              transition: 'background 1s ease',
+            }}
+          />
         </div>
 
         {/* CONTENIDO TEXTUAL */}
@@ -82,34 +119,36 @@ export default function Home() {
           <div className="container mx-auto px-6 md:px-10 max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               
-              {/* Columna izquierda: Título + CTA */}
+              {/* Columna izquierda */}
               <div className="lg:col-span-7">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={showUI ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p className="text-eyebrow text-[#FF7A5C] mb-6 flex items-center gap-3">
-                    <span className="w-8 h-[1px] bg-[#FF7A5C]" />
+                  <p className="text-eyebrow text-[#FF5A36] mb-6 flex items-center gap-3">
+                    <span className="w-8 h-[1px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
                     Somatosensorial
                   </p>
 
-                  <h1 className="display-hero text-[clamp(3rem,8vw,7.5rem)] text-white mb-8 leading-[0.95]">
-                    No solo vistes una
+                  <h1 className="display-hero text-[clamp(3rem,8vw,7.5rem)] mb-8 leading-[0.95]">
+                    <span className="text-white">No solo vistes una</span>
                     <br />
-                    prenda
+                    <span className="text-white">prenda.</span>
                     <br />
-                    <span className="italic font-light text-white/90 normal-case tracking-tight">Conectas con tu cuerpo</span>
+                    <span className="gradient-text-triad italic font-light normal-case tracking-tight">
+                      Conectas con tu cuerpo.
+                    </span>
                   </h1>
 
                   <p className="text-white/80 text-sm md:text-base leading-relaxed max-w-md mb-8 font-light">
-                    Prendas técnicas que activan tu sistema somatosensorial para un mayor control, estabilidad y rendimiento.
+                    Prendas Funcionales que activan tu sistema somatosensorial para un mayor control, estabilidad y rendimiento.
                   </p>
 
                   <div className="flex flex-wrap gap-3">
                     <Link
                       href="/nosotros"
-                      className="group inline-flex items-center gap-3 px-7 py-3.5 bg-white text-black rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase hover:bg-gray-100 transition-all duration-300 shadow-2xl"
+                      className="group inline-flex items-center gap-3 px-7 py-3.5 btn-orange text-[11px] font-semibold tracking-[0.2em] uppercase"
                     >
                       <span>Descubrir la ciencia</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -117,7 +156,7 @@ export default function Home() {
 
                     <Link
                       href="/products/cycling"
-                      className="group inline-flex items-center gap-3 px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase border border-white/30 hover:border-white/60 backdrop-blur-md transition-all duration-300"
+                      className="group inline-flex items-center gap-3 px-7 py-3.5 btn-outline-orange text-[11px] font-semibold tracking-[0.2em] uppercase"
                     >
                       <span>Ver productos</span>
                     </Link>
@@ -125,27 +164,74 @@ export default function Home() {
                 </motion.div>
               </div>
 
-              {/* Columna derecha: Claims */}
-              <div className="lg:col-span-5 lg:text-right">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={showUI ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="space-y-5 lg:border-r border-white/20 lg:pr-8"
-                >
-                  <div className="flex items-center justify-end gap-3 border-l-2 lg:border-l-0 lg:border-r-0 border-white/20 pl-4 lg:pl-0">
-                    <p className="text-label text-white/80">Mejora la resistencia a la fatiga sobre la distancia</p>
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                  </div>
-                  <div className="flex items-center justify-end gap-3 border-l-2 lg:border-l-0 lg:border-r-0 border-white/20 pl-4 lg:pl-0">
-                    <p className="text-label text-white/80">Más Conexión</p>
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                  </div>
-                  <div className="flex items-center justify-end gap-3 border-l-2 lg:border-l-0 lg:border-r-0 border-[#FF7A5C] pl-4 lg:pl-0">
-                    <p className="text-label text-[#FF7A5C]">Más Rendimiento</p>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF7A5C] scale-125" />
-                  </div>
-                </motion.div>
+              {/* Columna derecha: Claims + VIDEO 360° */}
+              <div className="lg:col-span-5">
+                <div className="flex flex-col items-end gap-6">
+                  {/* Claims */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={showUI ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="w-full space-y-5 lg:border-r border-white/20 lg:pr-8 text-right"
+                  >
+                    <div className="flex items-center justify-end gap-3 group cursor-pointer">
+                      <p className="text-label text-white/80 group-hover:text-[#FF5A36] transition-colors">
+                        Mejora la resistencia a la fatiga
+                      </p>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF5A36] shadow-[0_0_10px_#FF5A36]" />
+                    </div>
+                    <div className="flex items-center justify-end gap-3 group cursor-pointer">
+                      <p className="text-label text-white/80 group-hover:text-[#38BDF8] transition-colors">
+                        Más Conexión
+                      </p>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_10px_#38BDF8]" />
+                    </div>
+                    <div className="flex items-center justify-end gap-3 group cursor-pointer">
+                      <p className="text-label gradient-text-triad">
+                        Más Rendimiento
+                      </p>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8B94A] shadow-[0_0_10px_#E8B94A] scale-125" />
+                    </div>
+                  </motion.div>
+
+                  {/* VIDEO 360° EN LA COLUMNA DERECHA */}
+                  <AnimatePresence>
+                    {!closedManually && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, x: 20 }}
+                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                        className="relative w-40 md:w-48 aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl bg-black group card-neural"
+                      >
+                        <button
+                          onClick={() => setClosedManually(true)}
+                          className="absolute top-2 right-2 z-20 bg-black/60 hover:bg-[#FF5A36]/20 text-white p-1.5 rounded-full backdrop-blur-md transition-all border border-[#FF5A36]/30"
+                          aria-label="Cerrar video"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+
+                        <video
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          poster="/images/hero/hero-poster.jpg"
+                          className="w-full h-full object-cover"
+                        >
+                          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+                        </video>
+
+                        <div className="absolute bottom-2 left-2 right-2 z-10 pointer-events-none">
+                          <span className="inline-block px-2 py-0.5 bg-black/60 backdrop-blur-md rounded-full text-[8px] font-medium tracking-wider text-white/90 border border-[#FF5A36]/30 uppercase">
+                            Vista 360°
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
             </div>
@@ -166,9 +252,19 @@ export default function Home() {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="px-4 md:px-6 py-5 flex items-center gap-3 group hover:bg-white/5 transition-colors cursor-pointer"
+                  className="px-4 md:px-6 py-5 flex items-center gap-3 group hover:bg-white/5 transition-colors cursor-pointer relative"
                 >
-                  <div className="text-white/70 group-hover:text-[#FF7A5C] transition-colors flex-shrink-0">
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-[2px] opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{
+                      background: `linear-gradient(180deg, ${feature.color}, transparent)`,
+                      boxShadow: `0 0 10px ${feature.color}`,
+                    }}
+                  />
+                  <div
+                    className="transition-colors flex-shrink-0"
+                    style={{ color: feature.color }}
+                  >
                     {feature.icon}
                   </div>
                   <div className="min-w-0">
@@ -185,47 +281,6 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
-
-      {/* REPRODUCTOR DE VIDEO COMPACTO Y NÍTIDO (TIPO WIDGET REEL FLOTANTE) */}
-      <AnimatePresence>
-        {!hideVideoOnScroll && !closedManually && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 50 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="fixed bottom-24 right-6 md:bottom-28 md:right-10 z-50 w-44 md:w-56 aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-black backdrop-blur-lg group"
-          >
-            {/* Botón para cerrar manualmente */}
-            <button
-              onClick={() => setClosedManually(true)}
-              className="absolute top-3 right-3 z-20 bg-black/60 hover:bg-black text-white p-1.5 rounded-full backdrop-blur-md transition-all"
-              aria-label="Cerrar video"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Video en su relación de aspecto original perfecta sin recortar */}
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/images/hero/hero-poster.jpg"
-              className="w-full h-full object-cover rounded-2xl"
-            >
-              <source src="/videos/hero-bg.mp4" type="video/mp4" />
-            </video>
-
-            {/* Etiqueta flotante */}
-            <div className="absolute bottom-3 left-3 right-3 z-10 pointer-events-none">
-              <span className="inline-block px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-full text-[9px] font-medium tracking-wider text-white/90 border border-white/10 uppercase">
-                Vista previa 360°
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Product Showcase */}
       <ProductShowcase />
