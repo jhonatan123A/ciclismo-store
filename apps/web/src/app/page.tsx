@@ -137,7 +137,7 @@ export default function Home() {
                       href="/nosotros"
                       className="group inline-flex items-center gap-2 md:gap-3 px-5 md:px-7 py-3 md:py-3.5 btn-orange text-[10px] md:text-[11px] font-semibold tracking-[0.2em] uppercase"
                     >
-                      <span>Descubrir la ciencia</span>
+                      <span>Descubre Bestige</span>
                       <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
 
