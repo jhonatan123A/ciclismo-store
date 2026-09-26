@@ -2,23 +2,130 @@
 
 import { useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/cart-store';
-import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, Lock, Truck, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Lock, Truck, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { PaymentMethods } from '@/components/checkout/PaymentMethods';
+import { ShippingForm } from '@/components/checkout/ShippingForm';
+import { ShippingSummary } from '@/components/checkout/ShippingSummary';
+import { useCheckoutStore } from '@/lib/checkout-store';
+import { calcularEnvio } from '@/lib/shipping';
+import { OrderSuccess } from '@/components/checkout/OrderSuccess';
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
-  const totalPrice = getTotalPrice();
-  const [{ isPending, isResolved, isRejected }] = usePayPalScriptReducer();
+  const subtotal = getTotalPrice();
+  const { shipping, shippingTier } = useCheckoutStore();
   const [isComplete, setIsComplete] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [completedOrder, setCompletedOrder] = useState<any>(null);
+  const [isShippingValid, setIsShippingValid] = useState(false);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
+
+  // Snapshot inmutable para preservar los datos de la compra al vaciar el carrito
+  const [finalOrderDetails, setFinalOrderDetails] = useState<{
+    items: typeof items;
+    total: number;
+  }>({ items: [], total: 0 });
+
+  // Cálculo del envío: Ajustado para garantizar envío gratis en cualquier monto
+  const calculoBase = isShippingValid
+    ? calcularEnvio(subtotal, shippingTier)
+    : {
+        costo: 0,
+        esGratis: true,
+        tier: shippingTier,
+        tiempoEntrega: '',
+        metodoEntrega: '',
+        mensaje: '',
+      };
+
+  const envioInfo = {
+    ...calculoBase,
+    costo: 0,
+    esGratis: true,
+  };
+
+  const totalPrice = subtotal + envioInfo.costo;
 
   useEffect(() => {
-    console.log('PayPal Status:', { isPending, isResolved, isRejected });
-    console.log('Total Price:', totalPrice);
+    console.log('Subtotal:', subtotal);
+    console.log('Envío:', envioInfo.costo);
+    console.log('Total:', totalPrice);
     console.log('Items:', items.length);
-  }, [isPending, isResolved, isRejected, totalPrice, items]);
+  }, [subtotal, envioInfo.costo, totalPrice, items]);
+
+  // ============================
+  // GUARDAR ORDEN EN EL BACKEND
+  // ============================
+  const saveOrderToBackend = async (
+    transactionId: string,
+    paymentMethod: 'wompi' | 'paypal',
+    orderItems: typeof items,
+    orderSubtotal: number,
+    orderTotal: number
+  ): Promise<any> => {
+    try {
+      setIsSavingOrder(true);
+
+      const orderData = {
+        customerName: shipping.fullName,
+        customerEmail: shipping.email,
+        customerPhone: shipping.phone,
+        shippingAddress: {
+          department: shipping.department,
+          city: shipping.city,
+          address: shipping.address,
+          neighborhood: shipping.neighborhood,
+          references: shipping.references || '',
+          zipCode: shipping.zipCode || '',
+        },
+        items: orderItems.map((item) => ({
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+          image: item.image,
+        })),
+        subtotal: orderSubtotal,
+        shippingCost: envioInfo.costo,
+        total: orderTotal,
+        paymentMethod,
+        paymentId: transactionId,
+      };
+
+      console.log('📦 Enviando orden al backend:', orderData);
+
+      const apiUrl = process.env.NODE_ENV === 'production'
+        ? 'https://ciclismo-api.onrender.com/api/v1'
+        : 'http://localhost:4000/api/v1';
+
+      const response = await fetch(`${apiUrl}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Error del backend:', errorData);
+        throw new Error(errorData.error || 'Error al guardar la orden');
+      }
+
+      const result = await response.json();
+      console.log('✅ Orden guardada:', result.orderNumber);
+
+      setIsSavingOrder(false);
+      return result;
+    } catch (error) {
+      console.error('❌ Error guardando orden:', error);
+      setIsSavingOrder(false);
+      return null;
+    }
+  };
 
   // ============================
   // ESTADO 1: CARRITO VACÍO
@@ -59,39 +166,68 @@ export default function CheckoutPage() {
   // ============================
   if (isComplete) {
     return (
-      <div className="relative min-h-screen pt-24 pb-16 px-6 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none -z-10">
-          <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#FF5A36]/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-[#38BDF8]/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#E8B94A]/10 rounded-full blur-3xl" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full text-center"
-        >
-          <div className="w-20 h-20 rounded-full bg-[#FF5A36]/10 border border-[#FF5A36]/30 flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(255,90,54,0.3)]">
-            <Check className="w-8 h-8 text-[#FF5A36]" />
-          </div>
-          <p className="text-eyebrow text-[#FF5A36] mb-4">Pago confirmado</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            ¡Gracias por tu compra!
-          </h1>
-          <p className="text-white/50 text-sm mb-10 leading-relaxed">
-            Tu pedido ha sido procesado correctamente. Recibirás un correo de confirmación con el número de seguimiento.
-          </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-7 py-3.5 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold group"
-          >
-            Volver al inicio
-            <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </motion.div>
-      </div>
+      <OrderSuccess
+        orderNumber={completedOrder?.orderNumber || completedOrder?.id || 'N/A'}
+        customerName={shipping.fullName}
+        customerEmail={shipping.email}
+        total={completedOrder?.total ?? finalOrderDetails.total}
+        items={completedOrder?.items || finalOrderDetails.items}
+        shippingAddress={completedOrder?.shippingAddress || {
+          department: shipping.department,
+          city: shipping.city,
+          address: shipping.address,
+          neighborhood: shipping.neighborhood,
+          references: shipping.references || '',
+          zipCode: shipping.zipCode || '',
+        }}
+      />
     );
   }
+
+  // ============================
+  // CALLBACKS DE PAGO
+  // ============================
+  const handlePaymentSuccess = async (transactionId: string) => {
+    console.log('✅ Pago exitoso:', transactionId);
+
+    const currentItems = useCartStore.getState().items;
+    const currentSubtotal = currentItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    const currentTotal = currentSubtotal + envioInfo.costo;
+
+    // Guardar snapshot local del total y los items antes de borrar el store
+    setFinalOrderDetails({
+      items: [...currentItems],
+      total: currentTotal,
+    });
+
+    console.log('📦 Guardando orden en el backend...');
+
+    const savedOrder = await saveOrderToBackend(
+      transactionId,
+      'wompi',
+      currentItems,
+      currentSubtotal,
+      currentTotal
+    );
+
+    if (savedOrder) {
+      console.log('✅ Orden guardada y emails enviados');
+      setCompletedOrder(savedOrder);
+    } else {
+      console.warn('⚠️ Orden NO guardada, pero el pago sí se hizo');
+    }
+
+    clearCart();
+    setIsComplete(true);
+  };
+
+  const handlePaymentError = (error: string) => {
+    console.error('❌ Error de pago:', error);
+    alert(error);
+  };
 
   // ============================
   // ESTADO 3: CHECKOUT CON ITEMS
@@ -125,54 +261,62 @@ export default function CheckoutPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Resumen del pedido */}
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-eyebrow text-white/60 mb-4">Tu pedido</h2>
+          {/* COLUMNA IZQUIERDA: DIRECCIÓN + PRODUCTOS */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* FORMULARIO DE ENVÍO */}
+            <div className="p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <ShippingForm subtotal={subtotal} onValidityChange={setIsShippingValid} />
+            </div>
 
-            {items.map((item) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:border-[#FF5A36]/20 transition-all"
-              >
-                <div className="w-20 h-20 rounded-lg bg-white/5 overflow-hidden flex-shrink-0 ring-1 ring-white/5">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
-                    }}
-                  />
-                </div>
-                <div className="flex-1 min-w-0 flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-white font-medium text-sm mb-1.5">{item.name}</h4>
-                    <div className="flex items-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
-                      <span>Talla {item.size}</span>
-                      <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
-                      <span>{item.color}</span>
-                      <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
-                      <span>Cantidad {item.quantity}</span>
-                    </div>
+            {/* RESUMEN DEL PEDIDO */}
+            <div className="space-y-4">
+              <h2 className="text-eyebrow text-white/60 mb-4">Resumen del pedido</h2>
+
+              {items.map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:border-[#FF5A36]/20 transition-all"
+                >
+                  <div className="w-20 h-20 rounded-lg bg-white/5 overflow-hidden flex-shrink-0 ring-1 ring-white/5">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
+                      }}
+                    />
                   </div>
-                  <span className="text-white font-semibold text-sm mt-2">
-                    ${(item.price * item.quantity).toLocaleString('es-CO')}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                    <div>
+                      <h4 className="text-white font-medium text-sm mb-1.5">{item.name}</h4>
+                      <div className="flex items-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
+                        <span>Talla {item.size}</span>
+                        <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
+                        <span>{item.color}</span>
+                        <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
+                        <span>Cantidad {item.quantity}</span>
+                      </div>
+                    </div>
+                    <span className="text-white font-semibold text-sm mt-2">
+                      ${(item.price * item.quantity).toLocaleString('es-CO')}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
 
             {/* Trust badges */}
-            <div className="grid grid-cols-3 gap-3 mt-8">
+            <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#FF5A36]/20 bg-[#FF5A36]/[0.02] hover:border-[#FF5A36]/40 transition-all">
                 <Lock className="w-4 h-4 text-[#FF5A36] mb-2" />
                 <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Pago seguro</span>
               </div>
               <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#38BDF8]/20 bg-[#38BDF8]/[0.02] hover:border-[#38BDF8]/40 transition-all">
                 <Truck className="w-4 h-4 text-[#38BDF8] mb-2" />
-                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Envío gratis</span>
+                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Envío nacional</span>
               </div>
               <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#E8B94A]/20 bg-[#E8B94A]/[0.02] hover:border-[#E8B94A]/40 transition-all">
                 <ShieldCheck className="w-4 h-4 text-[#E8B94A] mb-2" />
@@ -181,7 +325,7 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Pago */}
+          {/* COLUMNA DERECHA: PAGO */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-24 p-6 rounded-2xl border border-white/10 bg-white/[0.02] relative overflow-hidden">
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#FF5A36]/10 rounded-full blur-3xl pointer-events-none" />
@@ -190,14 +334,26 @@ export default function CheckoutPage() {
               <div className="relative">
                 <p className="text-eyebrow text-white/40 mb-5">Resumen total</p>
 
+                {/* Resumen del envío */}
+                <div className="mb-5">
+                  <ShippingSummary subtotal={subtotal} />
+                </div>
+
+                {/* Desglose de precios */}
                 <div className="space-y-2.5 text-sm pb-5 border-b border-white/10 mb-6">
                   <div className="flex justify-between text-white/60">
                     <span className="text-xs tracking-wider">Subtotal</span>
-                    <span>${totalPrice.toLocaleString('es-CO')}</span>
+                    <span>${subtotal.toLocaleString('es-CO')}</span>
                   </div>
                   <div className="flex justify-between text-white/60">
                     <span className="text-xs tracking-wider">Envío</span>
-                    <span className="text-[#FF5A36] font-medium">Gratis</span>
+                    <span className={envioInfo.esGratis ? 'text-[#FF5A36] font-medium' : ''}>
+                      {!isShippingValid
+                        ? 'Por calcular'
+                        : envioInfo.esGratis
+                        ? 'GRATIS'
+                        : `$${envioInfo.costo.toLocaleString('es-CO')}`}
+                    </span>
                   </div>
                 </div>
 
@@ -208,86 +364,38 @@ export default function CheckoutPage() {
                   </span>
                 </div>
 
-                {isPending && (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="w-5 h-5 border-2 border-[#FF5A36] border-t-transparent rounded-full animate-spin" />
-                    <span className="ml-3 text-white/40 text-xs tracking-wider">Cargando PayPal...</span>
+                {/* Aviso si falta dirección */}
+                {!isShippingValid && (
+                  <div className="mb-4 p-4 rounded-lg border border-[#FF5A36]/30 bg-[#FF5A36]/[0.05] text-center">
+                    <p className="text-[11px] text-[#FF5A36] tracking-wide font-medium mb-1">
+                      ⚠️ COMPLETA TU DIRECCIÓN DE ENVÍO
+                    </p>
+                    <p className="text-[10px] text-white/50">
+                      Necesitamos estos datos para enviarte el pedido
+                    </p>
                   </div>
                 )}
 
-                {isRejected && (
-                  <div className="text-center py-4 rounded-lg border border-red-500/20 bg-red-500/5 mb-4">
-                    <p className="text-red-400 text-xs mb-1">Error al cargar PayPal</p>
-                    <p className="text-white/40 text-[10px]">Verifica tu conexión a Internet</p>
+                {/* Aviso guardando orden */}
+                {isSavingOrder && (
+                  <div className="mb-4 p-4 rounded-lg border border-[#E8B94A]/30 bg-[#E8B94A]/[0.05] text-center">
+                    <p className="text-[11px] text-[#E8B94A] tracking-wide font-medium">
+                      📦 Guardando tu pedido...
+                    </p>
                   </div>
                 )}
 
-                {isResolved && (
-                  <>
-                    <PayPalButtons
-                      style={{
-                        layout: 'vertical',
-                        color: 'white',
-                        shape: 'pill',
-                        label: 'paypal',
-                        height: 45,
-                      }}
-                      createOrder={(data, actions) => {
-                        console.log('Creando orden...');
-                        return actions.order.create({
-                          purchase_units: [
-                            {
-                              amount: {
-                                value: (totalPrice / 4000).toFixed(2),
-                                currency_code: 'USD',
-                              },
-                              description: 'Compra BESTIGE',
-                            },
-                          ],
-                          intent: 'CAPTURE',
-                        });
-                      }}
-                      onApprove={async (data, actions) => {
-                        console.log('Pago aprobado:', data);
-                        setIsProcessing(true);
-
-                        if (!actions.order) {
-                          console.error('actions.order no está disponible');
-                          setIsProcessing(false);
-                          alert('Error al procesar el pago. Intenta nuevamente.');
-                          return;
-                        }
-
-                        try {
-                          const details = await actions.order.capture();
-                          console.log('Captura completada:', details);
-                          setIsProcessing(false);
-                          clearCart();
-                          setIsComplete(true);
-                        } catch (error) {
-                          console.error('Error en captura:', error);
-                          setIsProcessing(false);
-                          alert('Error al capturar el pago. Por favor, intenta nuevamente.');
-                        }
-                      }}
-                      onError={(err) => {
-                        console.error('Error en PayPal:', err);
-                        alert('Error al procesar el pago. Por favor, intenta nuevamente.');
-                        setIsProcessing(false);
-                      }}
-                      onCancel={() => {
-                        console.log('Pago cancelado');
-                        setIsProcessing(false);
-                      }}
-                    />
-                    {isProcessing && (
-                      <div className="flex items-center justify-center mt-4">
-                        <div className="w-4 h-4 border-2 border-[#FF5A36] border-t-transparent rounded-full animate-spin" />
-                        <span className="ml-2 text-white/40 text-xs">Procesando pago...</span>
-                      </div>
-                    )}
-                  </>
-                )}
+                {/* SELECTOR DE MÉTODO DE PAGO */}
+                <div className={!isShippingValid ? 'pointer-events-none opacity-40' : ''}>
+                  <PaymentMethods
+                    totalPrice={totalPrice}
+                    customerEmail={shipping.email || 'cliente@bestige.com'}
+                    customerName={shipping.fullName || 'Cliente Bestige'}
+                    customerPhone={shipping.phone}
+                    onPaymentSuccess={handlePaymentSuccess}
+                    onPaymentError={handlePaymentError}
+                  />
+                </div>
 
                 <p className="text-[10px] text-white/30 text-center mt-6 leading-relaxed tracking-wide">
                   Al realizar el pago aceptas nuestros{' '}

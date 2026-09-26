@@ -9,6 +9,7 @@ import { errorHandler } from './middleware/error-handler';
 import authRoutes from './routes/auth/auth.controller';
 import productRoutes from './routes/products/products.controller';
 import orderRoutes from './routes/orders/orders.controller';
+import wompiRoutes from './routes/wompi/wompi.webhook';
 import { prisma } from './lib/prisma/client';
 
 const app = express();
@@ -18,6 +19,7 @@ const app = express();
 // ============================================
 
 // Helmet - Cabeceras de seguridad
+// ✅ CSP ajustada para permitir Wompi y PayPal
 app.use(helmet({
   hsts: {
     maxAge: 31536000,
@@ -27,11 +29,53 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https://cdn.ciclismo-store.com"],
-      scriptSrc: ["'self'"],
+      imgSrc: [
+        "'self'",
+        "data:",
+        "https://cdn.ciclismo-store.com",
+        "https://checkout.wompi.co",
+        "https://*.wompi.co",
+        "https://www.paypal.com",
+        "https://*.paypal.com",
+        "https://www.paypalobjects.com",
+      ],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://checkout.wompi.co",
+        "https://*.wompi.co",
+        "https://www.paypal.com",
+        "https://*.paypal.com",
+        "https://www.paypalobjects.com",
+      ],
       styleSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: [
+        "'self'",
+        "https://checkout.wompi.co",
+        "https://*.wompi.co",
+        "https://*.paypal.com",
+        "https://*.paypalobjects.com",
+        "https://ciclismo-api.onrender.com",
+        "https://bestige-somatosensory-norbertowilches.com",
+      ],
+      frameSrc: [
+        "'self'",
+        "https://checkout.wompi.co",
+        "https://*.wompi.co",
+        "https://*.paypal.com",
+      ],
+      formAction: [
+        "'self'",
+        "https://checkout.wompi.co",
+        "https://*.wompi.co",
+        "https://*.paypal.com",
+      ],
     },
   },
+  // ✅ Permitir recursos cross-origin (necesario para Wompi y PayPal)
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginOpenerPolicy: false,
 }));
 
 // Compresión
@@ -85,6 +129,7 @@ app.get('/ready', async (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
+app.use('/api/wompi', wompiRoutes);
 
 // ============================================
 // 3. MANEJADOR DE ERRORES

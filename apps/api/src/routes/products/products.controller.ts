@@ -114,10 +114,22 @@ router.post('/', authenticate, authorize('ADMIN', 'STORE_MANAGER'), asyncHandler
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
   
+  // ✅ CORRECCIÓN: usar campos explícitos y 'connect' para la relación
   const product = await prisma.product.create({
     data: {
-      ...data,
+      name: data.name,
       slug,
+      description: data.description || null,
+      price: data.price,
+      stock: data.stock,
+      images: data.images || [],
+      tags: data.tags || [],
+      // Relación con categoría (opcional)
+      ...(data.categoryId && {
+        category: {
+          connect: { id: data.categoryId },
+        },
+      }),
     },
   });
   
@@ -131,9 +143,20 @@ router.put('/:id', authenticate, authorize('ADMIN', 'STORE_MANAGER'), asyncHandl
   const { id } = req.params;
   const data = productUpdateSchema.parse(req.body);
   
+  // ✅ CORRECCIÓN: extraer categoryId si existe
+  const { categoryId, ...otherData } = data;
+  
   const product = await prisma.product.update({
     where: { id },
-    data,
+    data: {
+      ...otherData,
+      // Relación con categoría (si se proporciona)
+      ...(categoryId && {
+        category: {
+          connect: { id: categoryId },
+        },
+      }),
+    },
   });
   
   logger.info({ productId: product.id, admin: req.user?.email }, 'Product updated');

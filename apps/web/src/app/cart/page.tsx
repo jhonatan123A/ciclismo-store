@@ -2,7 +2,7 @@
 
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
-import { Trash2, Minus, Plus, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Trash2, Minus, Plus, ArrowLeft, ArrowRight, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function CartPage() {
@@ -34,13 +34,22 @@ export default function CartPage() {
           <p className="text-white/40 text-sm mb-10 leading-relaxed">
             Explora nuestra tecnología somatosensorial y comienza tu experiencia BESTIGE.
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-7 py-3.5 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold"
-          >
-            <ArrowLeft className="w-3 h-3" />
-            Explorar productos
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 px-7 py-3.5 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              Explorar productos
+            </Link>
+            <Link
+              href="/orders"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/10 hover:border-[#FF5A36]/40 text-white/60 hover:text-white transition-all text-[10px] tracking-[0.2em] uppercase font-semibold"
+            >
+              <Package className="w-3.5 h-3.5 text-[#FF5A36]" />
+              Mis Pedidos
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -56,14 +65,24 @@ export default function CartPage() {
       </div>
 
       <div className="max-w-6xl mx-auto">
-        {/* Breadcrumb */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-white/40 hover:text-[#FF5A36] transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Seguir comprando
-        </Link>
+        {/* Breadcrumb y enlace a pedidos */}
+        <div className="flex items-center justify-between mb-10">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-white/40 hover:text-[#FF5A36] transition-colors text-[11px] tracking-[0.2em] uppercase"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Seguir comprando
+          </Link>
+
+          <Link
+            href="/orders"
+            className="inline-flex items-center gap-2 text-white/60 hover:text-[#FF5A36] transition-colors text-[11px] tracking-[0.2em] uppercase"
+          >
+            <Package className="w-3.5 h-3.5 text-[#FF5A36]" />
+            Mis Pedidos
+          </Link>
+        </div>
 
         {/* Header */}
         <div className="flex items-end justify-between mb-10 pb-6 border-b border-white/10">
@@ -213,7 +232,7 @@ export default function CartPage() {
 
                 <Link
                   href="/checkout"
-                  className="block w-full py-4 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold text-center group"
+                  className="block w-full py-4 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold text-center group mb-3"
                 >
                   <span className="inline-flex items-center gap-2">
                     Proceder al pago
@@ -222,8 +241,16 @@ export default function CartPage() {
                 </Link>
 
                 <Link
+                  href="/orders"
+                  className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full border border-white/10 hover:border-[#FF5A36]/40 text-white/60 hover:text-white transition-all text-[10px] tracking-[0.2em] uppercase font-semibold mb-2"
+                >
+                  <Package className="w-3.5 h-3.5 text-[#FF5A36]" />
+                  Consultar mis pedidos
+                </Link>
+
+                <Link
                   href="/"
-                  className="block w-full text-center mt-4 text-[10px] text-white/40 hover:text-[#FF5A36] transition-colors tracking-wider uppercase"
+                  className="block w-full text-center mt-2 text-[10px] text-white/40 hover:text-[#FF5A36] transition-colors tracking-wider uppercase"
                 >
                   Seguir comprando
                 </Link>

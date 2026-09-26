@@ -1,31 +1,43 @@
 import { z } from 'zod';
 
 export const orderItemSchema = z.object({
-  productId: z.string().cuid(),
+  // productId NO debe ser opcional ni tener default ('')
+  productId: z.string().min(1, 'El ID del producto es obligatorio'),
+  name: z.string().optional(),
+  image: z.string().optional(),
+  size: z.string().optional(),
+  color: z.string().optional(),
   variantId: z.string().optional(),
-  quantity: z.number().int().min(1, 'Quantity must be at least 1'),
-  price: z.number().positive('Price must be positive'),
+  quantity: z.number().int().min(1),
+  price: z.number().positive(),
+});
+
+export const shippingAddressSchema = z.object({
+  department: z.string().optional(),
+  city: z.string().min(1, 'City is required'),
+  address: z.string().optional(),
+  neighborhood: z.string().optional(),
+  references: z.string().optional(),
+  zipCode: z.string().optional(),
+  street: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().optional(),
 });
 
 export const createOrderSchema = z.object({
-  items: z.array(orderItemSchema).min(1, 'Order must have at least one item'),
-  shippingAddress: z.object({
-    street: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    country: z.string().min(1),
-    zipCode: z.string().min(1),
-  }),
-  billingAddress: z.object({
-    street: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    country: z.string().min(1),
-    zipCode: z.string().min(1),
-  }),
-  paymentMethod: z.enum(['paypal', 'stripe', 'mercadopago']),
+  customerName: z.string().min(1, 'Customer name is required'),
+  customerEmail: z.string().email('Invalid email'),
+  customerPhone: z.string().optional(),
+  items: z.array(orderItemSchema).min(1, 'Debe haber al menos un ítem en la orden'),
+  shippingAddress: shippingAddressSchema,
+  billingAddress: shippingAddressSchema.optional(),
+  paymentMethod: z.enum(['wompi', 'paypal', 'stripe', 'mercadopago']),
+  paymentId: z.string().min(1, 'Payment ID is required'),
+  // Permitimos 0 o mayor para subtotal en casos especiales
+  subtotal: z.number().min(0),
+  shippingCost: z.number().min(0).default(0),
+  total: z.number().positive(),
   tax: z.number().default(0),
-  shipping: z.number().default(0),
   discount: z.number().default(0),
   notes: z.string().optional(),
 });

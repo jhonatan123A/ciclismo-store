@@ -5,6 +5,20 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  // Permitir redirecciones a Wompi y PayPal
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+        ],
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig
