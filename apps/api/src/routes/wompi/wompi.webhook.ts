@@ -11,6 +11,9 @@ const router = Router();
 // ============================================
 // Wompi firma cada webhook con el "events_secret".
 // Esto evita que alguien pueda enviar webhooks falsos.
+//
+// ⚠️ ALGORITMO OFICIAL DE WOMPI:
+// SHA256(transaction.id + transaction.status + transaction.amount_in_cents + timestamp + events_secret)
 function validateWompiSignature(event: any): boolean {
   try {
     const eventsSecret = process.env.WOMPI_EVENTS_SECRET;
@@ -22,24 +25,21 @@ function validateWompiSignature(event: any): boolean {
 
     const { signature, data, timestamp } = event;
 
-    if (!signature?.checksum || !signature?.properties || !timestamp) {
+    if (!signature?.checksum || !timestamp || !data?.transaction) {
       logger.error('❌ Webhook sin firma completa');
       return false;
     }
 
-    // Extraer los valores que Wompi usó para firmar
-    const properties = signature.properties as string[];
-    const values = properties.map((prop) => {
-      const keys = prop.split('.');
-      let value: any = data;
-      for (const key of keys) {
-        value = value?.[key];
-      }
-      return value;
-    });
+    const transaction = data.transaction;
+    const { id, status, amount_in_cents } = transaction;
 
-    // Concatenar valores + timestamp + secret
-    const concatenated = values.join('') + timestamp + eventsSecret;
+    if (!id || !status || amount_in_cents === undefined) {
+      logger.error('❌ Transacción incompleta para validar firma');
+      return false;
+    }
+
+    // ⚠️ Concatenar en el orden EXACTO que Wompi usa para firmar
+    const concatenated = `${id}${status}${amount_in_cents}${timestamp}${eventsSecret}`;
 
     // Calcular SHA256
     const calculatedSignature = crypto
@@ -51,7 +51,11 @@ function validateWompiSignature(event: any): boolean {
 
     if (!isValid) {
       logger.warn(
-        { expected: signature.checksum, calculated: calculatedSignature },
+        {
+          expected: signature.checksum,
+          calculated: calculatedSignature,
+          valuesUsed: { id, status, amount_in_cents, timestamp },
+        },
         '🚫 Firma de webhook inválida'
       );
     }
