@@ -57,6 +57,7 @@ app.use(helmet({
         "https://*.paypalobjects.com",
         "https://ciclismo-api.onrender.com",
         "https://bestige-somatosensory-norbertowilches.com",
+        "https://www.bestige-somatosensory-norbertowilches.com",
       ],
       frameSrc: [
         "'self'",
