@@ -7,12 +7,13 @@ import { sendOrderEmails } from '../../lib/email/send-order-emails';
 const router = Router();
 
 // ============================================
-// VALIDACIÓN DE FIRMA DE WOMPI (BLINDADA)
+// VALIDACIÓN DE FIRMA DE WOMPI (BLINDADA + FIX)
 // ============================================
 // Algoritmo oficial de Wompi:
 // SHA256( valores según signature.properties + timestamp + events_secret )
 //
-// Referencia: https://docs.wompi.co/docs/colombia/eventos/
+// ⚠️ IMPORTANTE: signature.properties usa rutas relativas a `data`.
+// Ej: "transaction.id" significa event.data.transaction.id
 function validateWompiSignature(event: any): boolean {
   try {
     const eventsSecret = process.env.WOMPI_EVENTS_SECRET?.trim();
@@ -37,56 +38,51 @@ function validateWompiSignature(event: any): boolean {
     }
 
     // ─── 1. LIMPIAR EL CHECKSUM RECIBIDO ────────────────────────
-    // Wompi a veces envía el checksum con espacios o caracteres
-    // invisibles si se copia/pega mal. Lo limpiamos.
     const receivedChecksum = String(signature.checksum)
       .trim()
       .replace(/[\u200B-\u200D\uFEFF]/g, '');
 
-    // 🔍 Forense: ver exactamente qué llegó
     logger.info(
       {
         checksum_length: receivedChecksum.length,
-        checksum_raw: JSON.stringify(signature.checksum),
         checksum_first_10: receivedChecksum.substring(0, 10),
         checksum_last_10: receivedChecksum.substring(receivedChecksum.length - 10),
         checksum_charCodes: [...receivedChecksum].map((c) => c.charCodeAt(0)),
         properties: signature.properties,
         timestamp,
         timestamp_type: typeof timestamp,
-        secretPrefix: eventsSecret.substring(0, 12) + '...',
         secretLength: eventsSecret.length,
       },
       '🔍 FORENSICS — checksum recibido'
     );
 
-    // Un SHA256 SIEMPRE tiene 64 caracteres hex. Si no, algo está mal.
     if (receivedChecksum.length !== 64) {
       logger.error(
-        {
-          length: receivedChecksum.length,
-          raw: JSON.stringify(signature.checksum),
-        },
-        '❌ Checksum recibido no tiene 64 caracteres (no es un SHA256 válido). ' +
-          'Posible: secret incorrecto, ambiente cruzado, o Wompi envió basura.'
+        { length: receivedChecksum.length, raw: JSON.stringify(signature.checksum) },
+        '❌ Checksum no tiene 64 caracteres'
       );
       return false;
     }
 
-    // ─── 2. EXTRAER VALORES EN EL ORDEN DE signature.properties ─
+    // ─── 2. EXTRAER VALORES DESDE event.data ────────────────────
+    // ⚠️ signature.properties usa rutas RELATIVAS a data.
+    // Por eso empezamos en `event.data`, NO en `event`.
     const rawValues: any[] = [];
     const valuesForLog: string[] = [];
 
     for (const property of signature.properties) {
       const parts = property.split('.');
-      let value: any = event;
+      let value: any = event.data;   // 👈 FIX: Wompi anida en `data`
 
       for (const part of parts) {
         value = value?.[part];
       }
 
       if (value === undefined || value === null) {
-        logger.error({ property }, '❌ Propiedad no encontrada en el webhook');
+        logger.error(
+          { property, availableKeys: Object.keys(event.data || {}) },
+          '❌ Propiedad no encontrada en el webhook'
+        );
         return false;
       }
 
@@ -97,7 +93,6 @@ function validateWompiSignature(event: any): boolean {
     const values = rawValues.map((v) => String(v).trim()).join('');
 
     // ─── 3. CONSTRUIR LA CADENA A HASHEAR ───────────────────────
-    // Orden oficial: valores + timestamp + events_secret
     const stringToHash = values + String(timestamp).trim() + eventsSecret;
 
     logger.info(
@@ -124,26 +119,8 @@ function validateWompiSignature(event: any): boolean {
         calculated: calculatedChecksum,
         match: isValid,
       },
-      isValid
-        ? '✅ FIRMA VÁLIDA'
-        : '❌ FIRMA INVÁLIDA — comparación final'
+      isValid ? '✅ FIRMA VÁLIDA' : '❌ FIRMA INVÁLIDA — comparación final'
     );
-
-    if (!isValid) {
-      logger.warn(
-        {
-          expected: receivedChecksum,
-          calculated: calculatedChecksum,
-          valuesUsed: {
-            id: event?.data?.transaction?.id,
-            status: event?.data?.transaction?.status,
-            amount_in_cents: event?.data?.transaction?.amount_in_cents,
-            timestamp,
-          },
-        },
-        '🚫 Firma de webhook inválida'
-      );
-    }
 
     return isValid;
   } catch (error: any) {
@@ -189,18 +166,13 @@ router.post('/webhook', async (req: Request, res: Response) => {
       '🎯 Webhook Wompi recibido'
     );
 
-    // 1. Validar firma
     if (!validateWompiSignature(event)) {
       logger.warn('🚫 Webhook rechazado: firma inválida');
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
-    // 2. Solo procesar transaction.updated
     if (event.event !== 'transaction.updated') {
-      logger.info(
-        { event: event.event },
-        '⏭️  Evento ignorado (no es transaction.updated)'
-      );
+      logger.info({ event: event.event }, '⏭️  Evento ignorado');
       return res.status(200).json({ received: true, ignored: true });
     }
 
@@ -222,27 +194,23 @@ router.post('/webhook', async (req: Request, res: Response) => {
       '📊 Procesando transacción de Wompi'
     );
 
-    // 3. Buscar la orden por referencia
     const order = await prisma.order.findFirst({
       where: { paymentId: reference },
       include: { items: true },
     });
 
     if (!order) {
-      logger.warn({ reference }, '⚠️  Orden no encontrada para esta referencia');
+      logger.warn({ reference }, '⚠️  Orden no encontrada');
       return res.status(200).json({ received: true, orderFound: false });
     }
 
-    // 4. Mapear estado
     const { status, paymentStatus } = mapWompiStatusToOrderStatus(wompiStatus);
 
-    // 5. Idempotencia
     if (order.status === status && order.paymentStatus === paymentStatus) {
       logger.info({ reference }, '✅ Orden ya estaba en el estado correcto');
       return res.status(200).json({ received: true, alreadyProcessed: true });
     }
 
-    // 6. Actualizar orden
     const metadata = (order.metadata as any) || {};
     await prisma.order.update({
       where: { id: order.id },
@@ -264,7 +232,6 @@ router.post('/webhook', async (req: Request, res: Response) => {
       '✅ Orden actualizada desde webhook'
     );
 
-    // 7. Emails si fue aprobado (solo la primera vez)
     if (wompiStatus === 'APPROVED' && order.status !== 'PAID') {
       try {
         await sendOrderEmails({
@@ -286,15 +253,9 @@ router.post('/webhook', async (req: Request, res: Response) => {
           paymentMethod: order.paymentMethod,
           paymentId: transactionId,
         });
-        logger.info(
-          { orderNumber: order.orderNumber },
-          '✅ Emails enviados desde webhook'
-        );
+        logger.info({ orderNumber: order.orderNumber }, '✅ Emails enviados desde webhook');
       } catch (emailError) {
-        logger.error(
-          { emailError },
-          '❌ Error enviando emails desde webhook'
-        );
+        logger.error({ emailError }, '❌ Error enviando emails desde webhook');
       }
     }
 
