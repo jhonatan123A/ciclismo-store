@@ -14,6 +14,9 @@ import { prisma } from './lib/prisma/client';
 
 const app = express();
 
+// ✅ Confiar en el proxy de Render (necesario para express-rate-limit)
+app.set('trust proxy', 1);
+
 // ============================================
 // 1. SEGURIDAD (OWASP Top 10 2025)
 // ============================================
