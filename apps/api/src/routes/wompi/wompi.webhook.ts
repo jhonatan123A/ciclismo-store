@@ -194,8 +194,10 @@ router.post('/webhook', async (req: Request, res: Response) => {
       '📊 Procesando transacción de Wompi'
     );
 
+    // ✅ FIX: buscar orden por orderNumber (NO por paymentId)
+    // Wompi envía en `reference` el orderNumber que guardamos al crear la orden.
     const order = await prisma.order.findFirst({
-      where: { paymentId: reference },
+      where: { orderNumber: reference },
       include: { items: true },
     });
 
