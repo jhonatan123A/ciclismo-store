@@ -32,7 +32,7 @@ export const createOrderSchema = z.object({
   shippingAddress: shippingAddressSchema,
   billingAddress: shippingAddressSchema.optional(),
   paymentMethod: z.enum(['wompi', 'paypal', 'stripe', 'mercadopago']),
-  paymentId: z.string().min(1, 'Payment ID is required'),
+  paymentId: z.string().optional(),   // ✅ AHORA OPCIONAL
   // Permitimos 0 o mayor para subtotal en casos especiales
   subtotal: z.number().min(0),
   shippingCost: z.number().min(0).default(0),

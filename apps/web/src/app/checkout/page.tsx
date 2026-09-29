@@ -55,15 +55,13 @@ export default function CheckoutPage() {
   }, [subtotal, envioInfo.costo, totalPrice, items]);
 
   // ============================
-  // GUARDAR ORDEN EN EL BACKEND
+  // CREAR ORDEN PENDING EN EL BACKEND (antes de pagar)
   // ============================
-  const saveOrderToBackend = async (
-    transactionId: string,
-    paymentMethod: 'wompi' | 'paypal',
+  const createPendingOrder = async (
     orderItems: typeof items,
     orderSubtotal: number,
     orderTotal: number
-  ): Promise<any> => {
+  ): Promise<{ orderNumber: string } | null> => {
     try {
       setIsSavingOrder(true);
 
@@ -91,8 +89,8 @@ export default function CheckoutPage() {
         subtotal: orderSubtotal,
         shippingCost: envioInfo.costo,
         total: orderTotal,
-        paymentMethod,
-        paymentId: transactionId,
+        paymentMethod: 'wompi',
+        // ✅ paymentId se omite — el webhook lo llenará cuando Wompi confirme
       };
 
       console.log('📦 Enviando orden al backend:', orderData);
@@ -112,16 +110,16 @@ export default function CheckoutPage() {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('❌ Error del backend:', errorData);
-        throw new Error(errorData.error || 'Error al guardar la orden');
+        throw new Error(errorData.error || 'Error al crear la orden');
       }
 
       const result = await response.json();
-      console.log('✅ Orden guardada:', result.orderNumber);
+      console.log('✅ Orden PENDING creada:', result.orderNumber);
 
       setIsSavingOrder(false);
-      return result;
+      return { orderNumber: result.orderNumber };
     } catch (error) {
-      console.error('❌ Error guardando orden:', error);
+      console.error('❌ Error creando orden:', error);
       setIsSavingOrder(false);
       return null;
     }
@@ -188,7 +186,7 @@ export default function CheckoutPage() {
   // CALLBACKS DE PAGO
   // ============================
   const handlePaymentSuccess = async (transactionId: string) => {
-    console.log('✅ Pago exitoso:', transactionId);
+    console.log('✅ Pago exitoso. Transacción:', transactionId);
 
     const currentItems = useCartStore.getState().items;
     const currentSubtotal = currentItems.reduce(
@@ -203,23 +201,9 @@ export default function CheckoutPage() {
       total: currentTotal,
     });
 
-    console.log('📦 Guardando orden en el backend...');
-
-    const savedOrder = await saveOrderToBackend(
-      transactionId,
-      'wompi',
-      currentItems,
-      currentSubtotal,
-      currentTotal
-    );
-
-    if (savedOrder) {
-      console.log('✅ Orden guardada y emails enviados');
-      setCompletedOrder(savedOrder);
-    } else {
-      console.warn('⚠️ Orden NO guardada, pero el pago sí se hizo');
-    }
-
+    // ✅ La orden YA existe (creada antes de abrir Wompi).
+    // El webhook de Wompi la actualizará a PAID en el backend.
+    // Aquí solo reflejamos el éxito en la UI.
     clearCart();
     setIsComplete(true);
   };
@@ -392,6 +376,15 @@ export default function CheckoutPage() {
                     customerEmail={shipping.email || 'cliente@bestige.com'}
                     customerName={shipping.fullName || 'Cliente Bestige'}
                     customerPhone={shipping.phone}
+                    onBeforePayment={async () => {
+                      const currentItems = useCartStore.getState().items;
+                      const currentSubtotal = currentItems.reduce(
+                        (sum, item) => sum + item.price * item.quantity,
+                        0
+                      );
+                      const currentTotal = currentSubtotal + envioInfo.costo;
+                      return await createPendingOrder(currentItems, currentSubtotal, currentTotal);
+                    }}
                     onPaymentSuccess={handlePaymentSuccess}
                     onPaymentError={handlePaymentError}
                   />

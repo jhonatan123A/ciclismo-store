@@ -4,7 +4,15 @@ import crypto from 'crypto';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { amountInCents, currency = 'COP' } = body;
+    const { amountInCents, currency = 'COP', reference } = body;
+
+    // ✅ AHORA: la reference es OBLIGATORIA y viene del frontend
+    if (!reference || typeof reference !== 'string') {
+      return NextResponse.json(
+        { error: 'reference es requerida' },
+        { status: 400 }
+      );
+    }
 
     const parsedAmount = Math.round(Number(amountInCents));
 
@@ -14,12 +22,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Generar referencia única
-    const reference = `BESTIGE-${Date.now()}-${Math.random()
-      .toString(36)
-      .substring(2, 8)
-      .toUpperCase()}`;
 
     // Obtener Secreto de Integridad de Wompi
     const integrityKey = process.env.WOMPI_INTEGRITY_KEY;

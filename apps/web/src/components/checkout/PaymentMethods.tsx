@@ -10,6 +10,8 @@ interface PaymentMethodsProps {
   customerEmail?: string;
   customerName?: string;
   customerPhone?: string;
+  // ✅ NUEVA PROP: se pasa al WompiButton para crear la orden antes de pagar
+  onBeforePayment?: () => Promise<{ orderNumber: string } | null>;
   onPaymentSuccess: (transactionId: string) => void;
   onPaymentError: (error: string) => void;
 }
@@ -21,6 +23,7 @@ export function PaymentMethods({
   customerEmail = 'cliente@bestige.com',
   customerName = 'Cliente Bestige',
   customerPhone,
+  onBeforePayment,
   onPaymentSuccess,
   onPaymentError,
 }: PaymentMethodsProps) {
@@ -80,6 +83,7 @@ export function PaymentMethods({
           customerEmail={customerEmail}
           customerName={customerName}
           customerPhone={customerPhone}
+          onBeforePayment={onBeforePayment}
           onSuccess={onPaymentSuccess}
           onError={onPaymentError}
         />

@@ -8,6 +8,8 @@ interface WompiButtonProps {
   customerEmail: string;
   customerName: string;
   customerPhone?: string;
+  // ✅ NUEVA PROP: crea la orden y devuelve el orderNumber
+  onBeforePayment?: () => Promise<{ orderNumber: string } | null>;
   onSuccess?: (transactionId: string) => void;
   onError?: (error: string) => void;
 }
@@ -23,6 +25,7 @@ export function WompiButton({
   customerEmail,
   customerName,
   customerPhone = '3000000000',
+  onBeforePayment,   // ✅ NUEVA PROP
   onSuccess,
   onError,
 }: WompiButtonProps) {
@@ -65,11 +68,28 @@ export function WompiButton({
     try {
       const amountInCents = Math.round(amountInPesos * 100);
 
-      // 1. Pedir la firma SHA-256 al servidor
+      // ✅ PASO A: Crear la orden en el backend ANTES de abrir Wompi
+      if (!onBeforePayment) {
+        throw new Error('onBeforePayment no configurado');
+      }
+
+      const orderResult = await onBeforePayment();
+      if (!orderResult?.orderNumber) {
+        throw new Error('No se pudo crear la orden. Intenta de nuevo.');
+      }
+
+      const orderNumber = orderResult.orderNumber;
+      console.log('📦 Orden creada:', orderNumber);
+
+      // ✅ PASO B: Pedir la firma SHA-256 usando el orderNumber como reference
       const response = await fetch('/api/wompi/signature', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amountInCents, currency: 'COP' }),
+        body: JSON.stringify({
+          amountInCents,
+          currency: 'COP',
+          reference: orderNumber,   // 👈 antes no se mandaba
+        }),
       });
 
       const data = await response.json();
@@ -82,7 +102,7 @@ export function WompiButton({
       const rawPhone = customerPhone.replace(/\D/g, '');
       const cleanPhone = rawPhone.length >= 10 ? rawPhone.slice(-10) : '3000000000';
 
-      // 2. Instanciar el Widget usando transporte postMessage para evitar el 403 de CloudFront
+      // 3. Instanciar el Widget usando transporte postMessage para evitar el 403 de CloudFront
       const checkout = new window.WidgetCheckout({
         currency: 'COP',
         amountInCents: amountInCents,
