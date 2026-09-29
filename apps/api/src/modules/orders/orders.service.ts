@@ -76,6 +76,11 @@ export async function createOrder(data: CreateOrderData) {
           customerName: data.customerName,
           customerEmail: data.customerEmail,
           customerPhone: data.customerPhone,
+          // ✅ NUEVO: Datos legales del cliente (DIAN + guías)
+          documentType: data.shippingAddress?.documentType || '',
+          documentId: data.shippingAddress?.documentId || '',
+          personType: data.shippingAddress?.personType || '',
+          taxRegime: data.shippingAddress?.taxRegime || '',
         },
         items: {
           create: itemsToCreate,

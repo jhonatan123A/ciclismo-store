@@ -70,6 +70,25 @@ export default function CheckoutPage() {
         customerEmail: shipping.email,
         customerPhone: shipping.phone,
         shippingAddress: {
+          // ✅ NUEVO: Datos legales del cliente
+          documentType: shipping.documentType,
+          documentId: shipping.documentId,
+          personType: shipping.personType,
+          taxRegime: shipping.taxRegime,
+          // Dirección de envío
+          department: shipping.department,
+          city: shipping.city,
+          address: shipping.address,
+          neighborhood: shipping.neighborhood,
+          references: shipping.references || '',
+          zipCode: shipping.zipCode || '',
+        },
+        billingAddress: {
+          // ✅ NUEVO: Dirección fiscal (mismo que envío)
+          documentType: shipping.documentType,
+          documentId: shipping.documentId,
+          personType: shipping.personType,
+          taxRegime: shipping.taxRegime,
           department: shipping.department,
           city: shipping.city,
           address: shipping.address,

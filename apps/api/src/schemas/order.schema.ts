@@ -12,7 +12,18 @@ export const orderItemSchema = z.object({
   price: z.number().positive(),
 });
 
+// ✅ NUEVO: Validaciones para tipo de documento y sus reglas
+const documentTypeSchema = z.enum(['CC', 'CE', 'NIT', 'PA']);
+const personTypeSchema = z.enum(['NATURAL', 'JURIDICA']);
+const taxRegimeSchema = z.enum(['NO_RESPONSABLE', 'RESPONSABLE', 'SIMPLE']);
+
 export const shippingAddressSchema = z.object({
+  // ✅ NUEVO: Datos legales obligatorios (DIAN + guías)
+  documentType: documentTypeSchema,
+  documentId: z.string().min(6, 'El número de documento es obligatorio'),
+  personType: personTypeSchema,
+  taxRegime: taxRegimeSchema,
+  // Dirección de envío
   department: z.string().optional(),
   city: z.string().min(1, 'City is required'),
   address: z.string().optional(),
@@ -32,7 +43,7 @@ export const createOrderSchema = z.object({
   shippingAddress: shippingAddressSchema,
   billingAddress: shippingAddressSchema.optional(),
   paymentMethod: z.enum(['wompi', 'paypal', 'stripe', 'mercadopago']),
-  paymentId: z.string().optional(),   // ✅ AHORA OPCIONAL
+  paymentId: z.string().optional(),
   // Permitimos 0 o mayor para subtotal en casos especiales
   subtotal: z.number().min(0),
   shippingCost: z.number().min(0).default(0),

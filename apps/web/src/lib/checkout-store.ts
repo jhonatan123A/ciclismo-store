@@ -38,12 +38,38 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
       isShippingComplete: () => {
         const s = get().shipping;
+        // ✅ Validación de documento según tipo (reglas simples y legales)
+        const docId = s.documentId?.replace(/\D/g, '') || '';
+        const docIdClean = s.documentId?.trim() || '';
+        let isDocumentValid = false;
+
+        switch (s.documentType) {
+          case 'CC':
+            isDocumentValid = /^\d{6,10}$/.test(docId);
+            break;
+          case 'CE':
+            isDocumentValid = /^[A-Za-z0-9]{6,12}$/.test(docIdClean);
+            break;
+          case 'NIT':
+            isDocumentValid = /^\d{9,10}$/.test(docId);
+            break;
+          case 'PA':
+            isDocumentValid = /^[A-Za-z0-9]{6,15}$/.test(docIdClean);
+            break;
+          default:
+            isDocumentValid = false;
+        }
+
         return !!(
           s.fullName &&
           s.phone &&
           s.phone.length === 10 &&
           s.email &&
           s.email.includes('@') &&
+          s.documentType &&
+          isDocumentValid &&
+          s.personType &&
+          s.taxRegime &&
           s.department &&
           s.city &&
           s.address &&
