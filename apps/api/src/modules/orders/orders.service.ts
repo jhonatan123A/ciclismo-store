@@ -1,6 +1,5 @@
 import { prisma } from '../../lib/prisma/client';
 import { logger } from '../../lib/logger/logger';
-import { sendOrderEmails } from '../../lib/email/send-order-emails';
 
 interface CreateOrderData {
   customerName: string;
@@ -60,16 +59,17 @@ export async function createOrder(data: CreateOrderData) {
       return itemData;
     });
 
+    // ✅ La orden se crea PENDING hasta que Wompi confirme el pago vía webhook
     const order = await prisma.order.create({
       data: {
         orderNumber,
-        status: 'PAID',
+        status: 'PENDING',
         subtotal: data.subtotal,
         shipping: data.shippingCost,
         total: data.total,
         paymentMethod: data.paymentMethod,
         paymentId: data.paymentId,
-        paymentStatus: 'approved',
+        paymentStatus: 'pending',
         shippingAddress: data.shippingAddress,
         billingAddress: data.shippingAddress,
         metadata: {
@@ -84,32 +84,9 @@ export async function createOrder(data: CreateOrderData) {
       include: { items: true },
     });
 
-    logger.info({ orderNumber: order.orderNumber }, '✅ Orden guardada en DB');
+    logger.info({ orderNumber: order.orderNumber }, '✅ Orden guardada en DB (PENDING)');
 
-    try {
-      await sendOrderEmails({
-        orderNumber: order.orderNumber,
-        customerName: data.customerName,
-        customerEmail: data.customerEmail,
-        customerPhone: data.customerPhone,
-        shippingAddress: data.shippingAddress,
-        items: data.items.map((item: any) => ({
-          name: item.name || 'Producto',
-          quantity: item.quantity,
-          size: item.size || 'M',
-          color: item.color || 'Negro',
-          price: item.price,
-        })),
-        subtotal: data.subtotal,
-        shippingCost: data.shippingCost,
-        total: data.total,
-        paymentMethod: data.paymentMethod,
-        paymentId: data.paymentId,
-      });
-      logger.info({ orderNumber }, '✅ Emails enviados');
-    } catch (emailError) {
-      logger.error({ emailError }, '❌ Error enviando emails');
-    }
+    // ✅ Los emails los envía el webhook de Wompi cuando el pago es APPROVED
 
     return order;
   } catch (error) {
@@ -133,10 +110,11 @@ export async function getOrderById(id: string) {
 }
 
 // ✅ NUEVA FUNCIÓN: Obtener pedidos por email del cliente
+// Solo devuelve pedidos pagados (PAID, SHIPPED, DELIVERED)
 export async function getOrdersByEmail(email: string) {
   logger.info({ email }, '🔍 Buscando pedidos por email');
 
-  // Buscar por email en metadata (formato JSON)
+  // Buscar por email en metadata (formato JSON), solo órdenes pagadas
   const orders = await prisma.$queryRaw`
     SELECT 
       id,
@@ -152,6 +130,7 @@ export async function getOrdersByEmail(email: string) {
       "createdAt"
     FROM "Order"
     WHERE metadata->>'customerEmail' = ${email}
+      AND status IN ('PAID', 'SHIPPED', 'DELIVERED')
     ORDER BY "createdAt" DESC
     LIMIT 50
   `;
