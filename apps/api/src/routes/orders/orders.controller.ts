@@ -6,6 +6,7 @@ import {
   getAllOrders,
   getOrderById,
   getOrdersByEmail,
+  getOrderByAccessToken,
 } from '../../modules/orders/orders.service';
 import { createOrderSchema } from '../../schemas/order.schema';
 import { logger } from '../../lib/logger/logger';
@@ -49,11 +50,40 @@ router.post(
 );
 
 /**
- * GET /api/v1/orders/history/:email - PÚBLICO (cliente ve sus pedidos)
+ * GET /api/v1/orders/by-token/:token - PÚBLICO (cliente ve SU pedido con token)
+ * ✅ NUEVO: Reemplaza al endpoint público por email
+ */
+router.get(
+  '/by-token/:token',
+  asyncHandler(async (req: Request, res: Response) => {
+    const { token } = req.params;
+
+    if (!token || token.length < 32) {
+      return res.status(400).json({ error: 'Token inválido' });
+    }
+
+    const order = await getOrderByAccessToken(token);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Pedido no encontrado o token expirado' });
+    }
+
+    res.json({
+      success: true,
+      order,
+    });
+  })
+);
+
+/**
+ * GET /api/v1/orders/history/:email - SOLO ADMIN
+ * ⚠️ CAMBIO: antes era público, ahora solo admins.
  * ⚠️ DEBE IR ANTES de /:id para no colisionar
  */
 router.get(
   '/history/:email',
+  authenticate,
+  authorize('ADMIN', 'STORE_MANAGER'),
   asyncHandler(async (req: Request, res: Response) => {
     const { email } = req.params;
 

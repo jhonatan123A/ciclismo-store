@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -13,6 +14,7 @@ import {
   Clock,
   Truck,
   XCircle,
+  Key,
 } from 'lucide-react';
 import { generateOrderWhatsAppLink } from '@/lib/whatsapp';
 
@@ -80,17 +82,19 @@ const getStatusInfo = (status: string) => {
   }
 };
 
-export default function OrdersPage() {
-  const [email, setEmail] = useState('');
+// ✅ Componente interno que usa useSearchParams()
+function OrdersContent() {
+  const searchParams = useSearchParams();
+  const [token, setToken] = useState('');
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setError('Ingresa un correo electrónico válido');
+  // ✅ Buscar por token (usado tanto por el form como por el query string)
+  const searchByToken = async (tokenValue: string) => {
+    if (!tokenValue || tokenValue.trim().length < 32) {
+      setError('El token debe tener al menos 32 caracteres');
       return;
     }
 
@@ -104,22 +108,43 @@ export default function OrdersPage() {
         : 'http://localhost:4000/api/v1';
 
       const response = await fetch(
-        `${apiUrl}/orders/history/${encodeURIComponent(email)}`
+        `${apiUrl}/orders/by-token/${encodeURIComponent(tokenValue.trim())}`
       );
 
+      if (response.status === 404) {
+        setHasSearched(true);
+        setOrders([]);
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Error al buscar pedidos');
+        throw new Error('Error al buscar el pedido');
       }
 
       const data = await response.json();
-      setOrders(data.orders || []);
+      setOrders(data.order ? [data.order] : []);
       setHasSearched(true);
     } catch (err) {
       console.error('Error:', err);
-      setError('Error al buscar tus pedidos. Intenta de nuevo.');
+      setError('Error al buscar tu pedido. Intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // ✅ Al montar, si hay un token en el query string, buscarlo automáticamente
+  useEffect(() => {
+    const tokenFromUrl = searchParams.get('token');
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+      searchByToken(tokenFromUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await searchByToken(token);
   };
 
   const formatDate = (date: string) => {
@@ -159,7 +184,7 @@ export default function OrdersPage() {
             Mis Pedidos
           </h1>
           <p className="text-white/50 text-sm max-w-md mx-auto">
-            Ingresa el correo con el que hiciste tu compra para ver el historial
+            Ingresa el token que recibiste por correo para ver tu pedido
           </p>
         </div>
 
@@ -167,13 +192,13 @@ export default function OrdersPage() {
         <form onSubmit={handleSearch} className="mb-10">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tucorreo@ejemplo.com"
-                className="w-full bg-white/[0.02] border border-white/10 rounded-full pl-12 pr-4 py-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF5A36]/50 focus:bg-white/[0.04] transition-all"
+                type="text"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                placeholder="Pega aquí tu token de acceso"
+                className="w-full bg-white/[0.02] border border-white/10 rounded-full pl-12 pr-4 py-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF5A36]/50 focus:bg-white/[0.04] transition-all font-mono"
               />
             </div>
             <button
@@ -204,10 +229,10 @@ export default function OrdersPage() {
           <div className="p-10 rounded-2xl border border-white/10 bg-white/[0.02] text-center">
             <div className="text-6xl mb-4">📦</div>
             <h3 className="text-white font-bold text-lg mb-2">
-              No encontramos pedidos
+              No encontramos tu pedido
             </h3>
             <p className="text-white/50 text-sm">
-              No hay pedidos asociados al correo <strong>{email}</strong>
+              Verifica que el token sea correcto. Si el problema continúa, contáctanos por WhatsApp.
             </p>
           </div>
         )}
@@ -333,5 +358,20 @@ export default function OrdersPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// ✅ Wrapper con Suspense (obligatorio en Next.js 14 para useSearchParams)
+export default function OrdersPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="relative min-h-screen pt-24 pb-16 px-6 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[#FF5A36]" />
+        </div>
+      }
+    >
+      <OrdersContent />
+    </Suspense>
   );
 }

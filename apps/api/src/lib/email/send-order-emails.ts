@@ -3,9 +3,12 @@ import { logger } from '../logger/logger';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ✅ CAMBIO ÚNICO: usar dominio verificado en Resend
+// ✅ Dominio verificado en Resend
 const FROM_EMAIL = 'BESTIGE <pedidos@bestige-somatosensory-norbertowilches.com>';
 const ADMIN_EMAIL = 'bestigesomatosensorial@gmail.com';
+
+// ✅ Dominio público (para armar el link de acceso al pedido)
+const SITE_URL = 'https://bestige-somatosensory-norbertowilches.com';
 
 interface OrderEmailData {
   orderNumber: string;
@@ -19,6 +22,8 @@ interface OrderEmailData {
   total: number;
   paymentMethod: string;
   paymentId: string;
+  // ✅ NUEVO: token de acceso (opcional, para el email del cliente)
+  accessToken?: string;
 }
 
 function formatAddress(addr: any): string {
@@ -56,6 +61,11 @@ export async function sendCustomerEmail(data: OrderEmailData) {
 
     const addressHtml = formatAddress(data.shippingAddress);
 
+    // ✅ NUEVO: Link con el token (si existe)
+    const trackingUrl = data.accessToken
+      ? `${SITE_URL}/orders?token=${data.accessToken}`
+      : null;
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -77,6 +87,22 @@ export async function sendCustomerEmail(data: OrderEmailData) {
               <p style="margin: 0; color: #666; font-size: 12px;">NÚMERO DE PEDIDO</p>
               <p style="margin: 5px 0 0 0; color: #000; font-size: 18px; font-weight: bold;">${data.orderNumber}</p>
             </div>
+
+            ${trackingUrl ? `
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${trackingUrl}" style="display: inline-block; background: #FF5A36; color: #fff; padding: 14px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                Ver mi pedido
+              </a>
+              <p style="margin: 15px 0 0 0; color: #999; font-size: 11px;">
+                O copia este enlace en tu navegador:<br>
+                <span style="color: #666; word-break: break-all; font-size: 10px;">${trackingUrl}</span>
+              </p>
+              <p style="margin: 12px 0 0 0; color: #999; font-size: 11px;">
+                Este enlace es válido por 90 días.
+              </p>
+            </div>
+            ` : ''}
+
             <h3 style="color: #000; margin-top: 30px;">Detalle del pedido</h3>
             <table style="width: 100%; border-collapse: collapse;">${itemsHtml}</table>
             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee;">

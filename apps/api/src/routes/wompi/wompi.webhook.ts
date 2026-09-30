@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { logger } from '../../lib/logger/logger';
 import { prisma } from '../../lib/prisma/client';
 import { sendOrderEmails } from '../../lib/email/send-order-emails';
+import { generateAccessToken, getAccessTokenExpiration } from '../../modules/orders/orders.service';
 
 const router = Router();
 
@@ -72,7 +73,7 @@ function validateWompiSignature(event: any): boolean {
 
     for (const property of signature.properties) {
       const parts = property.split('.');
-      let value: any = event.data;   // 👈 FIX: Wompi anida en `data`
+      let value: any = event.data;
 
       for (const part of parts) {
         value = value?.[part];
@@ -214,12 +215,29 @@ router.post('/webhook', async (req: Request, res: Response) => {
     }
 
     const metadata = (order.metadata as any) || {};
+
+    // ✅ NUEVO: Si el pago fue aprobado, generar token de acceso (solo la primera vez)
+    const shouldGenerateToken = wompiStatus === 'APPROVED' && !order.accessToken;
+    const accessToken = shouldGenerateToken ? generateAccessToken() : order.accessToken;
+    const accessTokenExp = shouldGenerateToken ? getAccessTokenExpiration() : order.accessTokenExp;
+
+    if (shouldGenerateToken && accessToken) {
+      logger.info(
+        { orderNumber: order.orderNumber, tokenPrefix: accessToken.substring(0, 8) + '...' },
+        '🎫 Token de acceso generado'
+      );
+    }
+
     await prisma.order.update({
       where: { id: order.id },
       data: {
         status,
         paymentStatus,
         paymentId: transactionId,
+        // ✅ NUEVO: guardar el token (solo si se generó)
+        ...(shouldGenerateToken && accessToken && accessTokenExp
+          ? { accessToken, accessTokenExp }
+          : {}),
         metadata: {
           ...metadata,
           wompiTransactionId: transactionId,
@@ -254,6 +272,8 @@ router.post('/webhook', async (req: Request, res: Response) => {
           total: order.total,
           paymentMethod: order.paymentMethod,
           paymentId: transactionId,
+          // ✅ NUEVO: pasar el token para que el email incluya el link
+          accessToken: accessToken || undefined,
         });
         logger.info({ orderNumber: order.orderNumber }, '✅ Emails enviados desde webhook');
       } catch (emailError) {

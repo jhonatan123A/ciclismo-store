@@ -1,5 +1,6 @@
 import { prisma } from '../../lib/prisma/client';
 import { logger } from '../../lib/logger/logger';
+import crypto from 'crypto';
 
 interface CreateOrderData {
   customerName: string;
@@ -76,7 +77,7 @@ export async function createOrder(data: CreateOrderData) {
           customerName: data.customerName,
           customerEmail: data.customerEmail,
           customerPhone: data.customerPhone,
-          // ✅ NUEVO: Datos legales del cliente (DIAN + guías)
+          // ✅ Datos legales del cliente (DIAN + guías)
           documentType: data.shippingAddress?.documentType || '',
           documentId: data.shippingAddress?.documentId || '',
           personType: data.shippingAddress?.personType || '',
@@ -116,6 +117,7 @@ export async function getOrderById(id: string) {
 
 // ✅ NUEVA FUNCIÓN: Obtener pedidos por email del cliente
 // Solo devuelve pedidos pagados (PAID, SHIPPED, DELIVERED)
+// ⚠️ USO INTERNO / ADMIN — No exponer públicamente
 export async function getOrdersByEmail(email: string) {
   logger.info({ email }, '🔍 Buscando pedidos por email');
 
@@ -153,4 +155,58 @@ export async function getOrdersByEmail(email: string) {
   logger.info({ email, count: ordersWithItems.length }, '✅ Pedidos encontrados');
 
   return ordersWithItems;
+}
+
+// ✅ NUEVO: Genera un token de acceso único (32 bytes hex = 64 caracteres)
+export function generateAccessToken(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+// ✅ NUEVO: Calcula la fecha de expiración (90 días desde ahora)
+export function getAccessTokenExpiration(): Date {
+  const exp = new Date();
+  exp.setDate(exp.getDate() + 90); // 90 días
+  return exp;
+}
+
+// ✅ NUEVO: Obtener una orden por su accessToken
+// Solo devuelve la orden si el token es válido y no ha expirado
+export async function getOrderByAccessToken(token: string) {
+  logger.info({ tokenPrefix: token.substring(0, 8) + '...' }, '🔍 Buscando orden por token');
+
+  if (!token || token.length < 32) {
+    logger.warn('⚠️ Token inválido (muy corto)');
+    return null;
+  }
+
+  const order = await prisma.order.findUnique({
+    where: { accessToken: token },
+    include: { items: true },
+  });
+
+  if (!order) {
+    logger.warn({ tokenPrefix: token.substring(0, 8) + '...' }, '⚠️ Token no encontrado');
+    return null;
+  }
+
+  // Verificar que no haya expirado
+  if (order.accessTokenExp && order.accessTokenExp < new Date()) {
+    logger.warn(
+      { orderNumber: order.orderNumber, expiredAt: order.accessTokenExp },
+      '⚠️ Token expirado'
+    );
+    return null;
+  }
+
+  // Solo devolver órdenes que ya estén pagadas o más allá
+  if (!['PAID', 'SHIPPED', 'DELIVERED'].includes(order.status)) {
+    logger.warn(
+      { orderNumber: order.orderNumber, status: order.status },
+      '⚠️ Orden no está pagada'
+    );
+    return null;
+  }
+
+  logger.info({ orderNumber: order.orderNumber }, '✅ Orden encontrada por token');
+  return order;
 }
