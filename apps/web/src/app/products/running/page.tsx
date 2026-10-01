@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight, Truck } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -16,7 +17,7 @@ export default function RunningProductPage() {
   const [selectedSize, setSelectedSize] = useState('M');
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
-  
+
   // ESTADO PARA CONTROLAR LA APARICIÓN DE LA INTERFAZ
   const [showUI, setShowUI] = useState(false);
 
@@ -74,17 +75,17 @@ export default function RunningProductPage() {
       />
 
       {/* 2. OVERLAY OSCURO CON TRANSICIÓN */}
-      <div 
+      <div
         className={`absolute inset-0 w-full h-full transition-opacity duration-1000 z-[1] ${
           showUI ? 'bg-black/60' : 'bg-black/0'
-        }`} 
+        }`}
       />
 
       {/* 3. INTERFAZ COMPLETA */}
-      <div 
+      <div
         className={`relative z-10 max-w-7xl mx-auto transition-all duration-1000 ease-out ${
-          showUI 
-            ? 'opacity-100 translate-y-0 pointer-events-auto' 
+          showUI
+            ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-12 pointer-events-none'
         }`}
       >
@@ -271,6 +272,12 @@ export default function RunningProductPage() {
             </div>
           </div>
         </div>
+
+        {/* ✅ NUEVO: Sección de reseñas */}
+        <ReviewsSection
+          productId={product.id}
+          productName={product.name}
+        />
       </div>
     </div>
   );

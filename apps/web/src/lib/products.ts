@@ -18,7 +18,7 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: '1',
+    id: 'cmupp6aj90000xgact45f7cbe',
     name: 'Badana de Running BESTIGE',
     slug: 'banda-running',
     category: 'running',
@@ -51,7 +51,7 @@ export const products: Product[] = [
     ],
   },
   {
-    id: '2',
+    id: 'cmupp6bb00001xgacxkfdr06u',
     name: 'Badana de Ciclismo BESTIGE',
     slug: 'banda-ciclismo',
     category: 'cycling',

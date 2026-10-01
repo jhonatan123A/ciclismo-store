@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight, Truck } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -243,6 +244,12 @@ export default function CyclingProductPage() {
             </div>
           </div>
         </div>
+
+        {/* ✅ NUEVO: Sección de reseñas */}
+        <ReviewsSection
+          productId={product.id}
+          productName={product.name}
+        />
       </div>
     </div>
   );

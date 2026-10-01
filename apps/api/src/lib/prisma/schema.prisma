@@ -73,11 +73,14 @@ model Product {
   dimensions      Json?
   metadata        Json?
   createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime @default(now()) @updatedAt
 
   category   Category?   @relation(fields: [categoryId], references: [id])
   orderItems OrderItem[]
   cartItems  CartItem[]
+  reviews    Review[]   // ✅ NUEVO: relación con reviews
+
+  @@index([categoryId])
 }
 
 model Category {
@@ -140,7 +143,7 @@ model Order {
   // ✅ Token de acceso para el cliente (sin login)
   accessToken     String?  @unique
   accessTokenExp  DateTime?
-  // ✅ NUEVO: Número de guía de envío (Interrapidísimo, etc.)
+  // ✅ Número de guía de envío (Interrapidísimo, etc.)
   trackingNumber  String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -158,17 +161,36 @@ model Order {
 model OrderItem {
   id            String   @id @default(cuid())
   orderId       String
-  productId     String?  // ✅ AHORA ES OPCIONAL (por si el producto se elimina)
+  productId     String?
   variantId     String?
   quantity      Int
   price         Float
   total         Float
-  productName   String?  // ✅ Guardar nombre del producto
-  productImage  String?  // ✅ Guardar imagen del producto
-  size          String?  // ✅ Guardar talla
-  color         String?  // ✅ Guardar color
+  productName   String?
+  productImage  String?
+  size          String?
+  color         String?
   createdAt     DateTime @default(now())
 
   order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product? @relation(fields: [productId], references: [id])
+}
+
+// ✅ NUEVO: Modelo de reseñas de productos
+model Review {
+  id          String   @id @default(cuid())
+  productId   String
+  authorName  String
+  authorEmail String
+  rating      Int      // 1 a 5
+  comment     String
+  isApproved  Boolean  @default(true)   // Admin puede ocultar (false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([isApproved])
+  @@index([createdAt])
 }

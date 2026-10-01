@@ -10,6 +10,7 @@ import authRoutes from './routes/auth/auth.controller';
 import productRoutes from './routes/products/products.controller';
 import orderRoutes from './routes/orders/orders.controller';
 import wompiRoutes from './routes/wompi/wompi.webhook';
+import reviewRoutes from './routes/reviews/reviews.controller';
 import { prisma } from './lib/prisma/client';
 
 const app = express();
@@ -133,6 +134,7 @@ app.get('/ready', async (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/reviews', reviewRoutes);  // ✅ NUEVO
 app.use('/api/wompi', wompiRoutes);
 
 // ============================================
