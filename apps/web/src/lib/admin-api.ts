@@ -191,3 +191,56 @@ export async function updateOrderTracking(
     body: JSON.stringify({ trackingNumber }),
   });
 }
+
+// ============================================
+// ✅ NUEVO: TIPOS DE REVIEWS
+// ============================================
+
+export interface AdminReview {
+  id: string;
+  productId: string;
+  authorName: string;
+  authorEmail: string;
+  rating: number;
+  comment: string;
+  isApproved: boolean;
+  createdAt: string;
+  updatedAt: string;
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+// ============================================
+// ✅ NUEVO: FUNCIONES DE REVIEWS (ADMIN)
+// ============================================
+
+/**
+ * Lista TODAS las reviews (incluidas las no aprobadas).
+ */
+export async function fetchAllReviews(): Promise<{ success: boolean; reviews: AdminReview[] }> {
+  return adminFetch<{ success: boolean; reviews: AdminReview[] }>('/reviews/admin/all');
+}
+
+/**
+ * Borra una review.
+ */
+export async function deleteReview(id: string): Promise<{ success: boolean }> {
+  return adminFetch<{ success: boolean }>(`/reviews/admin/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+/**
+ * Cambia el estado de aprobación de una review (toggle).
+ */
+export async function toggleReviewApproval(
+  id: string
+): Promise<{ success: boolean; review: AdminReview }> {
+  return adminFetch<{ success: boolean; review: AdminReview }>(
+    `/reviews/admin/${id}/toggle`,
+    { method: 'PATCH' }
+  );
+}
