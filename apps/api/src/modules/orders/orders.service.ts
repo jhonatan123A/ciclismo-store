@@ -24,50 +24,114 @@ export async function createOrder(data: CreateOrderData) {
 
     logger.info({ orderNumber }, '📦 Creando orden en DB...');
 
+    // ============================================
+    // ✅ SEGURIDAD: validar precios contra la DB
+    // ============================================
+
     const productIds = data.items
       .map((item: any) => item.productId)
       .filter((id: any) => typeof id === 'string' && id.trim().length > 0);
 
-    const existingProducts = productIds.length > 0
-      ? await prisma.product.findMany({
-          where: { id: { in: productIds } },
-          select: { id: true },
-        })
-      : [];
+    if (productIds.length === 0) {
+      throw new Error('La orden no tiene productos válidos');
+    }
 
-    const existingIds = new Set(existingProducts.map((p) => p.id));
+    // 1. Buscar TODOS los productos en la DB
+    const existingProducts = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, name: true, price: true, images: true },
+    });
 
     logger.info(
-      { requested: productIds.length, existing: existingIds.size },
-      '🔍 Productos verificados'
+      { requested: productIds.length, found: existingProducts.length },
+      '🔍 Productos verificados en DB'
     );
 
+    // 2. Verificar que TODOS los productos existan
+    if (existingProducts.length !== productIds.length) {
+      const foundIds = new Set(existingProducts.map((p) => p.id));
+      const missing = productIds.filter((id: string) => !foundIds.has(id));
+      logger.error(
+        { orderNumber, missingProducts: missing },
+        '🚨 Producto(s) no encontrado(s) en la DB'
+      );
+      throw new Error('Uno o más productos no existen');
+    }
+
+    // 3. Construir los items con PRECIOS REALES de la DB
+    let realSubtotal = 0;
     const itemsToCreate = data.items.map((item: any) => {
-      const itemData: any = {
+      const product = existingProducts.find((p) => p.id === item.productId);
+      if (!product) {
+        throw new Error(`Producto no encontrado: ${item.productId}`);
+      }
+
+      // ✅ Precio REAL de la DB (nunca del frontend)
+      const realPrice = product.price;
+      const realTotal = realPrice * item.quantity;
+      realSubtotal += realTotal;
+
+      return {
+        productId: product.id,
         quantity: item.quantity,
-        price: item.price,
-        total: item.price * item.quantity,
-        productName: item.name || 'Producto',
-        productImage: item.image || '',
+        price: realPrice,
+        total: realTotal,
+        productName: product.name,
+        productImage: product.images[0] || '',
         size: item.size || 'M',
         color: item.color || 'Negro',
       };
-
-      if (item.productId && existingIds.has(item.productId)) {
-        itemData.productId = item.productId;
-      }
-
-      return itemData;
     });
 
-    // ✅ La orden se crea PENDING hasta que Wompi confirme el pago vía webhook
+    // 4. Verificar que el subtotal del frontend coincida con el real
+    const TOLERANCE = 100; // tolerancia de $100 por redondeo
+    if (Math.abs(realSubtotal - data.subtotal) > TOLERANCE) {
+      logger.error(
+        {
+          orderNumber,
+          clientSubtotal: data.subtotal,
+          realSubtotal,
+          diff: Math.abs(realSubtotal - data.subtotal),
+        },
+        '🚨 ALERTA DE SEGURIDAD: subtotal del frontend no coincide con la DB'
+      );
+      throw new Error(
+        'El subtotal no coincide con el precio real de los productos. Verifica tu carrito.'
+      );
+    }
+
+    // 5. Verificar el total (subtotal + envío)
+    const realShipping = data.shippingCost || 0;
+    const realTotal = realSubtotal + realShipping;
+
+    if (Math.abs(realTotal - data.total) > TOLERANCE) {
+      logger.error(
+        {
+          orderNumber,
+          clientTotal: data.total,
+          realTotal,
+          diff: Math.abs(realTotal - data.total),
+        },
+        '🚨 ALERTA DE SEGURIDAD: total del frontend no coincide con la DB'
+      );
+      throw new Error('El total no coincide. Verifica tu carrito.');
+    }
+
+    logger.info(
+      { orderNumber, realSubtotal, realTotal },
+      '✅ Precios validados contra la DB'
+    );
+
+    // ============================================
+    // Crear la orden (PENDING hasta que Wompi confirme)
+    // ============================================
     const order = await prisma.order.create({
       data: {
         orderNumber,
         status: 'PENDING',
-        subtotal: data.subtotal,
-        shipping: data.shippingCost,
-        total: data.total,
+        subtotal: realSubtotal,       // ✅ usamos el subtotal real
+        shipping: realShipping,
+        total: realTotal,             // ✅ usamos el total real
         paymentMethod: data.paymentMethod,
         paymentId: data.paymentId,
         paymentStatus: 'pending',
@@ -212,7 +276,7 @@ export async function getOrderByAccessToken(token: string) {
 }
 
 // ============================================
-// ✅ NUEVO: FUNCIONES PARA EL PANEL DE ADMIN
+// ✅ FUNCIONES PARA EL PANEL DE ADMIN
 // ============================================
 
 interface AdminOrderFilters {

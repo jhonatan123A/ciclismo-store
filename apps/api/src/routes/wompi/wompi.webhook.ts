@@ -195,7 +195,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
       '📊 Procesando transacción de Wompi'
     );
 
-    // ✅ FIX: buscar orden por orderNumber (NO por paymentId)
+    // ✅ Buscar orden por orderNumber (NO por paymentId)
     // Wompi envía en `reference` el orderNumber que guardamos al crear la orden.
     const order = await prisma.order.findFirst({
       where: { orderNumber: reference },
@@ -207,6 +207,55 @@ router.post('/webhook', async (req: Request, res: Response) => {
       return res.status(200).json({ received: true, orderFound: false });
     }
 
+    // ============================================
+    // ✅ SEGURIDAD: Verificar que el monto de Wompi coincida con el total de la orden
+    // ============================================
+    if (wompiStatus === 'APPROVED') {
+      const wompiAmount = amount_in_cents / 100; // convertir de centavos a pesos
+      const expectedAmount = order.total;
+      const diff = Math.abs(wompiAmount - expectedAmount);
+      const TOLERANCE = 100; // tolerancia de $100 por redondeo
+
+      if (diff > TOLERANCE) {
+        logger.error(
+          {
+            orderNumber: order.orderNumber,
+            wompiAmount,
+            expectedAmount,
+            diff,
+            transactionId,
+          },
+          '🚨 ALERTA DE SEGURIDAD: monto de Wompi no coincide con el total de la orden'
+        );
+
+        // Marcar la orden como sospechosa en metadata (pero NO como PAID)
+        await prisma.order.update({
+          where: { id: order.id },
+          data: {
+            metadata: {
+              ...((order.metadata as any) || {}),
+              securityAlert: 'amount_mismatch',
+              wompiAmount,
+              expectedAmount,
+              flaggedAt: new Date().toISOString(),
+              wompiTransactionId: transactionId,
+            },
+          },
+        });
+
+        return res.status(400).json({
+          received: true,
+          error: 'Amount mismatch',
+          orderNumber: order.orderNumber,
+        });
+      }
+
+      logger.info(
+        { orderNumber: order.orderNumber, wompiAmount, expectedAmount },
+        '✅ Monto verificado correctamente'
+      );
+    }
+
     const { status, paymentStatus } = mapWompiStatusToOrderStatus(wompiStatus);
 
     if (order.status === status && order.paymentStatus === paymentStatus) {
@@ -216,7 +265,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
     const metadata = (order.metadata as any) || {};
 
-    // ✅ NUEVO: Si el pago fue aprobado, generar token de acceso (solo la primera vez)
+    // ✅ Si el pago fue aprobado, generar token de acceso (solo la primera vez)
     const shouldGenerateToken = wompiStatus === 'APPROVED' && !order.accessToken;
     const accessToken = shouldGenerateToken ? generateAccessToken() : order.accessToken;
     const accessTokenExp = shouldGenerateToken ? getAccessTokenExpiration() : order.accessTokenExp;
@@ -234,7 +283,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
         status,
         paymentStatus,
         paymentId: transactionId,
-        // ✅ NUEVO: guardar el token (solo si se generó)
+        // ✅ Guardar el token (solo si se generó)
         ...(shouldGenerateToken && accessToken && accessTokenExp
           ? { accessToken, accessTokenExp }
           : {}),
@@ -272,7 +321,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
           total: order.total,
           paymentMethod: order.paymentMethod,
           paymentId: transactionId,
-          // ✅ NUEVO: pasar el token para que el email incluya el link
+          // ✅ Pasar el token para que el email incluya el link
           accessToken: accessToken || undefined,
         });
         logger.info({ orderNumber: order.orderNumber }, '✅ Emails enviados desde webhook');
