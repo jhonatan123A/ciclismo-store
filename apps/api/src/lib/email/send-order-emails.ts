@@ -61,7 +61,7 @@ export async function sendCustomerEmail(data: OrderEmailData) {
 
     const addressHtml = formatAddress(data.shippingAddress);
 
-    // ✅ NUEVO: Link con el token (si existe)
+    // ✅ Link con el token (si existe)
     const trackingUrl = data.accessToken
       ? `${SITE_URL}/orders?token=${data.accessToken}`
       : null;
@@ -216,4 +216,144 @@ export async function sendAdminEmail(data: OrderEmailData) {
 export async function sendOrderEmails(data: OrderEmailData) {
   // Promise.allSettled asegura que la falla en un correo no cancele el otro
   await Promise.allSettled([sendCustomerEmail(data), sendAdminEmail(data)]);
+}
+
+// ============================================
+// ✅ NUEVO: EMAILS DE CAMBIO DE ESTADO (PANEL DE ADMIN)
+// ============================================
+
+interface StatusUpdateData {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  newStatus: string;             // PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  trackingNumber?: string;       // Solo cuando está SHIPPED
+  accessToken?: string;          // Para el botón "Ver mi pedido"
+}
+
+// Textos amigables por estado
+function getStatusCopy(status: string): {
+  emoji: string;
+  title: string;
+  message: string;
+  color: string;
+} {
+  switch (status) {
+    case 'PROCESSING':
+      return {
+        emoji: '📦',
+        title: '¡Estamos preparando tu pedido!',
+        message: 'Tu pedido está siendo empacado y en breve será despachado.',
+        color: '#E8B94A',
+      };
+    case 'SHIPPED':
+      return {
+        emoji: '🚚',
+        title: '¡Tu pedido está en camino!',
+        message: 'Tu pedido ha sido despachado y está en ruta hacia tu dirección.',
+        color: '#38BDF8',
+      };
+    case 'DELIVERED':
+      return {
+        emoji: '✅',
+        title: '¡Tu pedido fue entregado!',
+        message: 'Esperamos que disfrutes tu compra. ¡Gracias por confiar en BESTIGE!',
+        color: '#10B981',
+      };
+    case 'CANCELLED':
+      return {
+        emoji: '❌',
+        title: 'Tu pedido fue cancelado',
+        message: 'Si tienes dudas sobre esta cancelación, contáctanos por WhatsApp.',
+        color: '#EF4444',
+      };
+    default:
+      return {
+        emoji: '📋',
+        title: 'Actualización de tu pedido',
+        message: `El estado de tu pedido cambió a: ${status}`,
+        color: '#FF5A36',
+      };
+  }
+}
+
+export async function sendStatusUpdateEmail(data: StatusUpdateData) {
+  try {
+    const copy = getStatusCopy(data.newStatus);
+    const trackingUrl = data.accessToken
+      ? `${SITE_URL}/orders?token=${data.accessToken}`
+      : null;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head><meta charset="UTF-8"><title>Actualización de tu pedido - BESTIGE</title></head>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f5f5f5;">
+          <div style="background: #000; padding: 30px; text-align: center;">
+            <h1 style="color: #fff; margin: 0; letter-spacing: 4px;">BESTIGE</h1>
+            <p style="color: #FF5A36; font-size: 10px; letter-spacing: 2px; margin: 5px 0 0 0;">TECNOLOGÍA SOMATOSENSORIAL</p>
+          </div>
+          <div style="background: #fff; padding: 30px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <div style="width: 60px; height: 60px; background: ${copy.color}; border-radius: 50%; margin: 0 auto 15px; line-height: 60px; text-align: center;">
+                <span style="color: #fff; font-size: 30px;">${copy.emoji}</span>
+              </div>
+              <h2 style="color: #000; margin: 0;">${copy.title}</h2>
+              <p style="color: #666; margin: 10px 0 0 0;">${copy.message}</p>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+              <p style="margin: 0; color: #666; font-size: 12px;">NÚMERO DE PEDIDO</p>
+              <p style="margin: 5px 0 0 0; color: #000; font-size: 18px; font-weight: bold;">${data.orderNumber}</p>
+            </div>
+
+            ${data.trackingNumber ? `
+            <div style="background: #F0F9FF; padding: 20px; border-radius: 8px; border-left: 4px solid #38BDF8; margin-bottom: 20px;">
+              <p style="margin: 0; color: #38BDF8; font-weight: bold; font-size: 14px;">NÚMERO DE GUÍA</p>
+              <p style="margin: 8px 0 0 0; color: #000; font-size: 18px; font-weight: bold; font-family: monospace;">${data.trackingNumber}</p>
+              <p style="margin: 8px 0 0 0; color: #666; font-size: 12px;">Puedes rastrear tu pedido con este número en el sitio web de la transportadora.</p>
+            </div>
+            ` : ''}
+
+            ${trackingUrl ? `
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${trackingUrl}" style="display: inline-block; background: #FF5A36; color: #fff; padding: 14px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                Ver mi pedido
+              </a>
+            </div>
+            ` : ''}
+
+            <div style="margin-top: 30px; padding: 20px; background: #FFF5F0; border-radius: 8px; border-left: 4px solid #FF5A36;">
+              <p style="margin: 0; color: #FF5A36; font-weight: bold;">¿Preguntas?</p>
+              <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">Escríbenos a bestigesomatosensorial@gmail.com y te ayudamos.</p>
+            </div>
+          </div>
+          <div style="background: #000; padding: 20px; text-align: center;">
+            <p style="color: #666; font-size: 12px; margin: 0;">© ${new Date().getFullYear()} BESTIGE · FITHAB INNOVATION CI SAS</p>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const response = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.customerEmail,
+      subject: `${copy.emoji} ${copy.title} - Pedido ${data.orderNumber}`,
+      html,
+    });
+
+    if (response.error) {
+      logger.error({ error: response.error }, '❌ Resend devolvió un error al enviar status update');
+      return false;
+    }
+
+    logger.info(
+      { orderNumber: data.orderNumber, status: data.newStatus },
+      '✅ Email de cambio de estado enviado'
+    );
+    return true;
+  } catch (error) {
+    logger.error({ error }, '❌ Error enviando email de cambio de estado');
+    return false;
+  }
 }

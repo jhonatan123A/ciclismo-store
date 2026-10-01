@@ -137,9 +137,11 @@ model Order {
   shippingAddress Json
   billingAddress  Json
   metadata        Json?
-  // ✅ NUEVO: Token de acceso para el cliente (sin login)
+  // ✅ Token de acceso para el cliente (sin login)
   accessToken     String?  @unique
   accessTokenExp  DateTime?
+  // ✅ NUEVO: Número de guía de envío (Interrapidísimo, etc.)
+  trackingNumber  String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -150,6 +152,7 @@ model Order {
   @@index([paymentId])
   @@index([status])
   @@index([accessToken])
+  @@index([trackingNumber])
 }
 
 model OrderItem {
