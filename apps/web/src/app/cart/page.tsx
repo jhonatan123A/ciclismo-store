@@ -1,15 +1,36 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
 import { Trash2, Minus, Plus, ArrowLeft, ArrowRight, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { trackViewCart } from '@/lib/analytics';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotalItems, getTotalPrice, getSavings, clearCart } = useCartStore();
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
   const savings = getSavings();
+
+  // ✅ Trackear vista del carrito
+  useEffect(() => {
+    if (items.length > 0) {
+      trackViewCart(
+        items.map((item) => ({
+          item_id: item.productId,
+          item_name: item.name,
+          item_category: item.category,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+        })),
+        totalPrice
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length]);
 
   if (items.length === 0) {
     return (

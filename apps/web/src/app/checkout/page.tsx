@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
 import { ArrowLeft, Lock, Truck, ShieldCheck } from 'lucide-react';
@@ -11,6 +11,7 @@ import { ShippingSummary } from '@/components/checkout/ShippingSummary';
 import { useCheckoutStore } from '@/lib/checkout-store';
 import { calcularEnvio } from '@/lib/shipping';
 import { OrderSuccess } from '@/components/checkout/OrderSuccess';
+import { trackBeginCheckout, trackPurchase } from '@/lib/analytics';
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
@@ -26,6 +27,9 @@ export default function CheckoutPage() {
     items: typeof items;
     total: number;
   }>({ items: [], total: 0 });
+
+  // ✅ Control para no disparar begin_checkout varias veces
+  const beginCheckoutTracked = useRef(false);
 
   // Cálculo del envío: Ajustado para garantizar envío gratis en cualquier monto
   const calculoBase = isShippingValid
@@ -54,6 +58,26 @@ export default function CheckoutPage() {
     console.log('Items:', items.length);
   }, [subtotal, envioInfo.costo, totalPrice, items]);
 
+  // ✅ Trackear begin_checkout (una sola vez por sesión de checkout)
+  useEffect(() => {
+    if (items.length > 0 && !beginCheckoutTracked.current) {
+      beginCheckoutTracked.current = true;
+      trackBeginCheckout(
+        items.map((item) => ({
+          item_id: item.productId,
+          item_name: item.name,
+          item_category: item.category,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+        })),
+        totalPrice
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length]);
+
   // ============================
   // CREAR ORDEN PENDING EN EL BACKEND (antes de pagar)
   // ============================
@@ -70,12 +94,10 @@ export default function CheckoutPage() {
         customerEmail: shipping.email,
         customerPhone: shipping.phone,
         shippingAddress: {
-          // ✅ NUEVO: Datos legales del cliente
           documentType: shipping.documentType,
           documentId: shipping.documentId,
           personType: shipping.personType,
           taxRegime: shipping.taxRegime,
-          // Dirección de envío
           department: shipping.department,
           city: shipping.city,
           address: shipping.address,
@@ -84,7 +106,6 @@ export default function CheckoutPage() {
           zipCode: shipping.zipCode || '',
         },
         billingAddress: {
-          // ✅ NUEVO: Dirección fiscal (mismo que envío)
           documentType: shipping.documentType,
           documentId: shipping.documentId,
           personType: shipping.personType,
@@ -109,7 +130,6 @@ export default function CheckoutPage() {
         shippingCost: envioInfo.costo,
         total: orderTotal,
         paymentMethod: 'wompi',
-        // ✅ paymentId se omite — el webhook lo llenará cuando Wompi confirme
       };
 
       console.log('📦 Enviando orden al backend:', orderData);
@@ -220,9 +240,24 @@ export default function CheckoutPage() {
       total: currentTotal,
     });
 
+    // ✅ Trackear purchase (la venta real)
+    trackPurchase({
+      transactionId,
+      items: currentItems.map((item) => ({
+        item_id: item.productId,
+        item_name: item.name,
+        item_category: item.category,
+        price: item.price,
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color,
+      })),
+      total: currentTotal,
+      shipping: envioInfo.costo,
+    });
+
     // ✅ La orden YA existe (creada antes de abrir Wompi).
     // El webhook de Wompi la actualizará a PAID en el backend.
-    // Aquí solo reflejamos el éxito en la UI.
     clearCart();
     setIsComplete(true);
   };

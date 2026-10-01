@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import { products } from '@/lib/products';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight, Tru
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { ReviewsSection } from '@/components/reviews/ReviewsSection';
+import { trackViewItem, trackAddToCart } from '@/lib/analytics';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -18,6 +19,19 @@ export default function CyclingProductPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+
+  // ✅ Trackear vista del producto
+  useEffect(() => {
+    if (product) {
+      trackViewItem({
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
 
   if (!product) {
     return (
@@ -45,6 +59,18 @@ export default function CyclingProductPage() {
         image: product.images[0] || '/images/products/placeholder.jpg',
         category: product.category,
       });
+
+      // ✅ Trackear agregar al carrito
+      trackAddToCart({
+        item_id: product.id,
+        item_name: product.name,
+        item_category: product.category,
+        price: product.price,
+        quantity: 1,
+        size: selectedSize,
+        color: 'Negro',
+      });
+
       setIsAdding(false);
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 2000);

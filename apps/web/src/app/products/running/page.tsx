@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight, Tru
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { ReviewsSection } from '@/components/reviews/ReviewsSection';
+import { trackViewItem, trackAddToCart } from '@/lib/analytics';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -31,6 +32,19 @@ export default function RunningProductPage() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // ✅ Trackear vista del producto
+  useEffect(() => {
+    if (product) {
+      trackViewItem({
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
 
   if (!product) {
     return (
@@ -58,6 +72,18 @@ export default function RunningProductPage() {
         image: product.images[0] || '/images/products/placeholder.jpg',
         category: product.category,
       });
+
+      // ✅ Trackear agregar al carrito
+      trackAddToCart({
+        item_id: product.id,
+        item_name: product.name,
+        item_category: product.category,
+        price: product.price,
+        quantity: 1,
+        size: selectedSize,
+        color: 'Negro',
+      });
+
       setIsAdding(false);
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 2000);
