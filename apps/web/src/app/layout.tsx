@@ -13,20 +13,41 @@ import { NeuralBackground } from '@/components/neural/NeuralBackground';
 const GA_MEASUREMENT_ID = 'G-SQ3P0E4YFS';
 const META_PIXEL_ID = '1412178441062317';
 
+const BASE_URL = 'https://www.bestige-somatosensory-norbertowilches.com';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: 'BESTIGE — Tecnología Somatosensorial',
   description: 'Innovación textil para running y ciclismo. Tecnología italiana patentada que conecta con tu piel.',
   keywords: 'bestige, somatosensorial, running, ciclismo, tecnología textil, deporte',
   authors: [{ name: 'BESTIGE' }],
-  // ✅ Verificación de Google Search Console (método oficial de Next.js)
+  // ✅ Verificación de Google Search Console
   verification: {
     google: 'A3Hfq6MlxFhqxjlLnLDhnLVefvtV8z-zFDNxiqjgHZw',
   },
+  // ✅ Open Graph (WhatsApp, Facebook, LinkedIn, etc.)
   openGraph: {
     title: 'BESTIGE — Tecnología Somatosensorial',
     description: 'Tu cuerpo ya sabe. Ahora puedes sentirlo.',
     type: 'website',
     locale: 'es_CO',
+    url: BASE_URL,
+    siteName: 'BESTIGE',
+    images: [
+      {
+        url: `${BASE_URL}/images/brand/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'BESTIGE — Tecnología Somatosensorial',
+      },
+    ],
+  },
+  // ✅ Twitter Card
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BESTIGE — Tecnología Somatosensorial',
+    description: 'Tu cuerpo ya sabe. Ahora puedes sentirlo.',
+    images: [`${BASE_URL}/images/brand/og-image.jpg`],
   },
 };
 
