@@ -12,7 +12,9 @@ interface ReviewFormProps {
   onCancel?: () => void;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+// ✅ CAMBIO: Límite bajado a 2 MB
+const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
 export function ReviewForm({ productId, productName, onSuccess, onCancel }: ReviewFormProps) {
@@ -42,15 +44,21 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
 
     setError('');
 
-    // Validar tamaño
+    // ✅ Validar tamaño con mensaje claro
     if (file.size > MAX_FILE_SIZE) {
-      setError('La foto no puede pesar más de 5 MB');
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      setError(
+        `Tu imagen pesa ${sizeMB} MB y el máximo permitido es ${MAX_FILE_SIZE_MB} MB. ` +
+        `Intenta con una más liviana o comprímela antes de subirla.`
+      );
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
     // Validar tipo
     if (!ALLOWED_TYPES.includes(file.type)) {
       setError('Solo se permiten imágenes JPG, PNG o WebP');
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
@@ -62,17 +70,17 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
     };
     reader.readAsDataURL(file);
 
-    // Subir a Cloudinary inmediatamente
+    // Subir a Cloudinary
     setIsUploadingPhoto(true);
     try {
       const url = await uploadReviewPhoto(file);
       setPhotoUploadedUrl(url);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al subir la foto');
-      // Limpiar si falla
       setPhotoFile(null);
       setPhotoPreview(null);
       setPhotoUploadedUrl(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } finally {
       setIsUploadingPhoto(false);
     }
@@ -115,7 +123,6 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
       return;
     }
 
-    // Si hay foto seleccionada pero no se ha subido → esperar
     if (photoFile && !photoUploadedUrl && !isUploadingPhoto) {
       setError('Espera a que la foto termine de subir');
       return;
@@ -281,7 +288,7 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
           </p>
         </div>
 
-        {/* ✅ NUEVO: Foto */}
+        {/* ✅ Foto */}
         <div>
           <label className="text-[10px] tracking-[0.15em] uppercase text-white/50 mb-2 block">
             Foto del producto (opcional)
@@ -303,7 +310,7 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
                 className="w-full py-3 rounded-lg border border-dashed border-white/20 hover:border-[#FF5A36]/50 bg-white/[0.02] hover:bg-white/[0.04] text-white/60 hover:text-[#FF5A36] text-xs tracking-wider transition-all flex items-center justify-center gap-2"
               >
                 <Camera className="w-4 h-4" />
-                Subir foto (JPG, PNG o WebP, máx 5 MB)
+                Subir foto (JPG, PNG o WebP, máx {MAX_FILE_SIZE_MB} MB)
               </button>
             </>
           ) : (
@@ -311,7 +318,7 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
               <img
                 src={photoPreview}
                 alt="Preview"
-                className="w-full h-48 object-cover"
+                className="w-full max-h-96 object-contain bg-black/40"
               />
               {isUploadingPhoto && (
                 <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
@@ -337,7 +344,7 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
           )}
         </div>
 
-        {/* ✅ NUEVO: Instagram */}
+        {/* ✅ Instagram */}
         <div>
           <label className="text-[10px] tracking-[0.15em] uppercase text-white/50 mb-2 block">
             Link de tu post de Instagram (opcional)

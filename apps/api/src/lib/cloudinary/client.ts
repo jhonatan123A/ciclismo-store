@@ -24,8 +24,13 @@ export async function uploadReviewImage(fileBuffer: Buffer): Promise<string> {
       {
         folder: 'bestige/reviews',
         resource_type: 'image',
+        // ✅ CAMBIO: NO recortar. Mantener proporción original.
+        // - `crop: 'scale'` mantiene la proporción y solo redimensiona si excede el máximo.
+        // - Máximo 1200px de ancho (fotos de móvil suelen ser 3000px+).
+        // - `quality: 'auto:good'` balance entre calidad y peso.
+        // - `fetch_format: 'auto'` sirve WebP/AVIF a navegadores modernos.
         transformation: [
-          { width: 800, height: 800, crop: 'limit' },
+          { width: 1200, height: 1200, crop: 'scale' },
           { quality: 'auto:good' },
           { fetch_format: 'auto' },
         ],

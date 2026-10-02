@@ -19,11 +19,14 @@ const router = Router();
 // ============================================
 // MULTER (para subir fotos)
 // ============================================
-// Guarda el archivo en memoria (no en disco), lo subimos directo a Cloudinary.
+// ✅ CAMBIO: Límite bajado a 2 MB (era 5 MB).
+const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5 MB máximo
+    fileSize: MAX_FILE_SIZE_BYTES,
   },
   fileFilter: (_req, file, cb) => {
     const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -44,7 +47,6 @@ const createReviewSchema = z.object({
   authorEmail: z.string().email('Email inválido').max(200),
   rating: z.number().int().min(1, 'El rating debe ser entre 1 y 5').max(5),
   comment: z.string().min(10, 'El comentario debe tener al menos 10 caracteres').max(1000),
-  // ✅ NUEVO: campos opcionales
   photoUrl: z.string().url('URL de foto inválida').optional().or(z.literal('')),
   instagramUrl: z
     .string()
@@ -64,7 +66,6 @@ const createReviewSchema = z.object({
 
 /**
  * GET /api/v1/reviews/product/:productId - PÚBLICO
- * Lista reviews aprobadas de un producto.
  */
 router.get(
   '/product/:productId',
@@ -87,12 +88,28 @@ router.get(
 /**
  * POST /api/v1/reviews/upload - PÚBLICO
  * Sube una foto de review a Cloudinary.
- * Body: multipart/form-data con campo "photo"
- * Devuelve: { success: true, photoUrl: "https://res.cloudinary.com/..." }
  */
 router.post(
   '/upload',
-  upload.single('photo'),
+  // ✅ Middleware para capturar errores de Multer (tamaño/formato) con mensajes claros
+  (req: Request, res: Response, next: any) => {
+    upload.single('photo')(req, res, (err: any) => {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({
+            error: `La imagen no puede pesar más de ${MAX_FILE_SIZE_MB} MB. Intenta con una más liviana o comprímela antes de subirla.`,
+          });
+        }
+        return res.status(400).json({
+          error: `Error al subir el archivo: ${err.message}`,
+        });
+      } else if (err) {
+        // Error del fileFilter (formato no permitido)
+        return res.status(400).json({ error: err.message });
+      }
+      next();
+    });
+  },
   asyncHandler(async (req: Request, res: Response) => {
     logger.info('📷 Nueva foto de review recibida');
 
@@ -116,7 +133,6 @@ router.post(
 /**
  * POST /api/v1/reviews - PÚBLICO
  * Crea una nueva review.
- * Body: { productId, authorName, authorEmail, rating, comment, photoUrl?, instagramUrl? }
  */
 router.post(
   '/',
@@ -141,7 +157,6 @@ router.post(
 
 /**
  * GET /api/v1/reviews/admin/all - SOLO ADMIN
- * Lista TODAS las reviews (incluidas las no aprobadas).
  */
 router.get(
   '/admin/all',
@@ -155,7 +170,6 @@ router.get(
 
 /**
  * DELETE /api/v1/reviews/admin/:id - SOLO ADMIN
- * Borra una review.
  */
 router.delete(
   '/admin/:id',
@@ -175,7 +189,6 @@ router.delete(
 
 /**
  * PATCH /api/v1/reviews/admin/:id/toggle - SOLO ADMIN
- * Cambia el estado de aprobación (oculta/muestra).
  */
 router.patch(
   '/admin/:id/toggle',

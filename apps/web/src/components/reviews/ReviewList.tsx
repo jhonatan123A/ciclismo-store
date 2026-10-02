@@ -124,7 +124,7 @@ export function ReviewList({ reviews, stats }: ReviewListProps) {
                   <StarRating rating={review.rating} />
                 </div>
 
-                {/* ✅ NUEVO: Foto */}
+                {/* ✅ Foto */}
                 {review.photoUrl && (
                   <div className="mb-4">
                     <button
@@ -135,7 +135,7 @@ export function ReviewList({ reviews, stats }: ReviewListProps) {
                       <img
                         src={review.photoUrl}
                         alt={`Foto de ${review.authorName}`}
-                        className="w-full max-w-md h-64 object-cover group-hover:scale-[1.02] transition-transform"
+                        className="w-full max-w-md max-h-96 object-contain bg-black/40 group-hover:scale-[1.02] transition-transform"
                         loading="lazy"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = 'none';
@@ -150,7 +150,7 @@ export function ReviewList({ reviews, stats }: ReviewListProps) {
                   {review.comment}
                 </p>
 
-                {/* ✅ NUEVO: Link de Instagram */}
+                {/* ✅ Link de Instagram */}
                 {review.instagramUrl && (
                   <a
                     href={review.instagramUrl}
@@ -168,7 +168,7 @@ export function ReviewList({ reviews, stats }: ReviewListProps) {
         </div>
       </div>
 
-      {/* ✅ NUEVO: Lightbox (visor de foto a pantalla completa) */}
+      {/* ✅ Lightbox (visor de foto a pantalla completa) */}
       <AnimatePresence>
         {lightboxImage && (
           <motion.div
