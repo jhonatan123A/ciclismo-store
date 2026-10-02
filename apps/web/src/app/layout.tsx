@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description: 'Innovación textil para running y ciclismo. Tecnología italiana patentada que conecta con tu piel.',
   keywords: 'bestige, somatosensorial, running, ciclismo, tecnología textil, deporte',
   authors: [{ name: 'BESTIGE' }],
+  // ✅ Verificación de Google Search Console (método oficial de Next.js)
+  verification: {
+    google: 'A3Hfq6MlxFhqxjlLnLDhnLVefvtV8z-zFDNxiqjgHZw',
+  },
   openGraph: {
     title: 'BESTIGE — Tecnología Somatosensorial',
     description: 'Tu cuerpo ya sabe. Ahora puedes sentirlo.',
@@ -34,6 +38,12 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <head>
+        {/* ✅ Google Search Console verification (meta tag directo) */}
+        <meta
+          name="google-site-verification"
+          content="A3Hfq6MlxFhqxjlLnLDhnLVefvtV8z-zFDNxiqjgHZw"
+        />
+
         {/* Google Analytics 4 */}
         <Script
           strategy="afterInteractive"
