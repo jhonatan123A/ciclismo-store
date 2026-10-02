@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight, Tru
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { ReviewsSection } from '@/components/reviews/ReviewsSection';
+import { WishlistButton } from '@/components/wishlist/WishlistButton';
 import { trackViewItem, trackAddToCart } from '@/lib/analytics';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -193,9 +194,23 @@ export default function ProductClient() {
                 Performance Running
               </p>
 
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-                {product.name}
-              </h1>
+              {/* ✅ Título con botón de wishlist */}
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                  {product.name}
+                </h1>
+                <WishlistButton
+                  item={{
+                    productId: product.id,
+                    name: product.name,
+                    slug: product.slug,
+                    price: product.price,
+                    originalPrice: product.originalPrice,
+                    image: product.images[0] || '/images/products/placeholder.jpg',
+                    category: product.category,
+                  }}
+                />
+              </div>
 
               <p className="text-white/70 text-sm leading-relaxed mb-8">
                 {product.description}
