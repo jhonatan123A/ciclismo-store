@@ -78,7 +78,7 @@ model Product {
   category   Category?   @relation(fields: [categoryId], references: [id])
   orderItems OrderItem[]
   cartItems  CartItem[]
-  reviews    Review[]   // ✅ NUEVO: relación con reviews
+  reviews    Review[]
 
   @@index([categoryId])
 }
@@ -140,10 +140,8 @@ model Order {
   shippingAddress Json
   billingAddress  Json
   metadata        Json?
-  // ✅ Token de acceso para el cliente (sin login)
   accessToken     String?  @unique
   accessTokenExp  DateTime?
-  // ✅ Número de guía de envío (Interrapidísimo, etc.)
   trackingNumber  String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -176,17 +174,20 @@ model OrderItem {
   product Product? @relation(fields: [productId], references: [id])
 }
 
-// ✅ NUEVO: Modelo de reseñas de productos
+// ✅ Modelo de reseñas de productos
 model Review {
-  id          String   @id @default(cuid())
-  productId   String
-  authorName  String
-  authorEmail String
-  rating      Int      // 1 a 5
-  comment     String
-  isApproved  Boolean  @default(true)   // Admin puede ocultar (false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  productId    String
+  authorName   String
+  authorEmail  String
+  rating       Int      // 1 a 5
+  comment      String
+  // ✅ NUEVO: foto (Cloudinary) + link Instagram (opcionales)
+  photoUrl     String?
+  instagramUrl String?
+  isApproved   Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 

@@ -21,6 +21,9 @@ export interface Review {
   authorName: string;
   rating: number;
   comment: string;
+  // ✅ NUEVO: foto + link Instagram (opcionales)
+  photoUrl?: string | null;
+  instagramUrl?: string | null;
   createdAt: string;
   // Solo cuando es admin:
   authorEmail?: string;
@@ -57,6 +60,9 @@ export interface CreateReviewData {
   authorEmail: string;
   rating: number;
   comment: string;
+  // ✅ NUEVO: opcionales
+  photoUrl?: string;
+  instagramUrl?: string;
 }
 
 // ============================================
@@ -74,6 +80,29 @@ export async function fetchProductReviews(productId: string): Promise<ProductRev
   }
 
   return response.json();
+}
+
+/**
+ * ✅ NUEVO: Sube una foto de review a Cloudinary (vía backend).
+ * Devuelve la URL pública de la imagen.
+ */
+export async function uploadReviewPhoto(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('photo', file);
+
+  const response = await fetch(`${API_URL}/reviews/upload`, {
+    method: 'POST',
+    // ⚠️ NO poner 'Content-Type' — multer lo detecta automáticamente
+    body: formData,
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(json.error || 'Error al subir la imagen');
+  }
+
+  return json.photoUrl;
 }
 
 /**

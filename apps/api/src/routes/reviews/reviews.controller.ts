@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import multer from 'multer';
 import { asyncHandler } from '../../middleware/error-handler';
 import { authenticate, authorize } from '../../middleware/auth';
 import {
@@ -9,10 +10,29 @@ import {
   deleteReview,
   toggleReviewApproval,
 } from '../../modules/reviews/reviews.service';
+import { uploadReviewImage } from '../../lib/cloudinary/client';
 import { z } from 'zod';
 import { logger } from '../../lib/logger/logger';
 
 const router = Router();
+
+// ============================================
+// MULTER (para subir fotos)
+// ============================================
+// Guarda el archivo en memoria (no en disco), lo subimos directo a Cloudinary.
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5 MB máximo
+  },
+  fileFilter: (_req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new Error('Solo se permiten imágenes JPG, PNG o WebP'));
+    }
+    cb(null, true);
+  },
+});
 
 // ============================================
 // ESQUEMAS DE VALIDACIÓN
@@ -24,6 +44,18 @@ const createReviewSchema = z.object({
   authorEmail: z.string().email('Email inválido').max(200),
   rating: z.number().int().min(1, 'El rating debe ser entre 1 y 5').max(5),
   comment: z.string().min(10, 'El comentario debe tener al menos 10 caracteres').max(1000),
+  // ✅ NUEVO: campos opcionales
+  photoUrl: z.string().url('URL de foto inválida').optional().or(z.literal('')),
+  instagramUrl: z
+    .string()
+    .url('URL de Instagram inválida')
+    .refine(
+      (url) =>
+        /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\/[A-Za-z0-9_-]+\/?/.test(url),
+      { message: 'Debe ser un link válido de Instagram (post o reel)' }
+    )
+    .optional()
+    .or(z.literal('')),
 });
 
 // ============================================
@@ -53,9 +85,38 @@ router.get(
 );
 
 /**
+ * POST /api/v1/reviews/upload - PÚBLICO
+ * Sube una foto de review a Cloudinary.
+ * Body: multipart/form-data con campo "photo"
+ * Devuelve: { success: true, photoUrl: "https://res.cloudinary.com/..." }
+ */
+router.post(
+  '/upload',
+  upload.single('photo'),
+  asyncHandler(async (req: Request, res: Response) => {
+    logger.info('📷 Nueva foto de review recibida');
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'No se recibió ningún archivo' });
+    }
+
+    try {
+      const photoUrl = await uploadReviewImage(req.file.buffer);
+      logger.info({ photoUrl }, '✅ Foto subida a Cloudinary');
+      res.json({ success: true, photoUrl });
+    } catch (error: any) {
+      logger.error({ error: error?.message }, '❌ Error subiendo foto');
+      return res.status(500).json({
+        error: error?.message || 'Error al subir la imagen. Intenta de nuevo.',
+      });
+    }
+  })
+);
+
+/**
  * POST /api/v1/reviews - PÚBLICO
  * Crea una nueva review.
- * Body: { productId, authorName, authorEmail, rating, comment }
+ * Body: { productId, authorName, authorEmail, rating, comment, photoUrl?, instagramUrl? }
  */
 router.post(
   '/',
@@ -65,7 +126,6 @@ router.post(
     const data = createReviewSchema.parse(req.body);
 
     try {
-      // ✅ FIX: cast a `any` porque Zod infiere los campos como opcionales
       const review = await createReview(data as any);
       res.status(201).json({ success: true, review });
     } catch (error: any) {

@@ -193,7 +193,7 @@ export async function updateOrderTracking(
 }
 
 // ============================================
-// ✅ NUEVO: TIPOS DE REVIEWS
+// ✅ TIPOS DE REVIEWS
 // ============================================
 
 export interface AdminReview {
@@ -203,6 +203,9 @@ export interface AdminReview {
   authorEmail: string;
   rating: number;
   comment: string;
+  // ✅ NUEVO: foto + link Instagram
+  photoUrl: string | null;
+  instagramUrl: string | null;
   isApproved: boolean;
   createdAt: string;
   updatedAt: string;
@@ -214,7 +217,7 @@ export interface AdminReview {
 }
 
 // ============================================
-// ✅ NUEVO: FUNCIONES DE REVIEWS (ADMIN)
+// ✅ FUNCIONES DE REVIEWS (ADMIN)
 // ============================================
 
 /**

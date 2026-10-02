@@ -11,6 +11,9 @@ interface CreateReviewData {
   authorEmail: string;
   rating: number;
   comment: string;
+  // ✅ NUEVO: campos opcionales
+  photoUrl?: string;
+  instagramUrl?: string;
 }
 
 interface RatingStats {
@@ -46,6 +49,9 @@ export async function getReviewsByProduct(productId: string) {
       authorName: true,
       rating: true,
       comment: true,
+      // ✅ NUEVO: incluir foto + instagram
+      photoUrl: true,
+      instagramUrl: true,
       createdAt: true,
     },
   });
@@ -93,9 +99,18 @@ export async function getProductRatingStats(productId: string): Promise<RatingSt
  * Crea una nueva review.
  * - Valida el rating (1-5)
  * - Verifica que no exista una review previa del mismo email para el mismo producto
+ * - ✅ NUEVO: acepta photoUrl e instagramUrl opcionales
  */
 export async function createReview(data: CreateReviewData) {
-  const { productId, authorName, authorEmail, rating, comment } = data;
+  const {
+    productId,
+    authorName,
+    authorEmail,
+    rating,
+    comment,
+    photoUrl,
+    instagramUrl,
+  } = data;
 
   // Validaciones básicas
   if (!productId || !authorName || !authorEmail || !comment) {
@@ -136,6 +151,11 @@ export async function createReview(data: CreateReviewData) {
     throw new Error('Ya dejaste una reseña para este producto');
   }
 
+  // ✅ NUEVO: Limpiar URLs (si vienen vacías, se guardan como null)
+  const cleanPhotoUrl = photoUrl && photoUrl.trim() !== '' ? photoUrl.trim() : null;
+  const cleanInstagramUrl =
+    instagramUrl && instagramUrl.trim() !== '' ? instagramUrl.trim() : null;
+
   // Crear la review
   const review = await prisma.review.create({
     data: {
@@ -144,6 +164,9 @@ export async function createReview(data: CreateReviewData) {
       authorEmail: authorEmail.toLowerCase().trim(),
       rating,
       comment: comment.trim(),
+      // ✅ NUEVO: guardar foto + instagram
+      photoUrl: cleanPhotoUrl,
+      instagramUrl: cleanInstagramUrl,
       isApproved: true, // Por defecto aprobada; el admin puede ocultarla después
     },
     select: {
@@ -151,12 +174,14 @@ export async function createReview(data: CreateReviewData) {
       authorName: true,
       rating: true,
       comment: true,
+      photoUrl: true,
+      instagramUrl: true,
       createdAt: true,
     },
   });
 
   logger.info(
-    { reviewId: review.id, productId, rating },
+    { reviewId: review.id, productId, rating, hasPhoto: !!cleanPhotoUrl, hasInstagram: !!cleanInstagramUrl },
     '✅ Review creada'
   );
 

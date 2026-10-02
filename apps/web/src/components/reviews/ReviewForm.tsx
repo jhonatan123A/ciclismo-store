@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Loader2, Star, Check, X } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Loader2, Star, Check, X, Camera, Instagram, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { createReview } from '@/lib/reviews-api';
+import { createReview, uploadReviewPhoto } from '@/lib/reviews-api';
 
 interface ReviewFormProps {
   productId: string;
@@ -12,15 +12,84 @@ interface ReviewFormProps {
   onCancel?: () => void;
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
 export function ReviewForm({ productId, productName, onSuccess, onCancel }: ReviewFormProps) {
   const [authorName, setAuthorName] = useState('');
   const [authorEmail, setAuthorEmail] = useState('');
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoUploadedUrl, setPhotoUploadedUrl] = useState<string | null>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ============================================
+  // MANEJO DE FOTO
+  // ============================================
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError('');
+
+    // Validar tamaño
+    if (file.size > MAX_FILE_SIZE) {
+      setError('La foto no puede pesar más de 5 MB');
+      return;
+    }
+
+    // Validar tipo
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError('Solo se permiten imágenes JPG, PNG o WebP');
+      return;
+    }
+
+    // Mostrar preview local
+    setPhotoFile(file);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPhotoPreview(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Subir a Cloudinary inmediatamente
+    setIsUploadingPhoto(true);
+    try {
+      const url = await uploadReviewPhoto(file);
+      setPhotoUploadedUrl(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al subir la foto');
+      // Limpiar si falla
+      setPhotoFile(null);
+      setPhotoPreview(null);
+      setPhotoUploadedUrl(null);
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setPhotoUploadedUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // ============================================
+  // SUBMIT
+  // ============================================
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +115,17 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
       return;
     }
 
+    // Si hay foto seleccionada pero no se ha subido → esperar
+    if (photoFile && !photoUploadedUrl && !isUploadingPhoto) {
+      setError('Espera a que la foto termine de subir');
+      return;
+    }
+
+    if (isUploadingPhoto) {
+      setError('Espera a que la foto termine de subir');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -55,6 +135,8 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
         authorEmail: authorEmail.trim().toLowerCase(),
         rating,
         comment: comment.trim(),
+        photoUrl: photoUploadedUrl || undefined,
+        instagramUrl: instagramUrl.trim() || undefined,
       });
 
       setSuccess(true);
@@ -199,6 +281,90 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
           </p>
         </div>
 
+        {/* ✅ NUEVO: Foto */}
+        <div>
+          <label className="text-[10px] tracking-[0.15em] uppercase text-white/50 mb-2 block">
+            Foto del producto (opcional)
+          </label>
+
+          {!photoPreview ? (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingPhoto}
+                className="w-full py-3 rounded-lg border border-dashed border-white/20 hover:border-[#FF5A36]/50 bg-white/[0.02] hover:bg-white/[0.04] text-white/60 hover:text-[#FF5A36] text-xs tracking-wider transition-all flex items-center justify-center gap-2"
+              >
+                <Camera className="w-4 h-4" />
+                Subir foto (JPG, PNG o WebP, máx 5 MB)
+              </button>
+            </>
+          ) : (
+            <div className="relative rounded-lg overflow-hidden border border-white/10">
+              <img
+                src={photoPreview}
+                alt="Preview"
+                className="w-full h-48 object-cover"
+              />
+              {isUploadingPhoto && (
+                <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 animate-spin text-[#FF5A36]" />
+                  <span className="text-white text-xs ml-2">Subiendo...</span>
+                </div>
+              )}
+              {photoUploadedUrl && !isUploadingPhoto && (
+                <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-[#10B981] text-white text-[9px] font-semibold tracking-wider flex items-center gap-1">
+                  <Check className="w-3 h-3" />
+                  Subida
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm hover:bg-red-500/80 text-white flex items-center justify-center transition-all"
+                aria-label="Quitar foto"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ✅ NUEVO: Instagram */}
+        <div>
+          <label className="text-[10px] tracking-[0.15em] uppercase text-white/50 mb-2 block">
+            Link de tu post de Instagram (opcional)
+          </label>
+          <div className="relative">
+            <Instagram className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+            <input
+              type="url"
+              value={instagramUrl}
+              onChange={(e) => setInstagramUrl(e.target.value)}
+              placeholder="https://www.instagram.com/p/ABC123..."
+              className="w-full bg-white/[0.02] border border-white/10 rounded-lg pl-12 pr-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF5A36]/50 focus:bg-white/[0.04] transition-all"
+            />
+          </div>
+          <p className="text-[10px] text-white/40 mt-2">
+            Pega el link de tu post o reel usando el producto. Se mostrará junto a tu reseña.
+          </p>
+        </div>
+
+        {/* Aviso legal */}
+        <div className="p-3 rounded-lg border border-white/10 bg-white/[0.02]">
+          <p className="text-[10px] text-white/50 leading-relaxed">
+            📷 Al subir una foto o link confirmas que es tuyo, no contiene
+            contenido ofensivo, y autorizas a BESTIGE a mostrarlo en la web.
+          </p>
+        </div>
+
         {/* Error */}
         {error && (
           <div className="p-3 rounded-lg border border-red-500/30 bg-red-500/5">
@@ -209,13 +375,18 @@ export function ReviewForm({ productId, productName, onSuccess, onCancel }: Revi
         {/* Botón submit */}
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isUploadingPhoto}
           className="w-full py-4 rounded-full font-semibold text-xs tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF5A36] to-[#C17A4B] text-white hover:shadow-[0_0_40px_rgba(255,90,54,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
               Enviando...
+            </>
+          ) : isUploadingPhoto ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Subiendo foto...
             </>
           ) : (
             <>

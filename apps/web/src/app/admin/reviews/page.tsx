@@ -12,6 +12,7 @@ import {
   Package,
   AlertTriangle,
   CheckCircle,
+  Instagram,
 } from 'lucide-react';
 import {
   fetchAllReviews,
@@ -276,10 +277,42 @@ export default function AdminReviewsPage() {
                 </span>
               </div>
 
+              {/* ✅ NUEVO: Foto (con link para abrir en nueva pestaña) */}
+              {review.photoUrl && (
+                <div className="mb-4">
+                  <a
+                    href={review.photoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg overflow-hidden border border-white/10 hover:border-[#FF5A36]/40 transition-all w-fit"
+                  >
+                    <img
+                      src={review.photoUrl}
+                      alt={`Foto de ${review.authorName}`}
+                      className="max-w-xs h-40 object-cover"
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
+              )}
+
               {/* Comentario */}
               <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
                 {review.comment}
               </p>
+
+              {/* ✅ NUEVO: Link Instagram */}
+              {review.instagramUrl && (
+                <a
+                  href={review.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full border border-pink-500/30 bg-pink-500/5 hover:bg-pink-500/10 text-pink-400 text-[10px] tracking-[0.15em] uppercase font-semibold transition-all"
+                >
+                  <Instagram className="w-3.5 h-3.5" />
+                  Ver en Instagram
+                </a>
+              )}
             </motion.div>
           ))}
         </div>
