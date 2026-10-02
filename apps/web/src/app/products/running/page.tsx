@@ -49,6 +49,14 @@ const productSchema = {
     name: 'BESTIGE',
   },
   sku: 'BESTIGE-RUNNING-001',
+  // ✅ NUEVO: Rating real (2 reviews, promedio 5.0)
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5.0',
+    reviewCount: '2',
+    bestRating: '5',
+    worstRating: '1',
+  },
   offers: {
     '@type': 'Offer',
     url: `${BASE_URL}/products/running`,
@@ -59,6 +67,44 @@ const productSchema = {
     seller: {
       '@type': 'Organization',
       name: 'FITHAB INNOVATION CI SAS',
+    },
+    // ✅ NUEVO: Detalles de envío (gratis en Colombia)
+    shippingDetails: {
+      '@type': 'OfferShippingDetails',
+      shippingRate: {
+        '@type': 'MonetaryAmount',
+        value: '0',
+        currency: 'COP',
+      },
+      shippingDestination: {
+        '@type': 'DefinedRegion',
+        addressCountry: 'CO',
+      },
+      deliveryTime: {
+        '@type': 'ShippingDeliveryTime',
+        handlingTime: {
+          '@type': 'QuantitativeValue',
+          minValue: 1,
+          maxValue: 2,
+          unitCode: 'DAY',
+        },
+        transitTime: {
+          '@type': 'QuantitativeValue',
+          minValue: 3,
+          maxValue: 7,
+          unitCode: 'DAY',
+        },
+      },
+    },
+    // ✅ NUEVO: Política de devoluciones (30 días)
+    hasMerchantReturnPolicy: {
+      '@type': 'MerchantReturnPolicy',
+      applicableCountry: 'CO',
+      returnPolicyCategory:
+        'https://schema.org/MerchantReturnFiniteReturnWindow',
+      merchantReturnDays: 30,
+      returnMethod: 'https://schema.org/ReturnByMail',
+      returnFees: 'https://schema.org/FreeReturn',
     },
   },
 };
