@@ -11,7 +11,6 @@ interface CreateReviewData {
   authorEmail: string;
   rating: number;
   comment: string;
-  // ✅ NUEVO: campos opcionales
   photoUrl?: string;
   instagramUrl?: string;
 }
@@ -49,7 +48,6 @@ export async function getReviewsByProduct(productId: string) {
       authorName: true,
       rating: true,
       comment: true,
-      // ✅ NUEVO: incluir foto + instagram
       photoUrl: true,
       instagramUrl: true,
       createdAt: true,
@@ -90,20 +88,38 @@ export async function getProductRatingStats(productId: string): Promise<RatingSt
     }
   }
 
-  const average = Math.round((sum / total) * 10) / 10; // Redondea a 1 decimal
+  const average = Math.round((sum / total) * 10) / 10;
 
   return { average, total, distribution };
 }
 
 /**
+ * ✅ Helper: Resolver el ID real del producto desde un ID o un slug.
+ * Wompi, el frontend o cualquiera puede enviar un ID o un slug.
+ * Esto lo normaliza siempre.
+ */
+async function resolveProductId(productIdOrSlug: string): Promise<string | null> {
+  if (!productIdOrSlug || productIdOrSlug.trim() === '') return null;
+
+  const product = await prisma.product.findFirst({
+    where: {
+      OR: [
+        { id: productIdOrSlug },
+        { slug: productIdOrSlug },
+      ],
+    },
+    select: { id: true },
+  });
+
+  return product?.id ?? null;
+}
+
+/**
  * Crea una nueva review.
- * - Valida el rating (1-5)
- * - Verifica que no exista una review previa del mismo email para el mismo producto
- * - ✅ NUEVO: acepta photoUrl e instagramUrl opcionales
  */
 export async function createReview(data: CreateReviewData) {
   const {
-    productId,
+    productId: rawProductId,
     authorName,
     authorEmail,
     rating,
@@ -113,7 +129,7 @@ export async function createReview(data: CreateReviewData) {
   } = data;
 
   // Validaciones básicas
-  if (!productId || !authorName || !authorEmail || !comment) {
+  if (!rawProductId || !authorName || !authorEmail || !comment) {
     throw new Error('Todos los campos son obligatorios');
   }
 
@@ -129,20 +145,26 @@ export async function createReview(data: CreateReviewData) {
     throw new Error('El comentario no puede exceder 1000 caracteres');
   }
 
-  // Verificar que el producto existe
-  const product = await prisma.product.findUnique({
-    where: { id: productId },
-    select: { id: true, name: true },
-  });
+  // ✅ FIX: Resolver el ID real (acepta ID o slug)
+  const realProductId = await resolveProductId(rawProductId);
 
-  if (!product) {
+  if (!realProductId) {
+    logger.error(
+      { rawProductId },
+      '❌ Producto no encontrado (ni por ID ni por slug)'
+    );
     throw new Error('Producto no encontrado');
   }
+
+  logger.info(
+    { rawProductId, realProductId },
+    '✅ Producto resuelto correctamente'
+  );
 
   // Verificar si ya dejó una review para este producto
   const existing = await prisma.review.findFirst({
     where: {
-      productId,
+      productId: realProductId,
       authorEmail: authorEmail.toLowerCase().trim(),
     },
   });
@@ -151,7 +173,7 @@ export async function createReview(data: CreateReviewData) {
     throw new Error('Ya dejaste una reseña para este producto');
   }
 
-  // ✅ NUEVO: Limpiar URLs (si vienen vacías, se guardan como null)
+  // Limpiar URLs
   const cleanPhotoUrl = photoUrl && photoUrl.trim() !== '' ? photoUrl.trim() : null;
   const cleanInstagramUrl =
     instagramUrl && instagramUrl.trim() !== '' ? instagramUrl.trim() : null;
@@ -159,15 +181,14 @@ export async function createReview(data: CreateReviewData) {
   // Crear la review
   const review = await prisma.review.create({
     data: {
-      productId,
+      productId: realProductId,
       authorName: authorName.trim(),
       authorEmail: authorEmail.toLowerCase().trim(),
       rating,
       comment: comment.trim(),
-      // ✅ NUEVO: guardar foto + instagram
       photoUrl: cleanPhotoUrl,
       instagramUrl: cleanInstagramUrl,
-      isApproved: true, // Por defecto aprobada; el admin puede ocultarla después
+      isApproved: true,
     },
     select: {
       id: true,
@@ -181,7 +202,13 @@ export async function createReview(data: CreateReviewData) {
   });
 
   logger.info(
-    { reviewId: review.id, productId, rating, hasPhoto: !!cleanPhotoUrl, hasInstagram: !!cleanInstagramUrl },
+    {
+      reviewId: review.id,
+      realProductId,
+      rating,
+      hasPhoto: !!cleanPhotoUrl,
+      hasInstagram: !!cleanInstagramUrl,
+    },
     '✅ Review creada'
   );
 
@@ -192,9 +219,6 @@ export async function createReview(data: CreateReviewData) {
 // FUNCIONES DE ADMIN
 // ============================================
 
-/**
- * Obtiene TODAS las reviews (incluidas las no aprobadas) — solo admin.
- */
 export async function getAllReviewsAdmin() {
   const reviews = await prisma.review.findMany({
     orderBy: { createdAt: 'desc' },
@@ -208,9 +232,6 @@ export async function getAllReviewsAdmin() {
   return reviews;
 }
 
-/**
- * Borra una review — solo admin.
- */
 export async function deleteReview(id: string) {
   const review = await prisma.review.delete({
     where: { id },
@@ -220,9 +241,6 @@ export async function deleteReview(id: string) {
   return review;
 }
 
-/**
- * Cambia el estado de aprobación de una review — solo admin.
- */
 export async function toggleReviewApproval(id: string) {
   const current = await prisma.review.findUnique({
     where: { id },
