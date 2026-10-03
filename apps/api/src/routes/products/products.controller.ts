@@ -22,7 +22,7 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   
   const where: any = {
     isActive: true,
-    status: 'PUBLISHED',
+      status: 'ACTIVE',
   };
   
   if (category) {
