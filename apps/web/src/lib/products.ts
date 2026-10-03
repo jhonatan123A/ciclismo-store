@@ -51,7 +51,7 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'cmupp6bb00001xgacxkfdr06u',
+    id: 'cmupp6bbo00001xgacxkfdr06u',
     name: 'Badana de Ciclismo BESTIGE',
     slug: 'banda-ciclismo',
     category: 'cycling',
