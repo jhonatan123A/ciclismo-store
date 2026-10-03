@@ -95,23 +95,50 @@ export async function getProductRatingStats(productId: string): Promise<RatingSt
 
 /**
  * ✅ Helper: Resolver el ID real del producto desde un ID o un slug.
- * Wompi, el frontend o cualquiera puede enviar un ID o un slug.
- * Esto lo normaliza siempre.
+ *
+ * ⚠️ CAMBIO IMPORTANTE:
+ * Antes usábamos `findFirst` con `OR: [{ id }, { slug }]`, pero en Prisma 5.22
+ * este patrón puede fallar silenciosamente devolviendo `null`.
+ *
+ * Ahora usamos DOS `findUnique` secuenciales (mucho más confiable):
+ *   1. Por `id` (usa el @id del schema).
+ *   2. Por `slug` (usa el @unique del schema).
  */
 async function resolveProductId(productIdOrSlug: string): Promise<string | null> {
   if (!productIdOrSlug || productIdOrSlug.trim() === '') return null;
 
-  const product = await prisma.product.findFirst({
-    where: {
-      OR: [
-        { id: productIdOrSlug },
-        { slug: productIdOrSlug },
-      ],
-    },
-    select: { id: true },
-  });
+  const clean = productIdOrSlug.trim();
 
-  return product?.id ?? null;
+  // ─── Búsqueda 1: por ID ─────────────────────────────
+  try {
+    const byId = await prisma.product.findUnique({
+      where: { id: clean },
+      select: { id: true },
+    });
+    if (byId) {
+      logger.info({ id: clean }, '✅ Producto encontrado por ID');
+      return byId.id;
+    }
+  } catch (e) {
+    logger.warn({ error: e, id: clean }, '⚠️ Error buscando producto por id');
+  }
+
+  // ─── Búsqueda 2: por slug ───────────────────────────
+  try {
+    const bySlug = await prisma.product.findUnique({
+      where: { slug: clean },
+      select: { id: true },
+    });
+    if (bySlug) {
+      logger.info({ slug: clean }, '✅ Producto encontrado por slug');
+      return bySlug.id;
+    }
+  } catch (e) {
+    logger.warn({ error: e, slug: clean }, '⚠️ Error buscando producto por slug');
+  }
+
+  logger.warn({ raw: clean }, '❌ Producto no encontrado ni por ID ni por slug');
+  return null;
 }
 
 /**
