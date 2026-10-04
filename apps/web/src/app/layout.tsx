@@ -7,6 +7,7 @@ import { PayPalProvider } from '@/providers/PayPalProvider';
 import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
 import { TermsModal } from '@/components/legal/TermsModal';
 import { CookiesBanner } from '@/components/legal/CookiesBanner';
+import { WelcomeModal } from '@/components/conversion/WelcomeModal';
 import { NeuralFrame } from '@/components/neural/NeuralFrame';
 import { NeuralBackground } from '@/components/neural/NeuralBackground';
 
@@ -167,6 +168,9 @@ export default function RootLayout({
 
             {/* Banner de Cookies - aparece después del modal */}
             <CookiesBanner />
+
+            {/* Modal de Bienvenida - aparece la primera visita */}
+            <WelcomeModal />
           </PayPalProvider>
         </SmoothScrollProvider>
       </body>

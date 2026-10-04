@@ -1,9 +1,116 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
+
+// ============================================
+// CONFIG
+// ============================================
+
+const FREE_SHIPPING_THRESHOLD = 250000;
+
+// ============================================
+// TIP INLINE PARA EL CARRITO
+// ============================================
+
+function CartCrossSellInline({
+  missingProduct,
+  hasFreeShipping,
+}: {
+  missingProduct: 'cycling' | 'running';
+  hasFreeShipping: boolean;
+}) {
+  const config = {
+    cycling: {
+      eyebrow: 'Sugerencia',
+      title: '¿Agregas la badana de ciclismo?',
+      description:
+        'Protección contra caídas. Diseñada por ciclistas profesionales.',
+      ctaText: 'Ver badana de ciclismo',
+      ctaHref: '/products/cycling',
+      accentColor: '#38BDF8',
+    },
+    running: {
+      eyebrow: 'Sugerencia',
+      title: '¿Agregas la pantaloneta de running?',
+      description: 'Tecnología somatosensorial para kilómetros reales.',
+      ctaText: 'Ver pantaloneta de running',
+      ctaHref: '/products/running',
+      accentColor: '#E8B94A',
+    },
+  }[missingProduct];
+
+  const description = hasFreeShipping
+    ? `${config.description} Envío gratis ya está activo.`
+    : `${config.description} Envío gratis desde $${FREE_SHIPPING_THRESHOLD.toLocaleString('es-CO')}.`;
+
+  return (
+    <div
+      className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]"
+      style={{
+        boxShadow: `0 0 40px -20px ${config.accentColor}40`,
+      }}
+    >
+      {/* Glow */}
+      <div
+        className="absolute -top-16 -right-16 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none"
+        style={{ backgroundColor: config.accentColor }}
+      />
+
+      {/* Barra lateral */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-0.5"
+        style={{ backgroundColor: config.accentColor }}
+      />
+
+      <div className="relative p-4 space-y-2.5">
+        <div className="flex items-start gap-2.5">
+          <div
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{
+              backgroundColor: `${config.accentColor}15`,
+              border: `1px solid ${config.accentColor}40`,
+            }}
+          >
+            <Sparkles
+              className="w-3.5 h-3.5"
+              style={{ color: config.accentColor }}
+            />
+          </div>
+          <div className="flex-1 min-w-0 space-y-0.5">
+            <p
+              className="text-[9px] tracking-[0.25em] uppercase font-bold"
+              style={{ color: config.accentColor }}
+            >
+              {config.eyebrow}
+            </p>
+            <p className="text-white text-[12px] font-bold leading-snug">
+              {config.title}
+            </p>
+            <p className="text-white/50 text-[11px] leading-relaxed">
+              {description}
+            </p>
+          </div>
+        </div>
+
+        <Link
+          href={config.ctaHref}
+          className="inline-flex items-center gap-2 text-[10px] tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
+          style={{ color: config.accentColor }}
+        >
+          {config.ctaText}
+          <ArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// COMPONENTE PRINCIPAL
+// ============================================
 
 export function CartSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +119,23 @@ export function CartSidebar() {
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
   const savings = getSavings();
+
+  // Detectar qué producto falta en el carrito
+  const crossSellData = useMemo(() => {
+    if (items.length === 0) return { missingProduct: null, hasFreeShipping: false };
+
+    const hasCycling = items.some((item) => item.category === 'cycling');
+    const hasRunning = items.some((item) => item.category === 'running');
+
+    let missingProduct: 'cycling' | 'running' | null = null;
+    if (hasCycling && !hasRunning) missingProduct = 'running';
+    else if (hasRunning && !hasCycling) missingProduct = 'cycling';
+    // Si tiene ambos o ninguno, no sugerir
+
+    const hasFreeShipping = totalPrice >= FREE_SHIPPING_THRESHOLD;
+
+    return { missingProduct, hasFreeShipping };
+  }, [items, totalPrice]);
 
   useEffect(() => {
     setMounted(true);
@@ -200,6 +324,16 @@ export function CartSidebar() {
                   </div>
                 </div>
               ))}
+
+              {/* ✅ Cross-sell inline: sugiere el otro producto si falta */}
+              {crossSellData.missingProduct && (
+                <div className="pt-2">
+                  <CartCrossSellInline
+                    missingProduct={crossSellData.missingProduct}
+                    hasFreeShipping={crossSellData.hasFreeShipping}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Footer */}

@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 import { WishlistButton } from '@/components/wishlist/WishlistButton';
+import { ProductCrossSellTip } from '@/components/conversion/ProductCrossSellTip';
 import { trackViewItem, trackAddToCart } from '@/lib/analytics';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -292,6 +293,9 @@ export default function ProductClient() {
           productName={product.name}
         />
       </div>
+
+      {/* ✅ Cross-sell tip: sugiere la badana de running */}
+      <ProductCrossSellTip currentProduct="cycling" />
     </div>
   );
 }
