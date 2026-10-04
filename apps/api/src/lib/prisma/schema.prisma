@@ -195,3 +195,81 @@ model Review {
   @@index([isApproved])
   @@index([createdAt])
 }
+
+// ============================================
+// BLOG — Posts y Comentarios
+// ============================================
+// ✅ NUEVO: Sistema de blog con posts y comentarios
+// Añadido en Octubre 2026 para BESTIGE
+
+enum PostCategory {
+  TECNOLOGIA
+  GUIAS
+  HISTORIAS
+  COMPARATIVAS
+  NOTICIAS
+  CONSEJOS
+}
+
+model Post {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  excerpt         String        @db.Text
+  content         String        @db.Text
+
+  coverImage      String?
+  coverImageAlt   String?
+
+  metaTitle       String?
+  metaDescription String?       @db.Text
+  keywords        String[]
+
+  category        PostCategory  @default(TECNOLOGIA)
+  tags            String[]
+
+  authorName      String        @default("Equipo BESTIGE")
+
+  status          String        @default("DRAFT")
+  publishedAt     DateTime?
+  isMainArticle   Boolean       @default(false)
+
+  videoUrl        String?
+
+  readingTime     Int?
+  views           Int           @default(0)
+  showViews       Boolean       @default(false)
+
+  comments        PostComment[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([category])
+  @@index([isMainArticle])
+}
+
+model PostComment {
+  id              String    @id @default(cuid())
+
+  postId          String
+  post            Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorName      String
+  authorEmail     String
+  content         String    @db.Text
+
+  isApproved      Boolean   @default(false)
+  approvedAt      DateTime?
+
+  adminReply      String?   @db.Text
+  adminRepliedAt  DateTime?
+  wantsEmailReply Boolean   @default(false)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([postId, isApproved])
+  @@index([isApproved, createdAt])
+}
