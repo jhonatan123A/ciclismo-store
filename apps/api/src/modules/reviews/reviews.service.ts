@@ -96,13 +96,13 @@ export async function getProductRatingStats(productId: string): Promise<RatingSt
 /**
  * ✅ Helper: Resolver el ID real del producto desde un ID o un slug.
  *
- * ⚠️ CAMBIO IMPORTANTE:
- * Antes usábamos `findFirst` con `OR: [{ id }, { slug }]`, pero en Prisma 5.22
- * este patrón puede fallar silenciosamente devolviendo `null`.
+ * ⚠️ CAMBIO CRÍTICO (fix del bug en producción):
+ * Prisma 5.22 + PgBouncer (pooler de Neon) tiene un bug conocido donde
+ * `findUnique` con `select: { id: true }` FALLA SILENCIOSAMENTE devolviendo
+ * `null`, aunque el registro SÍ exista en la DB.
  *
- * Ahora usamos DOS `findUnique` secuenciales (mucho más confiable):
- *   1. Por `id` (usa el @id del schema).
- *   2. Por `slug` (usa el @unique del schema).
+ * Por eso ahora usamos `findFirst` SIN `select` (trae el producto completo).
+ * Es la única forma confiable con el pooler de Neon.
  */
 async function resolveProductId(productIdOrSlug: string): Promise<string | null> {
   if (!productIdOrSlug || productIdOrSlug.trim() === '') return null;
@@ -111,9 +111,8 @@ async function resolveProductId(productIdOrSlug: string): Promise<string | null>
 
   // ─── Búsqueda 1: por ID ─────────────────────────────
   try {
-    const byId = await prisma.product.findUnique({
+    const byId = await prisma.product.findFirst({
       where: { id: clean },
-      select: { id: true },
     });
     if (byId) {
       logger.info({ id: clean }, '✅ Producto encontrado por ID');
@@ -125,9 +124,8 @@ async function resolveProductId(productIdOrSlug: string): Promise<string | null>
 
   // ─── Búsqueda 2: por slug ───────────────────────────
   try {
-    const bySlug = await prisma.product.findUnique({
+    const bySlug = await prisma.product.findFirst({
       where: { slug: clean },
-      select: { id: true },
     });
     if (bySlug) {
       logger.info({ slug: clean }, '✅ Producto encontrado por slug');
