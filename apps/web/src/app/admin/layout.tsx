@@ -8,12 +8,16 @@ import {
   Star,
   LogOut,
   ShieldCheck,
+  BookOpen,
+  MessageSquare,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
 
 const NAV_ITEMS = [
   { href: '/admin/orders', label: 'Pedidos', icon: Package },
   { href: '/admin/reviews', label: 'Reseñas', icon: Star },
+  { href: '/admin/blog', label: 'Blog', icon: BookOpen },
+  { href: '/admin/comments', label: 'Comentarios', icon: MessageSquare },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
