@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BookOpen, Lightbulb } from 'lucide-react';
+import { BookOpen, Zap, Sparkles } from 'lucide-react';
 import { FloatingTip } from './FloatingTip';
 import { useLocalStorageFlag } from '@/hooks/useLocalStorageFlag';
 
@@ -13,46 +13,49 @@ const STORAGE_KEY_DISMISSED = 'bestige-blog-tips-dismissed';
 
 /**
  * Tips que aparecen mientras el usuario lee un post.
- * Cada uno aparece en un tiempo específico.
+ * Orden: Ambos → Ciclismo → Running.
  */
 const TIPS = [
   {
-    id: 'tech',
+    id: 'both',
     appearAfterMs: 8000,
-    eyebrow: '¿Sabías?',
-    title: 'La única del mundo con tecnología somatosensorial interna.',
+    eyebrow: 'LO MÁS NUEVO',
+    title: 'Ver prenda somatosensorial',
     description:
-      'Otras marcas aplican tecnología por fuera. BESTIGE la aplica donde tiene sentido: en contacto directo con tu piel.',
-    ctaText: 'Conocer la tecnología',
-    ctaHref: '/technology',
-    accentColor: '#FF5A36',
-    icon: <Lightbulb className="w-4 h-4" />,
+      'La prenda de running y ciclismo con tecnología somatosensorial interna. Diseñada en Colombia, probada en Europa y Norteamérica.',
+    ctaText: 'Ver prenda somatosensorial',
+    ctaHref: '/products',
+    accentColor: '#E8B94A',
+    icon: <Sparkles className="w-4 h-4" />,
   },
   {
     id: 'cycling',
     appearAfterMs: 25000,
-    eyebrow: 'Para ciclistas',
-    title: 'Badana de ciclismo con protección contra caídas.',
+    eyebrow: 'PARA CICLISTAS',
+    title: 'Ver prenda somatosensorial',
     description:
-      'Diseñada por una familia con 40+ años en el ciclismo profesional colombiano.',
-    ctaText: 'Ver badana de ciclismo',
+      'Prenda somatosensorial diseñada por una familia con más de 40 años en el ciclismo profesional colombiano.',
+    ctaText: 'Ver prenda somatosensorial',
     ctaHref: '/products/cycling',
-    accentColor: '#38BDF8',
+    accentColor: '#FF5A36',
     icon: <BookOpen className="w-4 h-4" />,
   },
   {
     id: 'running',
-    appearAfterMs: 45000,
-    eyebrow: 'Para corredores',
-    title: 'Pantaloneta de running con tecnología somatosensorial.',
+    appearAfterMs: 40000,
+    eyebrow: 'PARA CORREDORES',
+    title: 'Ver prenda somatosensorial',
     description:
-      'Activación muscular, mejor recuperación y menos fatiga. Diseñada para kilómetros reales.',
-    ctaText: 'Ver pantaloneta de running',
+      'Activa tu sistema somatosensorial con una prenda que integra estructuras que generan estímulos táctiles sobre la piel y acompañan la percepción del movimiento.',
+    ctaText: 'Ver prenda somatosensorial',
     ctaHref: '/products/running',
-    accentColor: '#E8B94A',
-    icon: <BookOpen className="w-4 h-4" />,
+    accentColor: '#38BDF8',
+    icon: <Zap className="w-4 h-4" />,
   },
 ];
+
+const AUTO_CLOSE_MS = 14000; // 14 segundos por tip
+const RESET_DELAY_MS = 500;
 
 // ============================================
 // COMPONENTE
@@ -84,14 +87,13 @@ export function BlogReadingTip() {
     };
   }, [isHydrated, dismissedForever]);
 
-  // Auto-cerrar el tip actual después de 20 seg (para que no quede pegado)
+  // Auto-cerrar el tip actual después de 14 seg
   useEffect(() => {
     if (!isOpen) return;
     const timer = setTimeout(() => {
       setIsOpen(false);
-      // Después de cerrar, permitir que el siguiente tip aparezca
-      setTimeout(() => setCurrentTipIndex(null), 500);
-    }, 20000);
+      setTimeout(() => setCurrentTipIndex(null), RESET_DELAY_MS);
+    }, AUTO_CLOSE_MS);
 
     return () => clearTimeout(timer);
   }, [isOpen, currentTipIndex]);
@@ -107,7 +109,7 @@ export function BlogReadingTip() {
       isOpen={isOpen}
       onClose={() => {
         setIsOpen(false);
-        setTimeout(() => setCurrentTipIndex(null), 500);
+        setTimeout(() => setCurrentTipIndex(null), RESET_DELAY_MS);
       }}
       onDismissForever={() => setDismissedForever(true)}
       eyebrow={tip.eyebrow}
