@@ -29,6 +29,7 @@ export function Header() {
     { label: 'Tecnología', href: '/technology' },
     { label: 'Running', href: '/products/running' },
     { label: 'Ciclismo', href: '/products/cycling' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Nosotros', href: '/nosotros' },
   ];
 
@@ -68,9 +69,9 @@ export function Header() {
             </Link>
 
             {/* NAVEGACIÓN CENTRADA */}
-            <nav className="hidden lg:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
+            <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
               {navItems.map((item, index) => {
-                const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B'];
+                const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B', '#FF5A36'];
                 const color = colors[index % colors.length];
                 return (
                   <Link
@@ -101,7 +102,7 @@ export function Header() {
                 <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
-              {/* ✅ NUEVO: Ícono de WISHLIST */}
+              {/* ✅ Ícono de WISHLIST */}
               <button
                 onClick={openWishlist}
                 className="relative w-10 h-10 rounded-full flex items-center justify-center border border-white/10 hover:border-[#FF5A36]/50 text-white/60 hover:text-[#FF5A36] transition-all duration-300"
@@ -132,7 +133,7 @@ export function Header() {
             <div className="lg:hidden py-6 border-t border-white/10 bg-black/95 backdrop-blur-xl">
               <nav className="flex flex-col space-y-5">
                 {navItems.map((item, index) => {
-                  const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B'];
+                  const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B', '#FF5A36'];
                   const color = colors[index % colors.length];
                   return (
                     <Link
@@ -152,7 +153,7 @@ export function Header() {
                     </Link>
                   );
                 })}
-                {/* ✅ NUEVO: Link a wishlist en menú móvil */}
+                {/* ✅ Link a wishlist en menú móvil */}
                 <Link
                   href="/wishlist"
                   className="text-white/70 hover:text-white transition-colors text-xs tracking-[0.28em] uppercase font-medium flex items-center gap-3"
@@ -178,7 +179,7 @@ export function Header() {
         </div>
       </header>
 
-      {/* ✅ NUEVO: Sidebar de WISHLIST (fuera del header, pero dentro del Fragment) */}
+      {/* ✅ Sidebar de WISHLIST */}
       <WishlistSidebar />
     </>
   );

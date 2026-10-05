@@ -3,9 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'images.unsplash.com', 'res.cloudinary.com'],
   },
-  // Permitir redirecciones a Wompi y PayPal
+  // Permitir redirecciones a Wompi y PayPal    ojo con cambiar algo critico , esto es delicado
   async headers() {
     return [
       {

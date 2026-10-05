@@ -101,6 +101,14 @@ export function Footer() {
                   Tecnología
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-white/40 hover:text-[#38BDF8] text-xs transition-colors duration-300"
+                >
+                  Blog
+                </Link>
+              </li>
             </ul>
           </div>
 

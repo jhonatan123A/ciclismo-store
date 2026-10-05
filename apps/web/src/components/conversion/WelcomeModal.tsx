@@ -21,6 +21,17 @@ import { useLocalStorageFlag } from '@/hooks/useLocalStorageFlag';
 const SLIDES = [
   {
     id: 1,
+    icon: Zap,
+    eyebrow: 'ÚNICO EN EL MUNDO',
+    title: 'No es un conjunto más.\nEs la única prenda del mundo\ncon tecnología somatosensorial.',
+    description:
+      'Mientras la industria sigue vendiendo ropa, BESTIGE activa tu sistema nervioso desde la piel. Tecnología somatosensorial interna. Diseñada en Colombia. Probada en Europa y Norteamérica.',
+    accentColor: '#E8B94A',
+    ctaHref: '/blog/bestige-tecnologia-somatosensorial-vs-biomecanica',
+    ctaText: 'Leer más',
+  },
+  {
+    id: 2,
     icon: Sparkles,
     eyebrow: 'BESTIGE',
     title: 'BESTIGE no es ropa.\nEs tecnología somatosensorial.',
@@ -29,22 +40,13 @@ const SLIDES = [
     accentColor: '#FF5A36',
   },
   {
-    id: 2,
+    id: 3,
     icon: Shield,
     eyebrow: 'LA DIFERENCIA',
     title: 'Nuestra tecnología está dentro.\nEn contacto con tu piel.',
     description:
       'Otras marcas aplican tecnología por fuera. BESTIGE la aplica donde tiene sentido: en el interior de la prenda, donde ocurre la interacción con los mecanorreceptores cutáneos.',
     accentColor: '#38BDF8',
-  },
-  {
-    id: 3,
-    icon: Zap,
-    eyebrow: 'ÚNICO EN EL MUNDO',
-    title: 'La única del mundo que interactúa\ncon tu sistema nervioso.',
-    description:
-      'Diseñada en Colombia por una familia con más de 40 años en el ciclismo profesional. Probada en carreteras de Europa, Norteamérica y Colombia.',
-    accentColor: '#E8B94A',
   },
 ];
 
@@ -127,6 +129,7 @@ export function WelcomeModal() {
   const slide = SLIDES[currentSlide];
   const Icon = slide.icon;
   const isLastSlide = currentSlide === SLIDES.length - 1;
+  const hasCustomCta = !!slide.ctaHref;
 
   return (
     <AnimatePresence>
@@ -242,8 +245,29 @@ export function WelcomeModal() {
 
                 {/* Botones de acción */}
                 <div className="flex flex-col gap-3">
-                  {!isLastSlide ? (
-                    // Slides 1 y 2: solo "Siguiente"
+                  {hasCustomCta ? (
+                    // Slide con CTA personalizado (nuevo slide 1)
+                    <>
+                      <Link
+                        href={slide.ctaHref!}
+                        onClick={handleFinish}
+                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-black text-xs tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
+                        style={{
+                          backgroundColor: slide.accentColor,
+                        }}
+                      >
+                        {slide.ctaText}
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                      <button
+                        onClick={handleNext}
+                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white text-xs tracking-[0.15em] uppercase font-bold hover:border-white/40 hover:bg-white/5 transition-all"
+                      >
+                        Siguiente
+                      </button>
+                    </>
+                  ) : !isLastSlide ? (
+                    // Slides intermedios: solo "Siguiente"
                     <button
                       onClick={handleNext}
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white text-xs tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
@@ -255,7 +279,7 @@ export function WelcomeModal() {
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   ) : (
-                    // Slide 3: botones finales
+                    // Último slide: botones finales
                     <>
                       <Link
                         href="/technology"
