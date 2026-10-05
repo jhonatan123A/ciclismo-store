@@ -609,3 +609,23 @@
   height: 1px;
   background: linear-gradient(90deg, #FF5A36, #38BDF8, #E8B94A);
 }
+
+/* ============================================
+   FADE-IN ON SCROLL — Agregado 2026-10-05
+   Para cards de productos con IntersectionObserver
+   ============================================ */
+
+/* Estado inicial: invisible hasta que el observer lo active */
+[data-animate]:not(.animate-fade-in-up) {
+  opacity: 0;
+}
+
+/* Respetar usuarios con prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-animate],
+  [data-animate]:not(.animate-fade-in-up) {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}

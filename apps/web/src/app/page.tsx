@@ -142,7 +142,7 @@ export default function Home() {
                     </Link>
 
                     <Link
-                      href="/products/cycling"
+                      href="/products"
                       className="group inline-flex items-center gap-2 md:gap-3 px-5 md:px-7 py-3 md:py-3.5 btn-outline-orange text-[10px] md:text-[11px] font-semibold tracking-[0.2em] uppercase"
                     >
                       <span>Ver productos</span>

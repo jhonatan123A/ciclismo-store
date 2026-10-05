@@ -30,7 +30,6 @@ export function Header() {
     { label: 'Running', href: '/products/running' },
     { label: 'Ciclismo', href: '/products/cycling' },
     { label: 'Blog', href: '/blog' },
-    { label: 'Nosotros', href: '/nosotros' },
   ];
 
   return (
@@ -71,7 +70,7 @@ export function Header() {
             {/* NAVEGACIÓN CENTRADA */}
             <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
               {navItems.map((item, index) => {
-                const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B', '#FF5A36'];
+                const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B'];
                 const color = colors[index % colors.length];
                 return (
                   <Link
@@ -133,7 +132,7 @@ export function Header() {
             <div className="lg:hidden py-6 border-t border-white/10 bg-black/95 backdrop-blur-xl">
               <nav className="flex flex-col space-y-5">
                 {navItems.map((item, index) => {
-                  const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B', '#FF5A36'];
+                  const colors = ['#FF5A36', '#38BDF8', '#E8B94A', '#C17A4B'];
                   const color = colors[index % colors.length];
                   return (
                     <Link

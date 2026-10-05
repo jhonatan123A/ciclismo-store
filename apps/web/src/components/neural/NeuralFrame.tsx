@@ -5,6 +5,12 @@ import { useEffect, useState } from 'react';
 export function NeuralFrame() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // ✅ FIX HIDRATACIÓN: marcar cuando el componente está montado en el cliente
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Optimización de listener de mouse con rAF
   useEffect(() => {
@@ -40,9 +46,14 @@ export function NeuralFrame() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Posiciones relativas
-  const mouseXRel = typeof window !== 'undefined' ? mousePos.x / window.innerWidth : 0.5;
-  const mouseYRel = typeof window !== 'undefined' ? mousePos.y / window.innerHeight : 0.5;
+  // ✅ FIX: valores neutros hasta que el componente esté montado en el cliente
+  // Esto garantiza que Server y Client rendericen lo mismo en la primera pasada
+  const mouseXRel = isMounted && typeof window !== 'undefined' 
+    ? mousePos.x / window.innerWidth 
+    : 0.5;
+  const mouseYRel = isMounted && typeof window !== 'undefined' 
+    ? mousePos.y / window.innerHeight 
+    : 0.5;
 
   return (
     <>
@@ -154,7 +165,7 @@ export function NeuralFrame() {
       </div>
 
       {/* ============================================================
-          4. IMPULSOS NERVOSOS FLOTANTES EN EL BORDE
+          4. IMPULSOS NERVIOSOS FLOTANTES EN EL BORDE
           ============================================================ */}
       <div className="fixed inset-0 z-[99] pointer-events-none overflow-hidden">
         {/* Pulsos axonales superiores */}
