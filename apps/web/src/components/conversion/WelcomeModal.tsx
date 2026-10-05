@@ -77,13 +77,14 @@ export function WelcomeModal() {
     return () => clearTimeout(timer);
   }, [isHydrated, hasSeen]);
 
-  // Bloquear el scroll del body cuando el modal está abierto
+  // ✅ FIX SCROLL: bloquear scroll mientras el modal está abierto.
+  // Al cerrar, SIEMPRE liberar con 'unset' (no restaurar el valor previo,
+  // porque puede ser 'hidden' de otro modal → quedaría bloqueado para siempre).
   useEffect(() => {
     if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
-        document.body.style.overflow = originalOverflow;
+        document.body.style.overflow = 'unset';
       };
     }
   }, [isOpen]);
