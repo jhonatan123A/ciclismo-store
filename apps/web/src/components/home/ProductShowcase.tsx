@@ -2,6 +2,7 @@
 
 import { ArrowRight, Shield, Zap, ShoppingBag, Watch, Shirt } from 'lucide-react';
 import { useFadeInOnScroll } from '@/hooks/useFadeInOnScroll';
+import { formatPriceWithUsd, formatCop } from '@/lib/format-price';
 
 export function ProductShowcase() {
   // ✅ Activa las animaciones CSS al hacer scroll
@@ -16,10 +17,10 @@ export function ProductShowcase() {
       icon: <Shield className="w-4 h-4" />,
       image: '/images/products/cards/cycling-card.jpg',
       tag: 'Performance Cycling',
-      price: '$486.000',
-      originalPrice: '$640.000',
-      discount: '-24%',
-      fullPrice: '$640.000',
+      price: 640000,
+      originalPrice: 719000,
+      discount: '-11%',
+      fullPrice: 719000,
       accentColor: '#FF5A36',
     },
     {
@@ -30,10 +31,10 @@ export function ProductShowcase() {
       icon: <Zap className="w-4 h-4" />,
       image: '/images/products/cards/running-card.jpg',
       tag: 'Performance Running',
-      price: '$399.000',
-      originalPrice: '$529.000',
-      discount: '-24%',
-      fullPrice: '$529.000',
+      price: 399000,
+      originalPrice: 529000,
+      discount: '-25%',
+      fullPrice: 529000,
       accentColor: '#38BDF8',
     },
   ];
@@ -106,11 +107,23 @@ export function ProductShowcase() {
                 </p>
 
                 <div className="mb-6 pb-6 border-b border-white/5">
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-3xl font-bold text-white">{product.price}</span>
-                    <span className="text-sm text-white/30 line-through">{product.originalPrice}</span>
+                  <div className="flex items-baseline gap-2 mb-2 flex-wrap">
+                    <span className="text-3xl font-bold text-white">
+                      {formatCop(product.price)}
+                    </span>
+                    <span className="text-sm text-white/30 line-through">
+                      {formatCop(product.originalPrice)}
+                    </span>
                     <span className="text-xs font-medium tracking-wider" style={{ color: product.accentColor }}>
                       {product.discount}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[10px] text-white/50 tracking-[0.1em]">
+                      {formatPriceWithUsd(product.price)}
+                    </span>
+                    <span className="text-[10px] text-white/30 tracking-[0.1em]">
+                      Valor futuro de colección: {formatCop(product.fullPrice)}
                     </span>
                   </div>
                 </div>

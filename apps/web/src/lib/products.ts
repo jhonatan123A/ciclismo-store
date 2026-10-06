@@ -26,7 +26,7 @@ export const products: Product[] = [
     longDescription: 'Las prendas para running están diseñadas para activar la musculatura durante el ejercicio, mejorar la estabilidad muscular, favorecer el drenaje de líquidos y metabolitos, reducir la fatiga y optimizar la recuperación.',
     price: 399000,
     originalPrice: 529000,
-    discount: 24,
+    discount: 25,
     images: [
       '/images/products/running/running-main.jpg',
       '/images/products/running/running-detail1.jpg',
@@ -57,9 +57,9 @@ export const products: Product[] = [
     category: 'cycling',
     description: 'Tecnología somatosensorial con protección contra caídas',
     longDescription: 'Además de los beneficios de activación, estabilidad y drenaje, BESTIGE incorpora una tecnología patentada de protección contra caídas, diseñada para disminuir la abrasión de la piel en caso de deslizamientos sobre el asfalto, brindando mayor seguridad al ciclista.',
-    price: 486400,
-    originalPrice: 640000,
-    discount: 24,
+    price: 640000,
+    originalPrice: 719000,
+    discount: 11,
     images: [
       '/images/products/cycling/cycling-main.jpg',
       '/images/products/cycling/cycling-detail1.jpg',

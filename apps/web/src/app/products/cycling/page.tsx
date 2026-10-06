@@ -60,7 +60,7 @@ const productSchema = {
     '@type': 'Offer',
     url: `${BASE_URL}/products/cycling`,
     priceCurrency: 'COP',
-    price: '486400',
+    price: '640000',
     availability: 'https://schema.org/InStock',
     itemCondition: 'https://schema.org/NewCondition',
     seller: {

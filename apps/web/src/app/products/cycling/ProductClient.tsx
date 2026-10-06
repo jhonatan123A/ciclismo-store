@@ -11,6 +11,7 @@ import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 import { WishlistButton } from '@/components/wishlist/WishlistButton';
 import { ProductCrossSellTip } from '@/components/conversion/ProductCrossSellTip';
 import { trackViewItem, trackAddToCart } from '@/lib/analytics';
+import { formatPriceWithUsd, formatCop } from '@/lib/format-price';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -192,19 +193,22 @@ export default function ProductClient() {
 
             {/* Precio */}
             <div className="mb-8 pb-8 border-b border-white/10">
-              <div className="flex items-baseline gap-3 mb-2">
+              <div className="flex items-baseline gap-3 mb-2 flex-wrap">
                 <span className="text-3xl font-bold text-white">
-                  ${product.price.toLocaleString('es-CO')}
+                  {formatCop(product.price)}
                 </span>
                 <span className="text-sm text-white/40 line-through">
-                  ${product.originalPrice.toLocaleString('es-CO')}
+                  {formatCop(product.originalPrice)}
                 </span>
                 <span className="text-xs text-[#FF5A36] font-medium tracking-wider">
                   -{product.discount}%
                 </span>
               </div>
+              <p className="text-[10px] text-white/50 tracking-wide mb-1">
+                {formatPriceWithUsd(product.price)}
+              </p>
               <p className="text-[10px] text-white/40 tracking-wide">
-                Precio lanzamiento — Valor futuro de colección: ${product.originalPrice.toLocaleString('es-CO')}
+                Precio lanzamiento — Valor futuro de colección: {formatCop(product.originalPrice)}
               </p>
             </div>
 

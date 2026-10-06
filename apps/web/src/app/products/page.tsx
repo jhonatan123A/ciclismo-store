@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Shield, Zap } from 'lucide-react';
 import { NeuralFrame } from '@/components/neural/NeuralFrame';
+import { formatPriceWithUsd, formatCop } from '@/lib/format-price';
 
 // ============================================
 // METADATA SEO
@@ -44,9 +45,9 @@ const PRODUCTS = [
     href: '/products/cycling',
     icon: Shield,
     accentColor: '#FF5A36',
-    price: '$486.000',
-    originalPrice: '$640.000',
-    discount: '-24%',
+    price: 640000,
+    originalPrice: 719000,
+    discount: '-11%',
     image: '/images/products/cards/cycling-card.jpg',
   },
   {
@@ -58,9 +59,9 @@ const PRODUCTS = [
     href: '/products/running',
     icon: Zap,
     accentColor: '#38BDF8',
-    price: '$399.000',
-    originalPrice: '$529.000',
-    discount: '-24%',
+    price: 399000,
+    originalPrice: 529000,
+    discount: '-25%',
     image: '/images/products/cards/running-card.jpg',
   },
 ];
@@ -160,19 +161,24 @@ function ProductsContent() {
                     </p>
 
                     {/* Precio */}
-                    <div className="flex items-baseline gap-3 pt-2">
-                      <span className="text-2xl font-bold text-white">
-                        {product.price}
-                      </span>
-                      <span className="text-sm text-white/30 line-through">
-                        {product.originalPrice}
-                      </span>
-                      <span
-                        className="text-xs font-medium tracking-wider"
-                        style={{ color: product.accentColor }}
-                      >
-                        {product.discount}
-                      </span>
+                    <div className="pt-2 space-y-1">
+                      <div className="flex items-baseline gap-3 flex-wrap">
+                        <span className="text-2xl font-bold text-white">
+                          {formatCop(product.price)}
+                        </span>
+                        <span className="text-sm text-white/30 line-through">
+                          {formatCop(product.originalPrice)}
+                        </span>
+                        <span
+                          className="text-xs font-medium tracking-wider"
+                          style={{ color: product.accentColor }}
+                        >
+                          {product.discount}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-white/50 tracking-[0.1em]">
+                        {formatPriceWithUsd(product.price)}
+                      </p>
                     </div>
 
                     {/* CTA */}
