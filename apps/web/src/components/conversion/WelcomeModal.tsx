@@ -3,52 +3,25 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  X,
-  ArrowRight,
-  ArrowLeft,
-  Sparkles,
-  Shield,
-  Zap,
-  Check,
-} from 'lucide-react';
+import { X, ArrowRight, Check } from 'lucide-react';
 import { useLocalStorageFlag } from '@/hooks/useLocalStorageFlag';
 
 // ============================================
-// SLIDES DEL MODAL
+// CONTENIDO DE LA INTRO ÚNICA
 // ============================================
 
-const SLIDES = [
-  {
-    id: 1,
-    icon: Zap,
-    eyebrow: 'ÚNICO EN EL MUNDO',
-    title: 'No es un conjunto más.\nEs la única prenda del mundo\ncon tecnología somatosensorial.',
-    description:
-      'Mientras la industria sigue vendiendo ropa, BESTIGE activa tu sistema nervioso desde la piel. Tecnología somatosensorial interna. Diseñada en Colombia. Probada en Europa y Norteamérica.',
-    accentColor: '#E8B94A',
-    ctaHref: '/blog/bestige-tecnologia-somatosensorial-vs-biomecanica',
-    ctaText: 'Leer más',
-  },
-  {
-    id: 2,
-    icon: Sparkles,
-    eyebrow: 'BESTIGE',
-    title: 'BESTIGE no es ropa.\nEs tecnología somatosensorial.',
-    description:
-      'Cada prenda está diseñada para interactuar con tu sistema nervioso mientras te mueves. No es un eslogan. Es un principio científico.',
-    accentColor: '#FF5A36',
-  },
-  {
-    id: 3,
-    icon: Shield,
-    eyebrow: 'LA DIFERENCIA',
-    title: 'Nuestra tecnología está dentro.\nEn contacto con tu piel.',
-    description:
-      'Otras marcas aplican tecnología por fuera. BESTIGE la aplica donde tiene sentido: en el interior de la prenda, donde ocurre la interacción con los mecanorreceptores cutáneos.',
-    accentColor: '#38BDF8',
-  },
-];
+const INTRO = {
+  iconSrc: '/images/icons-bestige/bestige-01.png',
+  eyebrow: 'TECNOLOGÍA SOMATOSENSORIAL',
+  title: 'No es ropa deportiva.\nEs tecnología que interactúa\ncon tu cuerpo.',
+  description:
+    'Prendas con tecnología somatosensorial integrada para interactuar con tu piel durante el movimiento.',
+  accentColor: '#BFAE85',
+  primaryCtaHref: '/technology',
+  primaryCtaText: 'Conocer la tecnología',
+  secondaryCtaHref: '/products/cycling',
+  secondaryCtaText: 'Ver productos',
+};
 
 const STORAGE_KEY = 'bestige-welcome-modal-seen';
 const DELAY_MS = 2500; // 2.5 segundos
@@ -63,7 +36,6 @@ export function WelcomeModal() {
     false
   );
   const [isOpen, setIsOpen] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [showDontShowAgain, setShowDontShowAgain] = useState(false);
 
   // Mostrar el modal después del delay (solo si no se ha visto)
@@ -107,18 +79,6 @@ export function WelcomeModal() {
     }
   };
 
-  const handleNext = () => {
-    if (currentSlide < SLIDES.length - 1) {
-      setCurrentSlide((s) => s + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentSlide > 0) {
-      setCurrentSlide((s) => s - 1);
-    }
-  };
-
   const handleFinish = () => {
     setHasSeen(true);
     setIsOpen(false);
@@ -127,10 +87,7 @@ export function WelcomeModal() {
   // No renderizar nada hasta que se hidrate (evita parpadeo)
   if (!isHydrated) return null;
 
-  const slide = SLIDES[currentSlide];
-  const Icon = slide.icon;
-  const isLastSlide = currentSlide === SLIDES.length - 1;
-  const hasCustomCta = !!slide.ctaHref;
+  const { accentColor } = INTRO;
 
   return (
     <AnimatePresence>
@@ -153,20 +110,20 @@ export function WelcomeModal() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-lg md:max-w-2xl bg-[#0A0A0D] border border-white/10 rounded-3xl overflow-hidden pointer-events-auto shadow-[0_0_80px_-20px_rgba(255,90,54,0.4)]"
+              className="relative w-full max-w-lg md:max-w-2xl bg-[#0A0A0D] border border-white/10 rounded-3xl overflow-hidden pointer-events-auto shadow-[0_0_80px_-20px_rgba(191,174,133,0.4)]"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Fondo con efecto neuronal sutil */}
+              {/* Fondo con efecto sutil dorado */}
               <div className="absolute inset-0 pointer-events-none">
                 <div
-                  className="absolute inset-0 opacity-20 transition-colors duration-700"
+                  className="absolute inset-0 opacity-20"
                   style={{
-                    background: `radial-gradient(circle at top right, ${slide.accentColor}15, transparent 60%)`,
+                    background: `radial-gradient(circle at top right, ${accentColor}15, transparent 60%)`,
                   }}
                 />
                 <div
-                  className="absolute -top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30 transition-colors duration-700"
-                  style={{ backgroundColor: `${slide.accentColor}25` }}
+                  className="absolute -top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30"
+                  style={{ backgroundColor: `${accentColor}25` }}
                 />
               </div>
 
@@ -181,181 +138,85 @@ export function WelcomeModal() {
 
               {/* Contenido */}
               <div className="relative p-8 md:p-12 space-y-8">
-                {/* Icono + eyebrow */}
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-500"
-                    style={{
-                      backgroundColor: `${slide.accentColor}15`,
-                      border: `1px solid ${slide.accentColor}40`,
-                    }}
-                  >
-                    <Icon
-                      className="w-6 h-6 transition-colors duration-500"
-                      style={{ color: slide.accentColor }}
+                {/* Onda BESTIGE + eyebrow */}
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={INTRO.iconSrc}
+                      alt=""
+                      style={{
+                        width: '160%',
+                        height: '160%',
+                        objectFit: 'contain',
+                        objectPosition: 'center',
+                        display: 'block',
+                      }}
                     />
                   </div>
                   <p
-                    className="text-[10px] tracking-[0.35em] uppercase font-bold transition-colors duration-500"
-                    style={{ color: slide.accentColor }}
+                    className="text-[10px] tracking-[0.35em] uppercase font-bold"
+                    style={{ color: accentColor }}
                   >
-                    {slide.eyebrow}
+                    {INTRO.eyebrow}
                   </p>
                 </div>
 
                 {/* Texto principal */}
-                <div className="space-y-4 min-h-[180px] md:min-h-[200px]">
-                  <motion.h2
-                    key={`title-${slide.id}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 }}
-                    className="text-3xl md:text-4xl font-black tracking-tight text-white leading-[1.15] whitespace-pre-line"
-                  >
-                    {slide.title}
-                  </motion.h2>
-                  <motion.p
-                    key={`desc-${slide.id}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.15 }}
-                    className="text-white/60 text-sm md:text-base leading-relaxed"
-                  >
-                    {slide.description}
-                  </motion.p>
-                </div>
-
-                {/* Navegación de slides (dots) */}
-                <div className="flex items-center justify-center gap-2">
-                  {SLIDES.map((s, i) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setCurrentSlide(i)}
-                      aria-label={`Ir al slide ${i + 1}`}
-                      className="group relative h-1 rounded-full overflow-hidden transition-all duration-300"
-                      style={{
-                        width: i === currentSlide ? '32px' : '8px',
-                        backgroundColor:
-                          i === currentSlide
-                            ? slide.accentColor
-                            : 'rgba(255,255,255,0.15)',
-                      }}
-                    />
-                  ))}
+                <div className="space-y-4">
+                  <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white leading-[1.15] whitespace-pre-line">
+                    {INTRO.title}
+                  </h2>
+                  <p className="text-white/60 text-sm md:text-base leading-relaxed">
+                    {INTRO.description}
+                  </p>
                 </div>
 
                 {/* Botones de acción */}
                 <div className="flex flex-col gap-3">
-                  {hasCustomCta ? (
-                    // Slide con CTA personalizado (nuevo slide 1)
-                    <>
-                      <Link
-                        href={slide.ctaHref!}
-                        onClick={handleFinish}
-                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-black text-xs tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
-                        style={{
-                          backgroundColor: slide.accentColor,
-                        }}
-                      >
-                        {slide.ctaText}
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                      <button
-                        onClick={handleNext}
-                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white text-xs tracking-[0.15em] uppercase font-bold hover:border-white/40 hover:bg-white/5 transition-all"
-                      >
-                        Siguiente
-                      </button>
-                    </>
-                  ) : !isLastSlide ? (
-                    // Slides intermedios: solo "Siguiente"
-                    <button
-                      onClick={handleNext}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white text-xs tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
-                      style={{
-                        backgroundColor: slide.accentColor,
-                      }}
-                    >
-                      Siguiente
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    // Último slide: botones finales
-                    <>
-                      <Link
-                        href="/technology"
-                        onClick={handleFinish}
-                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white text-xs tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
-                        style={{
-                          backgroundColor: slide.accentColor,
-                        }}
-                      >
-                        Conocer BESTIGE
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                      <Link
-                        href="/products/cycling"
-                        onClick={handleFinish}
-                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white text-xs tracking-[0.15em] uppercase font-bold hover:border-white/40 hover:bg-white/5 transition-all"
-                      >
-                        Ver productos
-                      </Link>
-                    </>
-                  )}
+                  {/* Botón principal */}
+                  <Link
+                    href={INTRO.primaryCtaHref}
+                    onClick={handleFinish}
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-black text-xs tracking-[0.15em] uppercase font-bold transition-all hover:gap-3"
+                    style={{ backgroundColor: accentColor }}
+                  >
+                    {INTRO.primaryCtaText}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
 
-                  {/* Botones prev/skip */}
-                  <div className="flex items-center justify-between pt-2">
-                    {currentSlide > 0 ? (
-                      <button
-                        onClick={handlePrev}
-                        className="inline-flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-white/40 hover:text-white/70 transition-colors"
-                      >
-                        <ArrowLeft className="w-3 h-3" />
-                        Anterior
-                      </button>
-                    ) : (
-                      <span />
-                    )}
-
-                    <label className="inline-flex items-center gap-2 cursor-pointer group">
-                      <span className="relative flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={showDontShowAgain}
-                          onChange={(e) =>
-                            setShowDontShowAgain(e.target.checked)
-                          }
-                          className="peer sr-only"
-                        />
-                        <span className="w-4 h-4 rounded border border-white/20 peer-checked:border-[#FF5A36] peer-checked:bg-[#FF5A36] transition-colors flex items-center justify-center">
-                          {showDontShowAgain && (
-                            <Check className="w-3 h-3 text-white" />
-                          )}
-                        </span>
-                      </span>
-                      <span className="text-[10px] tracking-widest uppercase text-white/40 group-hover:text-white/60 transition-colors">
-                        No volver a mostrar
-                      </span>
-                    </label>
-                  </div>
+                  {/* Botón secundario */}
+                  <Link
+                    href={INTRO.secondaryCtaHref}
+                    onClick={handleFinish}
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white text-xs tracking-[0.15em] uppercase font-bold hover:border-white/40 hover:bg-white/5 transition-all"
+                  >
+                    {INTRO.secondaryCtaText}
+                  </Link>
                 </div>
               </div>
 
-              {/* Barra de progreso de autoplay */}
-              <div className="relative h-0.5 bg-white/5">
-                <motion.div
-                  key={`progress-${slide.id}`}
-                  initial={{ width: '0%' }}
-                  animate={{ width: '100%' }}
-                  transition={{ duration: 8, ease: 'linear' }}
-                  className="absolute inset-y-0 left-0"
-                  style={{ backgroundColor: slide.accentColor }}
-                  onAnimationComplete={() => {
-                    if (!isLastSlide) {
-                      handleNext();
-                    }
-                  }}
-                />
+              {/* Footer discreto: checkbox "No volver a mostrar" */}
+              <div className="relative px-8 md:px-12 pb-5 flex justify-center">
+                <label className="inline-flex items-center gap-2 cursor-pointer group opacity-60 hover:opacity-100 transition-opacity">
+                  <span className="relative flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={showDontShowAgain}
+                      onChange={(e) =>
+                        setShowDontShowAgain(e.target.checked)
+                      }
+                      className="peer sr-only"
+                    />
+                    <span className="w-3 h-3 rounded-sm border border-white/20 peer-checked:border-[#BFAE85] peer-checked:bg-[#BFAE85] transition-colors flex items-center justify-center">
+                      {showDontShowAgain && (
+                        <Check className="w-2.5 h-2.5 text-white" />
+                      )}
+                    </span>
+                  </span>
+                  <span className="text-[9px] tracking-[0.2em] uppercase text-white/40 group-hover:text-white/60 transition-colors">
+                    No volver a mostrar
+                  </span>
+                </label>
               </div>
             </motion.div>
           </div>

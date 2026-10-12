@@ -27,7 +27,7 @@ export default function ProductClient() {
 
   const addItem = useCartStore((state) => state.addItem);
 
-  // TEMPORIZADOR: El atleta se ve solo por 1.8 segundos antes de mostrar el producto e interfaz
+  // TEMPORIZADOR: La interfaz aparece después de 1.8 segundos
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowUI(true);
@@ -54,7 +54,7 @@ export default function ProductClient() {
       <div className="min-h-screen pt-24 px-6 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl text-white mb-4">Producto no encontrado</h1>
-          <Link href="/" className="text-[#38BDF8] hover:underline text-sm">Volver a la tienda</Link>
+          <Link href="/" className="text-[#BFAE85] hover:underline text-sm">Volver a la tienda</Link>
         </div>
       </div>
     );
@@ -95,22 +95,10 @@ export default function ProductClient() {
 
   return (
     <div className="relative min-h-screen pt-24 pb-16 px-6 md:px-10 overflow-hidden bg-black">
-      {/* 1. IMAGEN DEL ATLETA */}
-      <div
-        className="absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat z-0"
-        style={{
-          backgroundImage: 'url("/images/products/backgrounds/running-bg.jpg")',
-        }}
-      />
+      {/* Fondo negro sólido */}
+      <div className="absolute inset-0 w-full h-full bg-black z-0" />
 
-      {/* 2. OVERLAY OSCURO CON TRANSICIÓN */}
-      <div
-        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 z-[1] ${
-          showUI ? 'bg-black/60' : 'bg-black/0'
-        }`}
-      />
-
-      {/* 3. INTERFAZ COMPLETA */}
+      {/* INTERFAZ COMPLETA */}
       <div
         className={`relative z-10 max-w-7xl mx-auto transition-all duration-1000 ease-out ${
           showUI
@@ -120,16 +108,16 @@ export default function ProductClient() {
       >
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-white/60 hover:text-[#38BDF8] transition-colors mb-8 text-[11px] tracking-[0.2em] uppercase"
+          className="inline-flex items-center gap-2 text-white/60 hover:text-[#BFAE85] transition-colors mb-8 text-[11px] tracking-[0.2em] uppercase"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Volver
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* Carrusel de imágenes */}
+          {/* Carrusel de imágenes + tarjetas de tecnología */}
           <div className="space-y-3">
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A]/80 backdrop-blur-sm relative group card-neural">
+            <div className="relative">
               <Swiper
                 modules={[Navigation, Pagination]}
                 navigation={{
@@ -139,7 +127,7 @@ export default function ProductClient() {
                 pagination={{
                   clickable: true,
                   bulletClass: 'swiper-pagination-bullet !bg-white/20 !w-1.5 !h-1.5',
-                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-[#38BDF8] !w-5 !rounded-full',
+                  bulletActiveClass: 'swiper-pagination-bullet-active !bg-[#BFAE85] !w-5 !rounded-full',
                 }}
                 spaceBetween={0}
                 slidesPerView={1}
@@ -151,7 +139,7 @@ export default function ProductClient() {
                       <img
                         src={img}
                         alt={`${product.name} - ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain brightness-125 contrast-110"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
                         }}
@@ -160,10 +148,10 @@ export default function ProductClient() {
                   </SwiperSlide>
                 ))}
 
-                <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#38BDF8]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#38BDF8] transition-all border border-white/10 hover:border-[#38BDF8]/50">
+                <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10 hover:border-[#BFAE85]/50">
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#38BDF8]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#38BDF8] transition-all border border-white/10 hover:border-[#38BDF8]/50">
+                <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10 hover:border-[#BFAE85]/50">
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </Swiper>
@@ -173,12 +161,12 @@ export default function ProductClient() {
               {product.images.map((img, index) => (
                 <div
                   key={index}
-                  className="rounded-xl overflow-hidden aspect-square border border-white/10 hover:border-[#38BDF8]/50 transition-all cursor-pointer bg-[#0A0A0A]/80 backdrop-blur-sm hover:shadow-[0_0_30px_rgba(56,189,248,0.2)]"
+                  className="aspect-square transition-opacity cursor-pointer opacity-90 hover:opacity-100"
                 >
                   <img
                     src={img}
                     alt={`Miniatura ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain brightness-125 contrast-110"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
                     }}
@@ -186,13 +174,123 @@ export default function ProductClient() {
                 </div>
               ))}
             </div>
+
+            {/* Tarjetas de tecnología — 3 columnas */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-8">
+              {/* Card 1: Tecnología para Running */}
+              <div className="pt-4 px-5 pb-5 rounded-xl border border-[#BFAE85]/15 bg-[#0A0A0A] relative overflow-hidden">
+                <div
+                  className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none"
+                  style={{ background: '#BFAE85' }}
+                />
+                <div className="relative">
+                  <p
+                    className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5"
+                    style={{ color: '#BFAE85' }}
+                  >
+                    Tecnología para Running
+                  </p>
+                  <h3 className="text-white text-base font-bold mb-3 leading-tight">
+                    Rendimiento y recuperación
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {[
+                      'Activación muscular.',
+                      'Estabilidad dinámica.',
+                      'Drenaje y recuperación.',
+                      'Menos fatiga, mejor respuesta.',
+                    ].map((item, i) => (
+                      <li
+                        key={i}
+                        className="text-white/60 text-[11.5px] leading-relaxed flex gap-2"
+                      >
+                        <span className="text-[#BFAE85] flex-shrink-0">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Card 2: Ciencia aplicada al deporte */}
+              <div className="pt-4 px-5 pb-5 rounded-xl border border-[#BFAE85]/15 bg-[#0A0A0A] relative overflow-hidden">
+                <div
+                  className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none"
+                  style={{ background: '#BFAE85' }}
+                />
+                <div className="relative">
+                  <p
+                    className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5"
+                    style={{ color: '#BFAE85' }}
+                  >
+                    Ciencia aplicada al deporte
+                  </p>
+                  <h3 className="text-white text-base font-bold mb-3 leading-tight">
+                    Diseñada para el alto rendimiento
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {[
+                      'Tecnología patentada.',
+                      'Activación muscular.',
+                      'Estabilidad.',
+                      'Drenaje y recuperación.',
+                      'Protección en movimiento.',
+                    ].map((item, i) => (
+                      <li
+                        key={i}
+                        className="text-white/60 text-[11.5px] leading-relaxed flex gap-2"
+                      >
+                        <span className="text-[#BFAE85] flex-shrink-0">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Card 3: Detalles del producto */}
+              <div className="pt-4 px-5 pb-5 rounded-xl border border-[#BFAE85]/15 bg-[#0A0A0A] relative overflow-hidden">
+                <div
+                  className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none"
+                  style={{ background: '#BFAE85' }}
+                />
+                <div className="relative">
+                  <p
+                    className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5"
+                    style={{ color: '#BFAE85' }}
+                  >
+                    Detalles del producto
+                  </p>
+                  <h3 className="text-white text-base font-bold mb-3 leading-tight">
+                    Diseño pensado para el deporte
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {[
+                      'Compresión ligera.',
+                      'Secado rápido.',
+                      'Ajuste anatómico.',
+                      'Costuras planas.',
+                      'Diseñada para entrenamientos prolongados.',
+                    ].map((item, i) => (
+                      <li
+                        key={i}
+                        className="text-white/60 text-[11.5px] leading-relaxed flex gap-2"
+                      >
+                        <span className="text-[#BFAE85] flex-shrink-0">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Panel de Compras y Tallas */}
           <div className="lg:sticky lg:top-24 lg:self-start z-10">
             <div className="p-6 md:p-8 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md relative overflow-hidden">
-              <p className="text-eyebrow text-[#38BDF8] mb-4 flex items-center gap-3">
-                <span className="w-6 h-[1px] bg-gradient-to-r from-[#38BDF8] via-[#FF5A36] to-[#E8B94A]" />
+              <p className="text-eyebrow text-[#BFAE85] mb-4 flex items-center gap-3">
+                <span className="w-6 h-[1px] bg-gradient-to-r from-[#BFAE85] via-[#E5DCC0] to-[#8F7E45]" />
                 Performance Running
               </p>
 
@@ -227,7 +325,7 @@ export default function ProductClient() {
                   <span className="text-sm text-white/40 line-through">
                     {formatCop(product.originalPrice)}
                   </span>
-                  <span className="text-xs text-[#38BDF8] font-medium tracking-wider">
+                  <span className="text-xs text-[#BFAE85] font-medium tracking-wider">
                     -{product.discount}%
                   </span>
                 </div>
@@ -243,7 +341,7 @@ export default function ProductClient() {
               <div className="mb-8 relative z-20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-eyebrow text-white/60">Talla</h3>
-                  <button className="text-[10px] text-white/40 hover:text-[#38BDF8] transition-colors tracking-wider uppercase">
+                  <button className="text-[10px] text-white/40 hover:text-[#BFAE85] transition-colors tracking-wider uppercase">
                     Guía de tallas
                   </button>
                 </div>
@@ -254,8 +352,8 @@ export default function ProductClient() {
                       onClick={() => setSelectedSize(size)}
                       className={`h-12 rounded-lg border text-xs font-semibold tracking-wider transition-all ${
                         selectedSize === size
-                          ? 'border-[#38BDF8] bg-[#38BDF8] text-white shadow-[0_0_25px_rgba(56,189,248,0.4)]'
-                          : 'border-white/15 hover:border-[#38BDF8]/50 text-white/70 hover:text-white'
+                          ? 'border-[#BFAE85] bg-[#BFAE85] text-white shadow-[0_0_25px_rgba(191,174,133,0.4)]'
+                          : 'border-white/15 hover:border-[#BFAE85]/50 text-white/70 hover:text-white'
                       }`}
                     >
                       {size}
@@ -268,7 +366,7 @@ export default function ProductClient() {
               <div className="mb-8">
                 <h3 className="text-eyebrow text-white/60 mb-4">Color</h3>
                 <div className="flex items-center gap-3">
-                  <div className="px-4 py-2.5 rounded-lg border border-[#38BDF8]/40 bg-[#38BDF8]/5 text-white flex items-center gap-2.5 text-xs tracking-wider shadow-[0_0_20px_rgba(56,189,248,0.15)]">
+                  <div className="px-4 py-2.5 rounded-lg border border-[#BFAE85]/40 bg-[#BFAE85]/5 text-white flex items-center gap-2.5 text-xs tracking-wider shadow-[0_0_20px_rgba(191,174,133,0.15)]">
                     <span className="w-3 h-3 rounded-full bg-black border border-white/30" />
                     Negro
                   </div>
@@ -287,7 +385,7 @@ export default function ProductClient() {
                   flex items-center justify-center gap-2 relative z-20
                   ${isAdded
                     ? 'bg-green-500 text-white'
-                    : 'bg-[#38BDF8] text-black hover:bg-[#7DD3FC] hover:shadow-[0_0_40px_rgba(56,189,248,0.4)] hover:scale-[1.02]'
+                    : 'bg-[#BFAE85] text-black hover:bg-[#E5DCC0] hover:shadow-[0_0_40px_rgba(191,174,133,0.4)] hover:scale-[1.02]'
                   }
                   disabled:opacity-70 disabled:cursor-not-allowed
                 `}
@@ -312,7 +410,7 @@ export default function ProductClient() {
 
               {/* Envío */}
               <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
-                <Truck className="w-3.5 h-3.5 text-[#38BDF8]" />
+                <Truck className="w-3.5 h-3.5 text-[#BFAE85]" />
                 Envío gratis a toda Colombia
               </div>
             </div>

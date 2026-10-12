@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Instrument_Serif, Newsreader } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -8,13 +9,29 @@ import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
 import { TermsModal } from '@/components/legal/TermsModal';
 import { CookiesBanner } from '@/components/legal/CookiesBanner';
 import { WelcomeModal } from '@/components/conversion/WelcomeModal';
-import { NeuralFrame } from '@/components/neural/NeuralFrame';
-import { NeuralBackground } from '@/components/neural/NeuralBackground';
 
 const GA_MEASUREMENT_ID = 'G-SQ3P0E4YFS';
 const META_PIXEL_ID = '1412178441062317';
 
 const BASE_URL = 'https://www.bestige-somatosensory-norbertowilches.com';
+
+// Fuente serif moderna (Instrument Serif) para el hero
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-serif-modern',
+  display: 'swap',
+});
+
+// Fuente serif alternativa (Newsreader) — para comparar en el preview
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif-newsreader',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -58,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es" className={`dark ${instrumentSerif.variable} ${newsreader.variable}`}>
       <head>
         {/* ✅ Google Search Console verification (meta tag directo) */}
         <meta
@@ -117,18 +134,15 @@ export default function RootLayout({
           />
         </noscript>
 
-        {/* FONDO NEURONAL (nueva red de nodos dorados) */}
-        <NeuralBackground />
-
-        {/* FONDO PREMIUM GLOBAL (tu diseño original) */}
-        <div className="fixed inset-0 w-screen h-screen -z-20 bg-black">
+        {/* FONDO PREMIUM GLOBAL — Dorado titanio */}
+        <div className="fixed inset-0 w-screen h-screen -z-20 bg-[#0A0A0A]">
           <div
             className="absolute inset-0"
             style={{
               background: `
-                radial-gradient(ellipse 800px 600px at 15% 20%, rgba(255, 122, 92, 0.06) 0%, transparent 60%),
-                radial-gradient(ellipse 900px 700px at 85% 80%, rgba(125, 211, 252, 0.05) 0%, transparent 60%),
-                radial-gradient(ellipse 700px 500px at 50% 50%, rgba(255, 90, 95, 0.03) 0%, transparent 70%)
+                radial-gradient(ellipse 800px 600px at 15% 20%, rgba(191, 174, 133, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 900px 700px at 85% 80%, rgba(191, 174, 133, 0.03) 0%, transparent 60%),
+                radial-gradient(ellipse 700px 500px at 50% 50%, rgba(191, 174, 133, 0.02) 0%, transparent 70%)
               `,
             }}
           />
@@ -148,9 +162,6 @@ export default function RootLayout({
             }}
           />
         </div>
-
-        {/* MARCO HUD PERIMETRAL (nuevo) */}
-        <NeuralFrame />
 
         <SmoothScrollProvider>
           <PayPalProvider>

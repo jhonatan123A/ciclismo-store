@@ -33,32 +33,19 @@
 @layer base {
   :root {
     /* ============================================
-       PALETA TRIADICA BESTIGE
-       Naranja + Cyan + Dorado
+       PALETA BESTIGE — Dorado Titanio
        ============================================ */
-    --bestige-carbon: #050505;
-    --bestige-graphite: #0F0F12;
-    --bestige-steel: #1A1A1F;
+    --bestige-carbon: #0A0A0A;
+    --bestige-graphite: #0F0F0F;
+    --bestige-steel: #1A1A1A;
     --bestige-border: rgba(255, 255, 255, 0.08);
-    --bestige-border-hover: rgba(255, 90, 54, 0.25);
+    --bestige-border-hover: rgba(191, 174, 133, 0.3);
 
-    /* Naranja somatosensorial */
-    --bestige-orange: #FF5A36;
-    --bestige-orange-bright: #FF7A5C;
-    --bestige-orange-glow: rgba(255, 90, 54, 0.4);
-
-    /* Cyan sensorial */
-    --bestige-cyan: #38BDF8;
-    --bestige-cyan-bright: #7DD3FC;
-    --bestige-cyan-glow: rgba(56, 189, 248, 0.4);
-
-    /* Dorado premium */
-    --bestige-gold: #E8B94A;
-    --bestige-gold-bright: #F7E98E;
-    --bestige-gold-glow: rgba(232, 185, 74, 0.4);
-
-    /* Cobre */
-    --bestige-copper: #C17A4B;
+    /* Dorado titanio */
+    --bestige-gold: #BFAE85;
+    --bestige-gold-bright: #E5DCC0;
+    --bestige-gold-dark: #8F7E45;
+    --bestige-gold-glow: rgba(191, 174, 133, 0.4);
 
     /* Neutros */
     --bestige-white: #FFFFFF;
@@ -91,7 +78,7 @@
     overflow-x: hidden;
   }
 
-  /* Fondo atmosférico global - triple gradiente */
+  /* Fondo atmosférico global — Dorado titanio sutil */
   body::before {
     content: '';
     position: fixed;
@@ -99,9 +86,8 @@
     z-index: -2;
     pointer-events: none;
     background:
-      radial-gradient(ellipse 900px 700px at 15% 15%, rgba(255, 90, 54, 0.06), transparent 60%),
-      radial-gradient(ellipse 900px 700px at 85% 30%, rgba(56, 189, 248, 0.05), transparent 60%),
-      radial-gradient(ellipse 1000px 800px at 50% 90%, rgba(232, 185, 74, 0.04), transparent 60%);
+      radial-gradient(ellipse 900px 700px at 15% 15%, rgba(191, 174, 133, 0.04), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 85% 60%, rgba(191, 174, 133, 0.03), transparent 60%);
   }
 }
 
@@ -147,7 +133,7 @@
 }
 
 /* ============================================
-   SCROLLBAR TRIADICA
+   SCROLLBAR DORADA
    ============================================ */
 ::-webkit-scrollbar {
   width: 6px;
@@ -159,12 +145,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #FF5A36, #38BDF8, #E8B94A);
+  background: linear-gradient(180deg, #E5DCC0, #BFAE85, #8F7E45);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #FF7A5C, #7DD3FC, #F7E98E);
+  background: linear-gradient(180deg, #F0E8D0, #BFAE85, #8F7E45);
 }
 
 /* ============================================
@@ -186,12 +172,12 @@
   }
 }
 
-@keyframes amberGlow {
+@keyframes goldGlow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 90, 54, 0.15), 0 0 40px rgba(56, 189, 248, 0.08);
+    box-shadow: 0 0 20px rgba(191, 174, 133, 0.15), 0 0 40px rgba(191, 174, 133, 0.08);
   }
   50% {
-    box-shadow: 0 0 30px rgba(255, 90, 54, 0.3), 0 0 60px rgba(232, 185, 74, 0.15);
+    box-shadow: 0 0 30px rgba(191, 174, 133, 0.3), 0 0 60px rgba(191, 174, 133, 0.15);
   }
 }
 
@@ -207,53 +193,29 @@
 
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
 .animate-neural-pulse { animation: neuralPulse 3s ease-in-out infinite; }
-.animate-amber-glow { animation: amberGlow 3s ease-in-out infinite; }
+.animate-gold-glow { animation: goldGlow 3s ease-in-out infinite; }
 .animate-float { animation: float 4s ease-in-out infinite; }
 
 /* ============================================
-   GRADIENTES DE TEXTO TRIADICOS
+   GRADIENTES DE TEXTO — DORADO TITANIO
    ============================================ */
 
-/* Gradiente principal: Naranja → Cyan → Dorado */
-.gradient-text-triad {
-  background: linear-gradient(135deg, #FF5A36 0%, #FF7A5C 25%, #38BDF8 60%, #E8B94A 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 6s ease-in-out infinite;
-}
-
-/* Gradiente naranja → cyan */
-.gradient-text-orange-cyan {
-  background: linear-gradient(135deg, #FF5A36 0%, #38BDF8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Gradiente cyan → dorado */
+/* Gradiente dorado principal */
+.gradient-text-triad,
+.gradient-text-gold,
+.gradient-text-orange,
+.gradient-text-orange-cyan,
 .gradient-text-cyan-gold {
-  background: linear-gradient(135deg, #38BDF8 0%, #E8B94A 100%);
+  background: linear-gradient(135deg, #E5DCC0 0%, #BFAE85 50%, #8F7E45 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Gradiente naranja puro */
-.gradient-text-orange {
-  background: linear-gradient(135deg, #FF5A36 0%, #FF7A5C 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Gradiente dorado puro */
-.gradient-text-gold {
-  background: linear-gradient(135deg, #F7E98E 0%, #E8B94A 50%, #C17A4B 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Gradiente dorado animado */
+.gradient-text-triad {
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease-in-out infinite;
 }
 
 /* Gradiente blanco → gris */
@@ -265,40 +227,14 @@
 }
 
 /* ============================================
-   BADGES TRIADICOS
+   BADGES DORADOS
    ============================================ */
-.badge-orange {
-  background: rgba(255, 90, 54, 0.1);
-  border: 1px solid rgba(255, 90, 54, 0.25);
-  color: #FF5A36;
-  padding: 0.25rem 0.875rem;
-  border-radius: 9999px;
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 0 20px rgba(255, 90, 54, 0.1);
-}
-
-.badge-cyan {
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  color: #38BDF8;
-  padding: 0.25rem 0.875rem;
-  border-radius: 9999px;
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
-}
-
+.badge-orange,
+.badge-cyan,
 .badge-gold {
-  background: rgba(232, 185, 74, 0.1);
-  border: 1px solid rgba(232, 185, 74, 0.25);
-  color: #E8B94A;
+  background: rgba(191, 174, 133, 0.1);
+  border: 1px solid rgba(191, 174, 133, 0.25);
+  color: #BFAE85;
   padding: 0.25rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.625rem;
@@ -306,13 +242,13 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   backdrop-filter: blur(8px);
-  box-shadow: 0 0 20px rgba(232, 185, 74, 0.1);
+  box-shadow: 0 0 20px rgba(191, 174, 133, 0.1);
 }
 
 .badge-triad {
-  background: linear-gradient(135deg, rgba(255, 90, 54, 0.1), rgba(56, 189, 248, 0.1), rgba(232, 185, 74, 0.1));
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, rgba(191, 174, 133, 0.15), rgba(191, 174, 133, 0.08));
+  border: 1px solid rgba(191, 174, 133, 0.3);
+  color: #E5DCC0;
   padding: 0.25rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.625rem;
@@ -335,14 +271,15 @@
 }
 
 /* ============================================
-   BOTONES TRIADICOS
+   BOTONES DORADOS
    ============================================ */
 
-/* Botón principal naranja (CTA) */
-.btn-orange {
+/* Botón principal dorado */
+.btn-orange,
+.btn-gold {
   position: relative;
-  background: linear-gradient(135deg, #FF5A36 0%, #FF7A5C 100%);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, #BFAE85 0%, #8F7E45 100%);
+  color: #0A0A0A;
   padding: 0.875rem 1.75rem;
   border-radius: 9999px;
   font-weight: 700;
@@ -352,7 +289,7 @@
   transition: all 0.4s ease;
   border: none;
   box-shadow:
-    0 4px 20px rgba(255, 90, 54, 0.3),
+    0 4px 20px rgba(191, 174, 133, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   overflow: hidden;
 }
@@ -361,86 +298,24 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  background: linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
   background-size: 200% 100%;
   animation: gradientShift 3s linear infinite;
   pointer-events: none;
 }
 
-.btn-orange:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow:
-    0 8px 40px rgba(255, 90, 54, 0.5),
-    0 0 80px rgba(255, 90, 54, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-/* Botón dorado (premium) */
-.btn-gold {
-  position: relative;
-  background: linear-gradient(135deg, #E8B94A 0%, #C17A4B 100%);
-  color: #050505;
-  padding: 0.875rem 1.75rem;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: all 0.4s ease;
-  border: none;
-  box-shadow:
-    0 4px 20px rgba(232, 185, 74, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
+.btn-orange:hover,
 .btn-gold:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow:
-    0 8px 40px rgba(232, 185, 74, 0.5),
-    0 0 80px rgba(232, 185, 74, 0.2);
+    0 8px 40px rgba(191, 174, 133, 0.5),
+    0 0 80px rgba(191, 174, 133, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Botón outline naranja */
-.btn-outline-orange {
-  background: transparent;
-  color: var(--bestige-white);
-  padding: 0.875rem 1.75rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 90, 54, 0.4);
-}
-
-.btn-outline-orange:hover {
-  background: rgba(255, 90, 54, 0.1);
-  border-color: rgba(255, 90, 54, 0.8);
-  box-shadow: 0 0 30px rgba(255, 90, 54, 0.3);
-}
-
-/* Botón outline cyan */
-.btn-outline-cyan {
-  background: transparent;
-  color: var(--bestige-white);
-  padding: 0.875rem 1.75rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-}
-
-.btn-outline-cyan:hover {
-  background: rgba(56, 189, 248, 0.1);
-  border-color: rgba(56, 189, 248, 0.8);
-  box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
-}
-
-/* Botón outline genérico */
+/* Botón outline dorado */
+.btn-outline-orange,
+.btn-outline-cyan,
 .btn-outline {
   background: transparent;
   color: var(--bestige-white);
@@ -451,21 +326,23 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   transition: all 0.3s ease;
-  border: 1px solid var(--bestige-border-hover);
+  border: 1px solid rgba(191, 174, 133, 0.4);
 }
 
+.btn-outline-orange:hover,
+.btn-outline-cyan:hover,
 .btn-outline:hover {
-  background: rgba(255, 90, 54, 0.05);
-  border-color: rgba(255, 90, 54, 0.5);
-  box-shadow: 0 0 30px rgba(255, 90, 54, 0.15);
+  background: rgba(191, 174, 133, 0.08);
+  border-color: rgba(191, 174, 133, 0.8);
+  box-shadow: 0 0 30px rgba(191, 174, 133, 0.3);
 }
 
 /* ============================================
-   CARDS CON BORDE NEURAL TRIADICO
+   CARDS CON BORDE DORADO
    ============================================ */
 .card-neural {
   position: relative;
-  background: rgba(15, 15, 18, 0.6);
+  background: rgba(15, 15, 15, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -480,7 +357,7 @@
   inset: -1px;
   border-radius: 1.25rem;
   padding: 1px;
-  background: linear-gradient(135deg, #FF5A36, #38BDF8, #E8B94A);
+  background: linear-gradient(135deg, #E5DCC0, #BFAE85, #8F7E45);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -496,68 +373,41 @@
   transform: translateY(-4px);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.6),
-    0 0 60px rgba(255, 90, 54, 0.1),
-    0 0 80px rgba(56, 189, 248, 0.05);
+    0 0 60px rgba(191, 174, 133, 0.1),
+    0 0 80px rgba(191, 174, 133, 0.05);
 }
 
 /* ============================================
-   EFECTOS DE GLOW
+   EFECTOS DE GLOW — DORADOS
    ============================================ */
-.glow-orange {
-  box-shadow: 0 0 30px rgba(255, 90, 54, 0.2);
-  transition: all 0.4s ease;
-}
-
-.glow-orange:hover {
-  box-shadow: 0 0 60px rgba(255, 90, 54, 0.4);
-}
-
-.glow-cyan {
-  box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
-  transition: all 0.4s ease;
-}
-
-.glow-cyan:hover {
-  box-shadow: 0 0 60px rgba(56, 189, 248, 0.4);
-}
-
-.glow-gold {
-  box-shadow: 0 0 30px rgba(232, 185, 74, 0.2);
-  transition: all 0.4s ease;
-}
-
-.glow-gold:hover {
-  box-shadow: 0 0 60px rgba(232, 185, 74, 0.4);
-}
-
+.glow-orange,
+.glow-cyan,
+.glow-gold,
 .glow-triad {
-  box-shadow:
-    0 0 30px rgba(255, 90, 54, 0.1),
-    0 0 60px rgba(56, 189, 248, 0.08),
-    0 0 90px rgba(232, 185, 74, 0.05);
+  box-shadow: 0 0 30px rgba(191, 174, 133, 0.2);
   transition: all 0.4s ease;
 }
 
+.glow-orange:hover,
+.glow-cyan:hover,
+.glow-gold:hover,
 .glow-triad:hover {
-  box-shadow:
-    0 0 40px rgba(255, 90, 54, 0.2),
-    0 0 80px rgba(56, 189, 248, 0.15),
-    0 0 120px rgba(232, 185, 74, 0.1);
+  box-shadow: 0 0 60px rgba(191, 174, 133, 0.4);
 }
 
 /* ============================================
-   DIVISORES TRIADICOS
+   DIVISORES DORADOS
    ============================================ */
 .divider-triad {
   height: 1px;
-  background: linear-gradient(90deg, transparent, #FF5A36, #38BDF8, #E8B94A, transparent);
+  background: linear-gradient(90deg, transparent, #BFAE85, #BFAE85, transparent);
   opacity: 0.4;
 }
 
 .divider-neural {
   position: relative;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 90, 54, 0.3), rgba(56, 189, 248, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(191, 174, 133, 0.3), rgba(191, 174, 133, 0.3), transparent);
   overflow: hidden;
 }
 
@@ -568,7 +418,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, #FF5A36, transparent);
+  background: linear-gradient(90deg, transparent, #BFAE85, transparent);
   animation: neuralScan 4s ease-in-out infinite;
 }
 
@@ -582,45 +432,23 @@
    ============================================ */
 .text-balance { text-wrap: balance; }
 
-.accent-line-orange {
-  display: inline-block;
-  width: 2rem;
-  height: 1px;
-  background: linear-gradient(90deg, #FF5A36, transparent);
-}
-
-.accent-line-cyan {
-  display: inline-block;
-  width: 2rem;
-  height: 1px;
-  background: linear-gradient(90deg, #38BDF8, transparent);
-}
-
-.accent-line-gold {
-  display: inline-block;
-  width: 2rem;
-  height: 1px;
-  background: linear-gradient(90deg, #E8B94A, transparent);
-}
-
+.accent-line-orange,
+.accent-line-cyan,
+.accent-line-gold,
 .accent-line-triad {
   display: inline-block;
   width: 2rem;
   height: 1px;
-  background: linear-gradient(90deg, #FF5A36, #38BDF8, #E8B94A);
+  background: linear-gradient(90deg, #BFAE85, transparent);
 }
 
 /* ============================================
-   FADE-IN ON SCROLL — Agregado 2026-10-05
-   Para cards de productos con IntersectionObserver
+   FADE-IN ON SCROLL
    ============================================ */
-
-/* Estado inicial: invisible hasta que el observer lo active */
 [data-animate]:not(.animate-fade-in-up) {
   opacity: 0;
 }
 
-/* Respetar usuarios con prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   [data-animate],
   [data-animate]:not(.animate-fade-in-up) {
