@@ -42,6 +42,7 @@ export function AddToCartButton({ product, selectedSize, selectedColor }: AddToC
         quantity: 1,
         size: selectedSize,
         color: selectedColor,
+        gender: 'Masculino',
         image: product.images[0] || '/images/products/placeholder.jpg',
         category: product.category,
       });
@@ -65,7 +66,7 @@ export function AddToCartButton({ product, selectedSize, selectedColor }: AddToC
         flex items-center justify-center gap-2
         ${isAdded 
           ? 'bg-green-500 text-white' 
-          : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02]'
+          : 'bg-gradient-to-r from-[#BFAE85] to-[#8F7E45] text-black hover:shadow-[0_0_40px_rgba(191,174,133,0.4)] hover:scale-[1.02]'
         }
         disabled:opacity-70 disabled:cursor-not-allowed
       `}

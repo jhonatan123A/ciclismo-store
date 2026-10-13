@@ -38,7 +38,7 @@ export function PaymentMethods({
           className={`
             flex items-center justify-center gap-2 py-3 rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all
             ${method === 'wompi'
-              ? 'bg-gradient-to-r from-[#FF5A36] to-[#C17A4B] text-white shadow-[0_0_30px_rgba(255,90,54,0.3)]'
+              ? 'bg-gradient-to-r from-[#BFAE85] to-[#8F7E45] text-black shadow-[0_0_30px_rgba(191,174,133,0.3)]'
               : 'text-white/60 hover:text-white'
             }
           `}
@@ -51,7 +51,7 @@ export function PaymentMethods({
           className={`
             flex items-center justify-center gap-2 py-3 rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all
             ${method === 'paypal'
-              ? 'bg-gradient-to-r from-[#38BDF8] to-[#E8B94A] text-white shadow-[0_0_30px_rgba(56,189,248,0.3)]'
+              ? 'bg-[#BFAE85]/10 text-[#BFAE85] border border-[#BFAE85]/30'
               : 'text-white/60 hover:text-white'
             }
           `}
@@ -65,12 +65,12 @@ export function PaymentMethods({
       <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5">
         {method === 'wompi' ? (
           <p className="text-[10px] text-white/50 leading-relaxed tracking-wide">
-            <span className="text-[#FF5A36] font-medium">Pago local Colombia:</span>{' '}
-            Tarjetas débito/crédito, PSE, Nequi, Bancolombia. Procesado por Wompi.
+            <span className="text-[#BFAE85] font-medium">Pago local Colombia:</span>{' '}
+            Tarjetas débito/crédito, PSE, Nequi y Bancolombia. Procesado de forma segura por Wompi.
           </p>
         ) : (
           <p className="text-[10px] text-white/50 leading-relaxed tracking-wide">
-            <span className="text-[#38BDF8] font-medium">Pago internacional:</span>{' '}
+            <span className="text-white/70 font-medium">¿Compra internacional?</span>{' '}
             Tarjetas de crédito/débito y saldo PayPal. Procesado por PayPal.
           </p>
         )}

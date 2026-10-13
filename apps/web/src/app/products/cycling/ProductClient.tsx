@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useCartStore } from '@/lib/cart-store';
+import { useCartStore, type CartGender } from '@/lib/cart-store';
 import { products } from '@/lib/products';
 import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Check, Loader2, ChevronLeft, ChevronRight, Truck } from 'lucide-react';
@@ -19,6 +19,7 @@ import 'swiper/css/pagination';
 export default function ProductClient() {
   const product = products.find(p => p.slug === 'banda-ciclismo');
   const [selectedSize, setSelectedSize] = useState('M');
+  const [selectedGender, setSelectedGender] = useState<CartGender>('Masculino');
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
@@ -61,6 +62,7 @@ export default function ProductClient() {
         quantity: 1,
         size: selectedSize,
         color: 'Negro',
+        gender: selectedGender,
         image: firstImage || '/images/products/placeholder.jpg',
         category: product.category,
       });
@@ -362,6 +364,26 @@ export default function ProductClient() {
                 <p className="text-[10px] text-white/40 tracking-wide">
                   Precio lanzamiento — Valor futuro de colección: {formatCop(product.originalPrice)}
                 </p>
+              </div>
+
+              {/* Género */}
+              <div className="mb-8 relative z-20">
+                <h3 className="text-eyebrow text-white/60 mb-4">Género</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {(['Masculino', 'Femenino'] as CartGender[]).map((gender) => (
+                    <button
+                      key={gender}
+                      onClick={() => setSelectedGender(gender)}
+                      className={`h-12 rounded-lg border text-xs font-semibold tracking-wider transition-all ${
+                        selectedGender === gender
+                          ? 'border-[#BFAE85] bg-[#BFAE85] text-white shadow-[0_0_25px_rgba(191,174,133,0.4)]'
+                          : 'border-white/15 hover:border-[#BFAE85]/50 text-white/70 hover:text-white'
+                      }`}
+                    >
+                      {gender}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Talla */}

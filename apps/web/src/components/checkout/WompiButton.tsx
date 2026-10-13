@@ -155,8 +155,8 @@ export function WompiButton({
       className="
         w-full py-4 rounded-full font-semibold text-xs tracking-[0.2em] uppercase transition-all duration-300
         flex items-center justify-center gap-2
-        bg-gradient-to-r from-[#FF5A36] to-[#C17A4B] text-white
-        hover:shadow-[0_0_40px_rgba(255,90,54,0.4)]
+        bg-gradient-to-r from-[#BFAE85] to-[#8F7E45] text-black
+        hover:shadow-[0_0_40px_rgba(191,174,133,0.4)]
         disabled:opacity-50 disabled:cursor-not-allowed
       "
     >

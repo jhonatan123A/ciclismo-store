@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
-import { ArrowLeft, Lock, Truck, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Lock, Truck, ShieldCheck, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PaymentMethods } from '@/components/checkout/PaymentMethods';
 import { ShippingForm } from '@/components/checkout/ShippingForm';
@@ -171,24 +171,24 @@ export default function CheckoutPage() {
     return (
       <div className="relative min-h-screen pt-24 pb-16 px-6 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 pointer-events-none -z-10">
-          <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#FF5A36]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-[#38BDF8]/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#BFAE85]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-[#8F7E45]/5 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-md w-full text-center">
-          <p className="text-eyebrow text-[#FF5A36] mb-6 flex items-center justify-center gap-3">
-            <span className="w-8 h-[1px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
-            Checkout
+          <p className="text-eyebrow text-[#BFAE85] mb-6 flex items-center justify-center gap-3">
+            <span className="w-8 h-[1px] bg-gradient-to-r from-transparent via-[#BFAE85] to-[#8F7E45]" />
+            CHECKOUT SEGURO
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Carrito vacío
+            Tu carrito está vacío
           </h1>
           <p className="text-white/40 text-sm mb-10 leading-relaxed">
-            Agrega productos para continuar con el checkout.
+            Agrega productos BESTIGE para continuar con tu compra.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-3 px-7 py-3.5 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold"
+            className="inline-flex items-center gap-3 px-7 py-3.5 btn-gold text-[10px] tracking-[0.2em] uppercase font-semibold"
           >
             <ArrowLeft className="w-3 h-3" />
             Volver a la tienda
@@ -273,15 +273,15 @@ export default function CheckoutPage() {
   return (
     <div className="relative min-h-screen pt-24 pb-16 px-6 md:px-10 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute top-20 -left-40 w-96 h-96 bg-[#FF5A36]/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 -right-40 w-96 h-96 bg-[#38BDF8]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-[#E8B94A]/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 -left-40 w-96 h-96 bg-[#BFAE85]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -right-40 w-96 h-96 bg-[#8F7E45]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-[#BFAE85]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-6xl mx-auto">
         <Link
           href="/cart"
-          className="inline-flex items-center gap-2 text-white/40 hover:text-[#FF5A36] transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-[#BFAE85] transition-colors mb-10 text-[11px] tracking-[0.2em] uppercase"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Volver al carrito
@@ -289,12 +289,12 @@ export default function CheckoutPage() {
 
         {/* Header */}
         <div className="mb-10 pb-6 border-b border-white/10">
-          <p className="text-eyebrow text-[#FF5A36] mb-3 flex items-center gap-3">
-            <span className="w-6 h-[1px] bg-gradient-to-r from-[#FF5A36] via-[#38BDF8] to-[#E8B94A]" />
-            Checkout seguro
+          <p className="text-eyebrow text-[#BFAE85] mb-3 flex items-center gap-3">
+            <span className="w-6 h-[1px] bg-gradient-to-r from-transparent via-[#BFAE85] to-[#8F7E45]" />
+            CHECKOUT SEGURO
           </p>
           <h1 className="text-3xl md:text-5xl font-bold text-white">
-            Finalizar compra
+            Finaliza tu equipamiento BESTIGE
           </h1>
         </div>
 
@@ -308,20 +308,20 @@ export default function CheckoutPage() {
 
             {/* RESUMEN DEL PEDIDO */}
             <div className="space-y-4">
-              <h2 className="text-eyebrow text-white/60 mb-4">Resumen del pedido</h2>
+              <h2 className="text-eyebrow text-white/60 mb-4">RESUMEN DEL PEDIDO</h2>
 
               {items.map((item) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:border-[#FF5A36]/20 transition-all"
+                  className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:border-[#BFAE85]/20 transition-all"
                 >
-                  <div className="w-20 h-20 rounded-lg bg-white/5 overflow-hidden flex-shrink-0 ring-1 ring-white/5">
+                  <div className="w-24 h-24 rounded-lg bg-[#0A0A0A] overflow-hidden flex-shrink-0 ring-1 ring-white/5">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
                       }}
@@ -330,11 +330,13 @@ export default function CheckoutPage() {
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
                       <h4 className="text-white font-medium text-sm mb-1.5">{item.name}</h4>
-                      <div className="flex items-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
+                      <div className="flex flex-wrap items-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
+                        <span>{item.gender}</span>
+                        <span className="w-1 h-1 bg-[#BFAE85] rounded-full" />
                         <span>Talla {item.size}</span>
-                        <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
+                        <span className="w-1 h-1 bg-[#BFAE85] rounded-full" />
                         <span>{item.color}</span>
-                        <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
+                        <span className="w-1 h-1 bg-[#BFAE85] rounded-full" />
                         <span>Cantidad {item.quantity}</span>
                       </div>
                     </div>
@@ -346,19 +348,19 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            {/* Trust badges */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#FF5A36]/20 bg-[#FF5A36]/[0.02] hover:border-[#FF5A36]/40 transition-all">
-                <Lock className="w-4 h-4 text-[#FF5A36] mb-2" />
+            {/* Trust badges — GARANTÍAS */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#BFAE85]/20 bg-[#BFAE85]/[0.02] hover:border-[#BFAE85]/40 transition-all">
+                <Lock className="w-4 h-4 text-[#BFAE85] mb-2" />
                 <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Pago seguro</span>
               </div>
-              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#38BDF8]/20 bg-[#38BDF8]/[0.02] hover:border-[#38BDF8]/40 transition-all">
-                <Truck className="w-4 h-4 text-[#38BDF8] mb-2" />
-                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Envío nacional</span>
+              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#BFAE85]/20 bg-[#BFAE85]/[0.02] hover:border-[#BFAE85]/40 transition-all">
+                <Truck className="w-4 h-4 text-[#BFAE85] mb-2" />
+                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Envíos gratis</span>
               </div>
-              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#E8B94A]/20 bg-[#E8B94A]/[0.02] hover:border-[#E8B94A]/40 transition-all">
-                <ShieldCheck className="w-4 h-4 text-[#E8B94A] mb-2" />
-                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Garantía 30 días</span>
+              <div className="flex flex-col items-center text-center p-4 rounded-xl border border-[#BFAE85]/20 bg-[#BFAE85]/[0.02] hover:border-[#BFAE85]/40 transition-all">
+                <ShieldCheck className="w-4 h-4 text-[#BFAE85] mb-2" />
+                <span className="text-[9px] text-white/60 tracking-[0.15em] uppercase">Cambios de talla</span>
               </div>
             </div>
           </div>
@@ -366,26 +368,26 @@ export default function CheckoutPage() {
           {/* COLUMNA DERECHA: PAGO */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-24 p-6 rounded-2xl border border-white/10 bg-white/[0.02] relative overflow-hidden">
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#FF5A36]/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#38BDF8]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#BFAE85]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#8F7E45]/10 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative">
-                <p className="text-eyebrow text-white/40 mb-5">Resumen total</p>
+                <p className="text-eyebrow text-white/40 mb-4">RESUMEN TOTAL</p>
 
                 {/* Resumen del envío */}
-                <div className="mb-5">
+                <div className="mb-4">
                   <ShippingSummary subtotal={subtotal} />
                 </div>
 
                 {/* Desglose de precios */}
-                <div className="space-y-2.5 text-sm pb-5 border-b border-white/10 mb-6">
+                <div className="space-y-2 text-sm pb-4 border-b border-white/10 mb-4">
                   <div className="flex justify-between text-white/60">
                     <span className="text-xs tracking-wider">Subtotal</span>
                     <span>${subtotal.toLocaleString('es-CO')}</span>
                   </div>
                   <div className="flex justify-between text-white/60">
                     <span className="text-xs tracking-wider">Envío</span>
-                    <span className={envioInfo.esGratis ? 'text-[#FF5A36] font-medium' : ''}>
+                    <span className={envioInfo.esGratis ? 'text-[#BFAE85] font-medium' : ''}>
                       {!isShippingValid
                         ? 'Por calcular'
                         : envioInfo.esGratis
@@ -395,17 +397,48 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="flex items-baseline justify-between pb-6">
-                  <span className="text-white/40 text-xs tracking-[0.2em] uppercase">Total</span>
-                  <span className="text-white text-2xl font-bold">
+                {/* Total — jerarquía reforzada */}
+                <div className="flex items-baseline justify-between pb-4 border-b border-[#BFAE85]/20 mb-4">
+                  <span className="text-white/40 text-[10px] tracking-[0.25em] uppercase">Total</span>
+                  <span className="text-[#E5DCC0] text-3xl font-bold tracking-tight">
                     ${totalPrice.toLocaleString('es-CO')}
                   </span>
                 </div>
 
+                {/* Frase emocional — alineada al concepto BESTIGE */}
+                <p className="text-[11px] text-white/40 italic leading-relaxed pb-4 border-b border-white/10 mb-4">
+                  Tecnología desarrollada para acompañar cada movimiento. Respaldada por una trayectoria de más de 40 años en el ciclismo.
+                </p>
+
+                {/* Bloque de beneficios */}
+                <ul className="space-y-2.5 pb-4 border-b border-white/10 mb-4">
+                  <li className="flex items-center gap-2.5 text-[11px] text-white/70">
+                    <Check className="w-3 h-3 text-[#BFAE85] flex-shrink-0" strokeWidth={3} />
+                    Envíos gratis a Colombia
+                  </li>
+                  <li className="flex items-center gap-2.5 text-[11px] text-white/70">
+                    <Check className="w-3 h-3 text-[#BFAE85] flex-shrink-0" strokeWidth={3} />
+                    Cambios de talla disponibles
+                  </li>
+                  <li className="flex items-center gap-2.5 text-[11px] text-white/70">
+                    <Check className="w-3 h-3 text-[#BFAE85] flex-shrink-0" strokeWidth={3} />
+                    Pago seguro con Wompi
+                  </li>
+                  <li className="flex items-center gap-2.5 text-[11px] text-white/70">
+                    <Check className="w-3 h-3 text-[#BFAE85] flex-shrink-0" strokeWidth={3} />
+                    Soporte BESTIGE
+                  </li>
+                </ul>
+
+                {/* Frase de respaldo histórico (redacción cuidada) */}
+                <p className="text-[10px] text-[#BFAE85]/80 leading-relaxed pb-4 border-b border-white/10 mb-4 italic">
+                  Una nueva generación de tecnología deportiva respaldada por una trayectoria de más de 40 años en el ciclismo de alto rendimiento.
+                </p>
+
                 {/* Aviso si falta dirección */}
                 {!isShippingValid && (
-                  <div className="mb-4 p-4 rounded-lg border border-[#FF5A36]/30 bg-[#FF5A36]/[0.05] text-center">
-                    <p className="text-[11px] text-[#FF5A36] tracking-wide font-medium mb-1">
+                  <div className="mb-4 p-4 rounded-lg border border-[#BFAE85]/30 bg-[#BFAE85]/[0.05] text-center">
+                    <p className="text-[11px] text-[#BFAE85] tracking-wide font-medium mb-1">
                       ⚠️ COMPLETA TU DIRECCIÓN DE ENVÍO
                     </p>
                     <p className="text-[10px] text-white/50">
@@ -416,8 +449,8 @@ export default function CheckoutPage() {
 
                 {/* Aviso guardando orden */}
                 {isSavingOrder && (
-                  <div className="mb-4 p-4 rounded-lg border border-[#E8B94A]/30 bg-[#E8B94A]/[0.05] text-center">
-                    <p className="text-[11px] text-[#E8B94A] tracking-wide font-medium">
+                  <div className="mb-4 p-4 rounded-lg border border-[#BFAE85]/30 bg-[#BFAE85]/[0.05] text-center">
+                    <p className="text-[11px] text-[#BFAE85] tracking-wide font-medium">
                       📦 Guardando tu pedido...
                     </p>
                   </div>

@@ -17,7 +17,7 @@ export function PayPalButton({ totalPrice, onSuccess, onError }: PayPalButtonPro
   if (isPending) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-5 h-5 animate-spin text-[#38BDF8]" />
+        <Loader2 className="w-5 h-5 animate-spin text-[#BFAE85]" />
         <span className="ml-3 text-white/40 text-xs tracking-wider">
           Cargando PayPal...
         </span>
@@ -92,7 +92,7 @@ export function PayPalButton({ totalPrice, onSuccess, onError }: PayPalButtonPro
 
       {isProcessing && (
         <div className="flex items-center justify-center mt-4">
-          <Loader2 className="w-4 h-4 animate-spin text-[#38BDF8]" />
+          <Loader2 className="w-4 h-4 animate-spin text-[#BFAE85]" />
           <span className="ml-2 text-white/40 text-xs">Procesando pago...</span>
         </div>
       )}

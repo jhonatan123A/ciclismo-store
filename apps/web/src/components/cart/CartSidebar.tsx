@@ -10,6 +10,7 @@ import Link from 'next/link';
 // ============================================
 
 const FREE_SHIPPING_THRESHOLD = 250000;
+const goldTitanium = '#BFAE85';
 
 // ============================================
 // TIP INLINE PARA EL CARRITO
@@ -30,7 +31,7 @@ function CartCrossSellInline({
         'Protección contra caídas. Diseñada por ciclistas profesionales.',
       ctaText: 'Ver badana de ciclismo',
       ctaHref: '/products/cycling',
-      accentColor: '#38BDF8',
+      accentColor: goldTitanium,
     },
     running: {
       eyebrow: 'Sugerencia',
@@ -38,7 +39,7 @@ function CartCrossSellInline({
       description: 'Tecnología somatosensorial para kilómetros reales.',
       ctaText: 'Ver pantaloneta de running',
       ctaHref: '/products/running',
-      accentColor: '#E8B94A',
+      accentColor: goldTitanium,
     },
   }[missingProduct];
 
@@ -130,7 +131,6 @@ export function CartSidebar() {
     let missingProduct: 'cycling' | 'running' | null = null;
     if (hasCycling && !hasRunning) missingProduct = 'running';
     else if (hasRunning && !hasCycling) missingProduct = 'cycling';
-    // Si tiene ambos o ninguno, no sugerir
 
     const hasFreeShipping = totalPrice >= FREE_SHIPPING_THRESHOLD;
 
@@ -159,7 +159,7 @@ export function CartSidebar() {
   if (!mounted) {
     return (
       <button
-        className="relative text-white hover:text-[#FF5A36] transition-colors"
+        className="relative text-white hover:text-[#BFAE85] transition-colors"
         aria-label="Abrir carrito"
       >
         <ShoppingBag className="w-5 h-5" />
@@ -172,12 +172,12 @@ export function CartSidebar() {
       {/* Botón para abrir */}
       <button
         onClick={() => setIsOpen(true)}
-        className="relative text-white hover:text-[#FF5A36] transition-colors"
+        className="relative text-white hover:text-[#BFAE85] transition-colors"
         aria-label="Abrir carrito"
       >
         <ShoppingBag className="w-5 h-5" />
         {totalItems > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#FF5A36] text-white text-[9px] rounded-full flex items-center justify-center font-bold shadow-[0_0_10px_rgba(255,90,54,0.6)]">
+          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#BFAE85] text-black text-[9px] rounded-full flex items-center justify-center font-bold shadow-[0_0_10px_rgba(191,174,133,0.6)]">
             {totalItems}
           </span>
         )}
@@ -194,29 +194,29 @@ export function CartSidebar() {
       {/* Sidebar */}
       <div
         className={`
-          fixed top-0 right-0 h-full w-full sm:w-[440px] bg-black border-l border-white/10 z-[101] 
+          fixed top-0 right-0 h-full w-full sm:w-[440px] bg-[#0A0A0A] border-l border-white/10 z-[101] 
           transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}
         `}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 relative overflow-hidden">
-          {/* Glow triádico en el header */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FF5A36]/5 via-[#38BDF8]/5 to-[#E8B94A]/5 pointer-events-none" />
+          {/* Glow dorado en el header */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#BFAE85]/5 via-[#BFAE85]/3 to-[#BFAE85]/5 pointer-events-none" />
 
           <div className="relative">
             <h2 className="text-white font-bold text-base tracking-tight">
-              Carrito
+              Tu equipamiento
             </h2>
             {totalItems > 0 && (
-              <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mt-1">
-                {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
+              <p className="text-white/40 text-[10px] tracking-[0.2em] mt-1">
+                {totalItems} {totalItems === 1 ? 'producto seleccionado' : 'productos seleccionados'}
               </p>
             )}
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="relative w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-[#FF5A36] hover:bg-[#FF5A36]/5 transition-all"
+            className="relative w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-[#BFAE85] hover:bg-[#BFAE85]/5 transition-all"
             aria-label="Cerrar carrito"
           >
             <X className="w-4 h-4" />
@@ -235,7 +235,7 @@ export function CartSidebar() {
             </p>
             <button
               onClick={() => setIsOpen(false)}
-              className="px-7 py-3 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold"
+              className="px-7 py-3 btn-gold text-[10px] tracking-[0.2em] uppercase font-semibold"
             >
               Ver productos
             </button>
@@ -247,14 +247,14 @@ export function CartSidebar() {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-4 p-3 bg-white/[0.02] rounded-xl border border-white/10 hover:border-[#FF5A36]/30 transition-all hover:shadow-[0_0_30px_rgba(255,90,54,0.06)]"
+                  className="flex gap-4 p-3 bg-white/[0.02] rounded-xl border border-white/10 hover:border-[#BFAE85]/30 transition-all hover:shadow-[0_0_30px_rgba(191,174,133,0.06)]"
                 >
                   {/* Imagen */}
-                  <div className="w-20 h-20 rounded-lg bg-[#0A0A0A] overflow-hidden flex-shrink-0 border border-white/5">
+                  <div className="w-24 h-24 rounded-lg bg-[#0A0A0A] overflow-hidden flex-shrink-0 border border-white/5">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
                       }}
@@ -269,16 +269,21 @@ export function CartSidebar() {
                       </h4>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="text-white/30 hover:text-[#FF5A36] transition-colors flex-shrink-0"
+                        className="text-white/30 hover:text-[#BFAE85] transition-colors flex-shrink-0"
                         aria-label="Eliminar producto"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div className="flex items-center gap-2 text-[10px] text-white/40 mt-1 tracking-wider uppercase">
+                    {/* Género + Talla + Color */}
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] text-white/40 mt-1 tracking-wider uppercase">
+                      <span className="text-[#BFAE85] font-semibold">
+                        {item.gender}
+                      </span>
+                      <span className="w-1 h-1 bg-[#BFAE85] rounded-full" />
                       <span>{item.size}</span>
-                      <span className="w-1 h-1 bg-[#FF5A36] rounded-full" />
+                      <span className="w-1 h-1 bg-[#BFAE85] rounded-full" />
                       <span>{item.color}</span>
                     </div>
 
@@ -292,7 +297,7 @@ export function CartSidebar() {
                           <span className="text-[10px] text-white/30 line-through">
                             ${(item.originalPrice * item.quantity).toLocaleString('es-CO')}
                           </span>
-                          <span className="text-[10px] text-[#FF5A36] font-medium tracking-wider">
+                          <span className="text-[10px] text-[#BFAE85] font-medium tracking-wider">
                             -{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}%
                           </span>
                         </>
@@ -301,10 +306,10 @@ export function CartSidebar() {
 
                     {/* Controles de cantidad */}
                     <div className="flex items-center gap-3 mt-3">
-                      <div className="flex items-center border border-white/15 rounded-full hover:border-[#FF5A36]/40 transition-colors">
+                      <div className="flex items-center border border-white/15 rounded-full hover:border-[#BFAE85]/40 transition-colors">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 flex items-center justify-center text-white/60 hover:text-[#FF5A36] transition-colors"
+                          className="w-7 h-7 flex items-center justify-center text-white/60 hover:text-[#BFAE85] transition-colors"
                           aria-label="Disminuir cantidad"
                         >
                           <Minus className="w-3 h-3" />
@@ -314,7 +319,7 @@ export function CartSidebar() {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 flex items-center justify-center text-white/60 hover:text-[#FF5A36] transition-colors"
+                          className="w-7 h-7 flex items-center justify-center text-white/60 hover:text-[#BFAE85] transition-colors"
                           aria-label="Aumentar cantidad"
                         >
                           <Plus className="w-3 h-3" />
@@ -337,16 +342,16 @@ export function CartSidebar() {
             </div>
 
             {/* Footer */}
-            <div className="border-t border-white/10 px-6 py-5 space-y-4 bg-black relative">
-              {/* Glow triádico en el footer */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#FF5A36]/5 via-transparent to-transparent pointer-events-none" />
+            <div className="border-t border-white/10 px-6 py-5 space-y-4 bg-[#0A0A0A] relative">
+              {/* Glow dorado en el footer */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#BFAE85]/5 via-transparent to-transparent pointer-events-none" />
 
               <div className="relative">
                 {/* Resumen */}
                 <div className="space-y-2">
                   {savings > 0 && (
-                    <div className="flex justify-between text-[11px] text-[#FF5A36] tracking-wider">
-                      <span className="uppercase">Ahorro</span>
+                    <div className="flex justify-between text-[11px] text-[#BFAE85] tracking-wider">
+                      <span>Ahorro aplicado</span>
                       <span className="font-medium">${savings.toLocaleString('es-CO')}</span>
                     </div>
                   )}
@@ -363,14 +368,14 @@ export function CartSidebar() {
                   <Link
                     href="/cart"
                     onClick={() => setIsOpen(false)}
-                    className="py-3 text-center bg-transparent border border-white/15 hover:border-[#FF5A36]/50 text-white rounded-full text-[10px] tracking-[0.2em] uppercase font-semibold transition-all"
+                    className="py-3 text-center bg-transparent border border-white/15 hover:border-[#BFAE85]/50 text-white rounded-full text-[10px] tracking-[0.2em] uppercase font-semibold transition-all"
                   >
-                    Ver carrito
+                    Ver detalle
                   </Link>
                   <Link
                     href="/checkout"
                     onClick={() => setIsOpen(false)}
-                    className="py-3 text-center btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold"
+                    className="py-3 text-center btn-gold text-[10px] tracking-[0.2em] uppercase font-semibold"
                   >
                     Pagar
                   </Link>
@@ -378,7 +383,7 @@ export function CartSidebar() {
 
                 <button
                   onClick={clearCart}
-                  className="w-full text-center text-[10px] text-white/30 hover:text-[#FF5A36] transition-colors tracking-wider uppercase mt-4"
+                  className="w-full text-center text-[10px] text-white/30 hover:text-[#BFAE85] transition-colors tracking-wider uppercase mt-4"
                 >
                   Vaciar carrito
                 </button>

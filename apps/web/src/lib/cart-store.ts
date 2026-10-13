@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export type CartGender = 'Masculino' | 'Femenino';
+
 export interface CartItem {
   id: string;
   productId: string;
@@ -11,6 +13,7 @@ export interface CartItem {
   quantity: number;
   size: string;
   color: string;
+  gender: CartGender;
   image: string;
   category: 'running' | 'cycling';
 }
@@ -48,7 +51,8 @@ export const useCartStore = create<CartStore>()(
           (item) =>
             item.productId === newItem.productId &&
             item.size === newItem.size &&
-            item.color === newItem.color
+            item.color === newItem.color &&
+            item.gender === newItem.gender
         );
 
         if (existingIndex >= 0) {
@@ -58,7 +62,7 @@ export const useCartStore = create<CartStore>()(
         } else {
           const item: CartItem = {
             ...newItem,
-            id: `${newItem.productId}-${newItem.size}-${newItem.color}-${Date.now()}`,
+            id: `${newItem.productId}-${newItem.size}-${newItem.color}-${newItem.gender}-${Date.now()}`,
           };
           set({ items: [...items, item] });
         }

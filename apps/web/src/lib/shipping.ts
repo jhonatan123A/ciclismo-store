@@ -2,14 +2,14 @@
  * Sistema de cálculo de envíos BESTIGE
  * 
  * Política:
- * - Envío GRATIS desde $250.000
+ * - Envío GRATIS desde $300.000
  * - Pago: $10.000 a $25.000 según zona
  * - Cobertura: 3 niveles
  */
 
 import { ShippingTier } from './colombia';
 
-export const ENVIO_GRATIS_DESDE = 250000; // $250.000 COP
+export const ENVIO_GRATIS_DESDE = 300000; // $300.000 COP
 
 // Costos por tier (en COP)
 export const COSTOS_ENVIO: Record<ShippingTier, number> = {
@@ -51,7 +51,7 @@ export function calcularEnvio(
   subtotal: number,
   tier: ShippingTier
 ): ShippingInfo {
-  // Envío gratis desde $250.000
+  // Envío gratis desde $300.000
   if (subtotal >= ENVIO_GRATIS_DESDE) {
     return {
       costo: 0,
@@ -59,7 +59,7 @@ export function calcularEnvio(
       tier,
       tiempoEntrega: TIEMPOS_ENTREGA[tier],
       metodoEntrega: METODO_ENTREGA[tier],
-      mensaje: '🎉 ¡Envío GRATIS por compra superior a $250.000!',
+      mensaje: '🎉 ¡Envío GRATIS por compra superior a $300.000!',
     };
   }
 
@@ -98,13 +98,13 @@ export function calcularTotal(subtotal: number, tier: ShippingTier): {
 export function getTierColor(tier: ShippingTier): string {
   switch (tier) {
     case 1:
-      return '#FF5A36'; // Naranja (premium)
+      return '#BFAE85'; // Dorado titanio (principal)
     case 2:
-      return '#38BDF8'; // Cyan
+      return '#E5DCC0'; // Dorado claro
     case 3:
-      return '#E8B94A'; // Dorado
+      return '#BFAE85'; // Dorado titanio (principal)
     case 4:
-      return '#C17A4B'; // Cobre
+      return '#8F7E45'; // Dorado oscuro
   }
 }
 
@@ -120,6 +120,6 @@ export function getTierIcon(tier: ShippingTier): string {
     case 3:
       return '🏪'; // Punto
     case 4:
-      return '📍'; // Ciudad cercana
+      return '🏬'; // Ciudad cercana (tienda/almacén)
   }
 }

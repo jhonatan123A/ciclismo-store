@@ -35,6 +35,7 @@ export function WishlistSidebar() {
       quantity: 1,
       size: 'M', // Talla por defecto
       color: 'Negro',
+      gender: 'Masculino',
       image: item.image,
       category: item.category,
     });
@@ -65,8 +66,8 @@ export function WishlistSidebar() {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#FF5A36]/20 to-[#38BDF8]/20 border border-[#FF5A36]/30 flex items-center justify-center">
-                  <Heart className="w-4 h-4 text-[#FF5A36] fill-[#FF5A36]" />
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#BFAE85]/20 to-[#8F7E45]/20 border border-[#BFAE85]/30 flex items-center justify-center">
+                  <Heart className="w-4 h-4 text-[#BFAE85] fill-[#BFAE85]" />
                 </div>
                 <div>
                   <h2 className="text-white font-bold text-sm tracking-wide">Favoritos</h2>
@@ -97,7 +98,7 @@ export function WishlistSidebar() {
                 <Link
                   href="/"
                   onClick={closeWishlist}
-                  className="inline-flex items-center gap-2 px-6 py-3 btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold rounded-full"
+                  className="inline-flex items-center gap-2 px-6 py-3 btn-gold text-[10px] tracking-[0.2em] uppercase font-semibold rounded-full"
                 >
                   Explorar productos
                 </Link>
@@ -112,14 +113,14 @@ export function WishlistSidebar() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, x: 100 }}
-                      className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:border-[#FF5A36]/20 transition-all"
+                      className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:border-[#BFAE85]/20 transition-all"
                     >
                       <Link href={`/products/${item.category === 'cycling' ? 'cycling' : 'running'}`} onClick={closeWishlist}>
-                        <div className="w-20 h-20 rounded-lg bg-white/5 overflow-hidden flex-shrink-0">
+                        <div className="w-20 h-20 rounded-lg bg-[#0A0A0A] overflow-hidden flex-shrink-0">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
                             }}
@@ -132,7 +133,7 @@ export function WishlistSidebar() {
                             <Link
                               href={`/products/${item.category === 'cycling' ? 'cycling' : 'running'}`}
                               onClick={closeWishlist}
-                              className="text-white font-medium text-sm hover:text-[#FF5A36] transition-colors line-clamp-2"
+                              className="text-white font-medium text-sm hover:text-[#BFAE85] transition-colors line-clamp-2"
                             >
                               {item.name}
                             </Link>
@@ -154,7 +155,7 @@ export function WishlistSidebar() {
                           </span>
                           <button
                             onClick={() => handleAddToCart(item)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF5A36]/10 hover:bg-[#FF5A36]/20 border border-[#FF5A36]/30 text-[#FF5A36] text-[9px] tracking-wider uppercase font-semibold transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#BFAE85]/10 hover:bg-[#BFAE85]/20 border border-[#BFAE85]/30 text-[#BFAE85] text-[9px] tracking-wider uppercase font-semibold transition-all"
                           >
                             <ShoppingCart className="w-3 h-3" />
                             Al carrito
@@ -170,7 +171,7 @@ export function WishlistSidebar() {
                   <Link
                     href="/wishlist"
                     onClick={closeWishlist}
-                    className="block w-full py-4 text-center btn-orange text-[10px] tracking-[0.2em] uppercase font-semibold rounded-full"
+                    className="block w-full py-4 text-center btn-gold text-[10px] tracking-[0.2em] uppercase font-semibold rounded-full"
                   >
                     Ver todos mis favoritos
                   </Link>

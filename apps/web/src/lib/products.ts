@@ -3,6 +3,8 @@ export interface ProductImage {
   badge?: string;
 }
 
+export type ProductGender = 'Masculino' | 'Femenino';
+
 export interface Product {
   id: string;
   name: string;
@@ -16,6 +18,7 @@ export interface Product {
   images: (string | ProductImage)[];
   sizes: string[];
   colors: string[];
+  genders: ProductGender[];
   technology: string;
   benefits: string[];
   features: string[];
@@ -43,6 +46,7 @@ export const products: Product[] = [
     ],
     sizes: ['XS', 'S', 'M', 'L'],
     colors: ['Negro'],
+    genders: ['Masculino', 'Femenino'],
     technology: 'Somatosensorial - Tecnología italiana que conecta con la piel enviando señales al sistema somatosensorial',
     benefits: [
       'Activación muscular durante el ejercicio',
@@ -76,6 +80,7 @@ export const products: Product[] = [
     ],
     sizes: ['XS', 'S', 'M', 'L'],
     colors: ['Negro'],
+    genders: ['Masculino', 'Femenino'],
     technology: 'Somatosensorial + Protección contra caídas - Tecnología italiana patentada',
     benefits: [
       'Activación muscular durante el ejercicio',
