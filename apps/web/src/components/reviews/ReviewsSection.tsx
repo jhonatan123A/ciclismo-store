@@ -54,11 +54,11 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
         <div>
-          <p className="text-eyebrow text-[#FF5A36] mb-3 tracking-[0.3em] text-[10px]">
-            OPINIONES
+          <p className="text-eyebrow text-[#BFAE85] mb-3 tracking-[0.3em] text-[10px]">
+            EXPERIENCIAS
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            Reseñas de clientes
+            Experiencias BESTIGE
           </h2>
 
           {stats && stats.total > 0 && (
@@ -69,7 +69,7 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
                     key={star}
                     className={`w-4 h-4 ${
                       star <= Math.round(stats.average)
-                        ? 'fill-[#E8B94A] text-[#E8B94A]'
+                        ? 'fill-[#BFAE85] text-[#BFAE85]'
                         : 'text-white/20'
                     }`}
                   />
@@ -79,7 +79,8 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
                 {stats.average.toFixed(1)}
               </span>
               <span className="text-white/50 text-xs">
-                · {stats.total} {stats.total === 1 ? 'reseña' : 'reseñas'}
+                · {stats.total}{' '}
+                {stats.total === 1 ? 'experiencia verificada' : 'experiencias verificadas'}
               </span>
             </div>
           )}
@@ -87,7 +88,7 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
 
         <button
           onClick={() => setShowForm(!showForm)}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all border border-[#FF5A36]/40 text-[#FF5A36] hover:bg-[#FF5A36]/10 self-start md:self-auto"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all border border-[#BFAE85]/40 text-[#BFAE85] hover:bg-[#BFAE85]/10 self-start md:self-auto"
         >
           <MessageSquare className="w-3.5 h-3.5" />
           {showForm ? 'Cancelar' : 'Escribir reseña'}
@@ -109,7 +110,7 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
       {/* Contenido */}
       {isLoading ? (
         <div className="py-16 flex justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#FF5A36]" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#BFAE85]" />
         </div>
       ) : error ? (
         <div className="py-16 text-center">
@@ -123,7 +124,7 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
         >
           <Star className="w-12 h-12 text-white/20 mx-auto mb-4" />
           <h3 className="text-white font-semibold text-base mb-2">
-            Aún no hay reseñas
+            Aún no hay experiencias
           </h3>
           <p className="text-white/50 text-sm mb-6 max-w-md mx-auto">
             Sé el primero en compartir tu experiencia con {productName}.
@@ -131,7 +132,7 @@ export function ReviewsSection({ productId, productName }: ReviewsSectionProps) 
           {!showForm && (
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#FF5A36] to-[#C17A4B] text-white text-[10px] tracking-[0.15em] uppercase font-semibold"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#BFAE85] to-[#8F7E45] text-black text-[10px] tracking-[0.15em] uppercase font-semibold"
             >
               <MessageSquare className="w-3.5 h-3.5" />
               Escribir la primera reseña

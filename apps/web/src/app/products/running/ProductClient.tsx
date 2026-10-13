@@ -63,6 +63,8 @@ export default function ProductClient() {
   const handleAddToCart = () => {
     setIsAdding(true);
     setTimeout(() => {
+      const firstImage = typeof product.images[0] === 'string' ? product.images[0] : product.images[0].src;
+
       addItem({
         productId: product.id,
         name: product.name,
@@ -72,7 +74,7 @@ export default function ProductClient() {
         quantity: 1,
         size: selectedSize,
         color: 'Negro',
-        image: product.images[0] || '/images/products/placeholder.jpg',
+        image: firstImage || '/images/products/placeholder.jpg',
         category: product.category,
       });
 
@@ -133,20 +135,42 @@ export default function ProductClient() {
                 slidesPerView={1}
                 className="relative aspect-square"
               >
-                {product.images.map((img, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="w-full h-full flex items-center justify-center">
-                      <img
-                        src={img}
-                        alt={`${product.name} - ${index + 1}`}
-                        className="w-full h-full object-contain brightness-125 contrast-110"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
-                        }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
+                {product.images.map((item, index) => {
+                  const src = typeof item === 'string' ? item : item.src;
+                  const badge = typeof item === 'string' ? undefined : item.badge;
+                  const isVideo = src.endsWith('.mp4');
+                  return (
+                    <SwiperSlide key={index}>
+                      <div className="w-full h-full flex items-center justify-center relative">
+                        {badge && (
+                          <span className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-md bg-[#BFAE85]/95 backdrop-blur-sm text-black text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_20px_rgba(191,174,133,0.3)]">
+                            {badge}
+                          </span>
+                        )}
+                        {isVideo ? (
+                          <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-contain"
+                          >
+                            <source src={src} type="video/mp4" />
+                          </video>
+                        ) : (
+                          <img
+                            src={src}
+                            alt={`${product.name} - ${index + 1}`}
+                            className="w-full h-full object-contain brightness-125 contrast-110"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
+                            }}
+                          />
+                        )}
+                      </div>
+                    </SwiperSlide>
+                  );
+                })}
 
                 <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10 hover:border-[#BFAE85]/50">
                   <ChevronLeft className="w-4 h-4" />
@@ -158,21 +182,42 @@ export default function ProductClient() {
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              {product.images.map((img, index) => (
-                <div
-                  key={index}
-                  className="aspect-square transition-opacity cursor-pointer opacity-90 hover:opacity-100"
-                >
-                  <img
-                    src={img}
-                    alt={`Miniatura ${index + 1}`}
-                    className="w-full h-full object-contain brightness-125 contrast-110"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
-                    }}
-                  />
-                </div>
-              ))}
+              {product.images.map((item, index) => {
+                const src = typeof item === 'string' ? item : item.src;
+                const badge = typeof item === 'string' ? undefined : item.badge;
+                const isVideo = src.endsWith('.mp4');
+                return (
+                  <div
+                    key={index}
+                    className="aspect-square transition-opacity cursor-pointer opacity-90 hover:opacity-100 relative"
+                  >
+                    {badge && (
+                      <span className="absolute top-1.5 right-1.5 z-10 px-1.5 py-0.5 rounded bg-[#BFAE85]/95 text-black text-[7.5px] tracking-widest uppercase font-bold">
+                        {badge}
+                      </span>
+                    )}
+                    {isVideo ? (
+                      <video
+                        muted
+                        playsInline
+                        preload="metadata"
+                        className="w-full h-full object-contain"
+                      >
+                        <source src={src} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <img
+                        src={src}
+                        alt={`Miniatura ${index + 1}`}
+                        className="w-full h-full object-contain brightness-125 contrast-110"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Tarjetas de tecnología — 3 columnas */}
@@ -306,7 +351,7 @@ export default function ProductClient() {
                     slug: product.slug,
                     price: product.price,
                     originalPrice: product.originalPrice,
-                    image: product.images[0] || '/images/products/placeholder.jpg',
+                    image: typeof product.images[0] === 'string' ? product.images[0] : product.images[0].src,
                     category: product.category,
                   }}
                 />

@@ -21,20 +21,20 @@ const goldTitanium = '#BFAE85';
 const CONFIG = {
   cycling: {
     eyebrow: '¿También corres?',
-    title: 'Conoce nuestra tecnología para running',
+    title: 'Conoce nuestra tecnología BESTIGE para running',
     description:
       'Misma tecnología somatosensorial. Diseñada para kilómetros reales.',
-    ctaText: 'Ver pantaloneta de running',
+    ctaText: 'Ver badana running',
     ctaHref: '/products/running',
     accentColor: goldTitanium,
     iconSrc: '/images/icons-bestige/bestige-02.png',
   },
   running: {
-    eyebrow: '¿También entrenas sobre dos ruedas?',
-    title: 'Conoce nuestra tecnología para ciclismo',
+    eyebrow: '¿También pedaleas?',
+    title: 'Conoce nuestra tecnología BESTIGE para ciclismo',
     description:
       'Con protección contra caídas. Diseñada por y para ciclistas profesionales.',
-    ctaText: 'Ver badana de ciclismo',
+    ctaText: 'Ver badana ciclismo',
     ctaHref: '/products/cycling',
     accentColor: goldTitanium,
     iconSrc: '/images/icons-bestige/bestige-01.png',

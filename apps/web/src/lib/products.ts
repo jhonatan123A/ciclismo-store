@@ -1,3 +1,8 @@
+export interface ProductImage {
+  src: string;
+  badge?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -8,7 +13,7 @@ export interface Product {
   price: number;
   originalPrice: number;
   discount: number;
-  images: string[];
+  images: (string | ProductImage)[];
   sizes: string[];
   colors: string[];
   technology: string;
@@ -54,21 +59,20 @@ export const products: Product[] = [
   },
   {
     id: 'cmupp6bbo0001xgacxkfdr06u',
-    name: 'Badana de Ciclismo BESTIGE',
+    name: 'Badana Cycling BESTIGE',
     slug: 'banda-ciclismo',
     category: 'cycling',
-    description: 'Tecnología somatosensorial con protección contra caídas',
+    description: 'Badana de ciclismo con tecnología somatosensorial integrada y protección patentada contra caídas, diseñada para acompañar la conexión entre cuerpo, bicicleta y movimiento durante cada recorrido.',
     longDescription: 'Además de los beneficios de activación, estabilidad y drenaje, BESTIGE incorpora una tecnología patentada de protección contra caídas, diseñada para disminuir la abrasión de la piel en caso de deslizamientos sobre el asfalto, brindando mayor seguridad al ciclista.',
     price: 640000,
     originalPrice: 719000,
     discount: 11,
     images: [
-      '/images/products/cycling/cycling-main.jpg',
-      '/images/products/cycling/cycling-detail1.jpg',
-      '/images/products/cycling/cycling-detail2.jpg',
-      '/images/products/cycling/cycling-detail3.jpg',
-      '/images/products/cycling/cycling-detail4.jpg',
-      '/images/products/cycling/cycling-detail5.jpg',
+      '/images/products/cycling/cycling-hero.png',
+      '/images/products/cycling/cycling-3.jpg',
+      { src: '/videos/cycling-technology.mp4', badge: 'Video' },
+      '/images/products/cycling/cycling-5.jpg',
+      { src: '/images/products/cycling/cycling-6.jpg', badge: 'Femenino' },
     ],
     sizes: ['XS', 'S', 'M', 'L'],
     colors: ['Negro'],
