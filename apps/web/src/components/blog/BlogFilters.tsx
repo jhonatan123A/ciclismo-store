@@ -7,10 +7,7 @@ import { getCategoryLabel } from '@/lib/posts-api';
 const CATEGORIES: PostCategory[] = [
   'TECNOLOGIA',
   'GUIAS',
-  'HISTORIAS',
   'COMPARATIVAS',
-  'NOTICIAS',
-  'CONSEJOS',
 ];
 
 export function BlogFilters() {
@@ -30,13 +27,13 @@ export function BlogFilters() {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-2">
       <button
         onClick={() => handleCategoryClick(null)}
         className={`px-4 py-2 text-xs tracking-widest uppercase rounded-full border transition-all ${
           !currentCategory
-            ? 'bg-[#FF5A36] border-[#FF5A36] text-white font-bold'
-            : 'bg-transparent border-white/10 text-white/50 hover:border-[#FF5A36]/40 hover:text-white'
+            ? 'bg-gradient-to-r from-[#BFAE85] to-[#8F7E45] border-[#BFAE85] text-black font-bold'
+            : 'bg-transparent border-white/10 text-white/50 hover:border-[#BFAE85]/40 hover:text-white'
         }`}
       >
         Todos
@@ -47,8 +44,8 @@ export function BlogFilters() {
           onClick={() => handleCategoryClick(cat)}
           className={`px-4 py-2 text-xs tracking-widest uppercase rounded-full border transition-all ${
             currentCategory === cat
-              ? 'bg-[#FF5A36] border-[#FF5A36] text-white font-bold'
-              : 'bg-transparent border-white/10 text-white/50 hover:border-[#FF5A36]/40 hover:text-white'
+              ? 'bg-gradient-to-r from-[#BFAE85] to-[#8F7E45] border-[#BFAE85] text-black font-bold'
+              : 'bg-transparent border-white/10 text-white/50 hover:border-[#BFAE85]/40 hover:text-white'
           }`}
         >
           {getCategoryLabel(cat)}

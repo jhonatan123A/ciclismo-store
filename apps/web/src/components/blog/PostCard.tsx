@@ -17,7 +17,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     return (
       <Link
         href={href}
-        className="group block relative overflow-hidden rounded-2xl bg-[#0F0F12] border border-white/5 transition-all duration-500 hover:border-[#FF5A36]/40 hover:shadow-[0_0_40px_-10px_rgba(255,90,54,0.4)]"
+        className="group block relative overflow-hidden rounded-2xl bg-[#0F0F12] border border-white/5 transition-all duration-500 hover:border-[#BFAE85]/40 hover:shadow-[0_0_40px_-10px_rgba(191,174,133,0.4)]"
       >
         <div className="relative aspect-[16/9] overflow-hidden">
           {post.coverImage ? (
@@ -37,7 +37,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
 
         <div className="p-8 md:p-10 space-y-4">
           <div className="flex items-center gap-3 text-xs tracking-widest uppercase">
-            <span className="text-[#FF5A36]">
+            <span className="text-[#BFAE85]">
               {getCategoryLabel(post.category)}
             </span>
             <span className="text-white/30">·</span>
@@ -46,7 +46,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
             </span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight group-hover:text-[#FF5A36] transition-colors">
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight group-hover:text-[#BFAE85] transition-colors">
             {post.title}
           </h2>
 
@@ -78,7 +78,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
   return (
     <Link
       href={href}
-      className="group block relative overflow-hidden rounded-xl bg-[#0F0F12] border border-white/5 transition-all duration-500 hover:border-[#FF5A36]/40 hover:-translate-y-1"
+      className="group block relative overflow-hidden rounded-xl bg-[#0F0F12] border border-white/5 transition-all duration-500 hover:border-[#BFAE85]/40 hover:-translate-y-1"
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         {post.coverImage ? (
@@ -96,12 +96,12 @@ export function PostCard({ post, featured = false }: PostCardProps) {
 
       <div className="p-6 space-y-3">
         <div className="flex items-center gap-2 text-[10px] tracking-widest uppercase">
-          <span className="text-[#FF5A36]">
+          <span className="text-[#BFAE85]">
             {getCategoryLabel(post.category)}
           </span>
         </div>
 
-        <h3 className="text-xl font-bold tracking-tight text-white leading-snug group-hover:text-[#FF5A36] transition-colors line-clamp-2">
+        <h3 className="text-xl font-bold tracking-tight text-white leading-snug group-hover:text-[#BFAE85] transition-colors line-clamp-2">
           {post.title}
         </h3>
 

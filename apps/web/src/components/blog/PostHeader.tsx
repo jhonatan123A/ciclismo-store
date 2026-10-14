@@ -14,7 +14,7 @@ export function PostHeader({ post }: PostHeaderProps) {
       {/* Volver al blog */}
       <Link
         href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-[#FF5A36] transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-[#BFAE85] transition-colors"
       >
         <ArrowLeft size={16} />
         Volver al blog
@@ -22,19 +22,19 @@ export function PostHeader({ post }: PostHeaderProps) {
 
       {/* Categoría */}
       <div className="flex items-center gap-3 text-xs tracking-widest uppercase">
-        <span className="text-[#FF5A36] font-bold">
+        <span className="text-[#BFAE85] font-bold">
           {getCategoryLabel(post.category)}
         </span>
         {post.isMainArticle && (
           <>
             <span className="text-white/30">·</span>
-            <span className="text-[#E8B94A]">Artículo destacado</span>
+            <span className="text-[#BFAE85]">Artículo destacado</span>
           </>
         )}
       </div>
 
       {/* Título */}
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.05]">
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.15]">
         {post.title}
       </h1>
 
@@ -69,7 +69,7 @@ export function PostHeader({ post }: PostHeaderProps) {
 
       {/* Imagen de portada */}
       {post.coverImage && (
-        <div className="relative aspect-[16/9] overflow-hidden rounded-2xl mt-8">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl mt-8">
           <Image
             src={post.coverImage}
             alt={post.coverImageAlt || post.title}
@@ -88,7 +88,7 @@ export function PostHeader({ post }: PostHeaderProps) {
             <Link
               key={tag}
               href={`/blog?tag=${encodeURIComponent(tag)}`}
-              className="px-3 py-1 text-xs rounded-full bg-[#0F0F12] border border-white/10 text-white/60 hover:border-[#FF5A36]/40 hover:text-[#FF5A36] transition-colors"
+              className="px-3 py-1 text-xs rounded-full bg-[#0F0F12] border border-white/10 text-white/60 hover:border-[#BFAE85]/40 hover:text-[#BFAE85] transition-colors"
             >
               #{tag}
             </Link>

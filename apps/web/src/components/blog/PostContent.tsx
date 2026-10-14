@@ -10,32 +10,32 @@ interface PostContentProps {
 
 export function PostContent({ content }: PostContentProps) {
   return (
-    <div className="prose prose-invert prose-lg max-w-none">
+    <div className="max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
-            <h1 className="text-4xl font-black tracking-tight text-white mt-12 mb-6">
+            <h1 className="text-xl md:text-2xl font-bold tracking-widest uppercase text-[#BFAE85] mt-16 mb-6">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-3xl font-bold tracking-tight text-white mt-12 mb-5">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mt-16 mb-6 leading-tight">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-2xl font-bold tracking-tight text-white mt-8 mb-4">
+            <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-white mt-12 mb-4 leading-snug">
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className="text-xl font-bold tracking-tight text-white mt-6 mb-3">
+            <h4 className="text-lg font-semibold tracking-tight text-white mt-8 mb-3">
               {children}
             </h4>
           ),
           p: ({ children }) => (
-            <p className="text-white/80 text-lg leading-[1.8] mb-6">
+            <p className="text-base md:text-lg text-white/75 leading-[1.75] mb-5">
               {children}
             </p>
           ),
@@ -45,7 +45,7 @@ export function PostContent({ content }: PostContentProps) {
               return (
                 <Link
                   href={href || '#'}
-                  className="text-[#FF5A36] underline decoration-[#FF5A36]/40 hover:decoration-[#FF5A36] transition-colors"
+                  className="text-[#BFAE85] underline decoration-[#BFAE85]/40 hover:decoration-[#BFAE85] transition-colors"
                 >
                   {children}
                 </Link>
@@ -56,32 +56,32 @@ export function PostContent({ content }: PostContentProps) {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#FF5A36] underline decoration-[#FF5A36]/40 hover:decoration-[#FF5A36] transition-colors"
+                className="text-[#BFAE85] underline decoration-[#BFAE85]/40 hover:decoration-[#BFAE85] transition-colors"
               >
                 {children}
               </a>
             );
           },
           strong: ({ children }) => (
-            <strong className="text-white font-bold">{children}</strong>
+            <strong className="text-[#E5DCC0] font-semibold">{children}</strong>
           ),
           em: ({ children }) => (
             <em className="italic text-white/90">{children}</em>
           ),
           ul: ({ children }) => (
-            <ul className="list-disc pl-6 space-y-2 my-6 text-white/80 text-lg leading-relaxed">
+            <ul className="list-disc pl-6 space-y-2 my-6 text-base md:text-lg text-white/75 leading-relaxed">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal pl-6 space-y-2 my-6 text-white/80 text-lg leading-relaxed">
+            <ol className="list-decimal pl-6 space-y-2 my-6 text-base md:text-lg text-white/75 leading-relaxed">
               {children}
             </ol>
           ),
           li: ({ children }) => <li className="pl-1">{children}</li>,
           blockquote: ({ children }) => (
-            <blockquote className="border-l-2 border-[#FF5A36] pl-6 py-2 my-8 bg-[#0F0F12]/50 rounded-r-lg">
-              <div className="text-white/70 italic text-lg leading-relaxed">
+            <blockquote className="border-l-2 border-[#BFAE85] pl-6 py-4 my-8 bg-[#0F0F12]/50 rounded-r-lg">
+              <div className="text-white/70 italic text-base md:text-lg leading-relaxed">
                 {children}
               </div>
             </blockquote>
@@ -90,13 +90,13 @@ export function PostContent({ content }: PostContentProps) {
             const isInline = !className;
             if (isInline) {
               return (
-                <code className="bg-[#0F0F12] text-[#38BDF8] px-1.5 py-0.5 rounded text-sm font-mono">
+                <code className="bg-[#0F0F12] text-[#BFAE85] px-1.5 py-0.5 rounded text-sm font-mono">
                   {children}
                 </code>
               );
             }
             return (
-              <code className="block bg-[#0F0F12] text-white/90 p-4 rounded-lg text-sm font-mono overflow-x-auto border border-[#38BDF8]/20">
+              <code className="block bg-[#0F0F12] text-white/90 p-4 rounded-lg text-sm font-mono overflow-x-auto border border-[#BFAE85]/20">
                 {children}
               </code>
             );
@@ -108,11 +108,11 @@ export function PostContent({ content }: PostContentProps) {
             <hr className="my-12 border-white/10" />
           ),
           img: ({ src, alt }) => (
-            <span className="block my-8">
+            <span className="block my-10">
               <img
                 src={typeof src === 'string' ? src : ''}
                 alt={alt || ''}
-                className="rounded-xl w-full"
+                className="rounded-2xl w-full"
               />
               {alt && (
                 <span className="block text-center text-sm text-white/40 mt-3">
