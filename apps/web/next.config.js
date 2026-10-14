@@ -3,9 +3,14 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
   images: {
-    domains: ['localhost', 'images.unsplash.com', 'res.cloudinary.com'],
+    domains: [
+      'localhost',
+      'images.unsplash.com',
+      'res.cloudinary.com',
+      'www.bestige-somatosensory-norbertowilches.com',
+    ],
   },
-  // Permitir redirecciones a Wompi y PayPal    ojo con cambiar algo critico , esto es delicado
+  // Permitir redirecciones a Wompi y PayPal
   async headers() {
     return [
       {
