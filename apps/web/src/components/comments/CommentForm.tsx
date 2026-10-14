@@ -44,10 +44,10 @@ export function CommentForm({ postSlug, onSuccess }: CommentFormProps) {
 
   if (status === 'success') {
     return (
-      <div className="p-6 rounded-2xl bg-[#0F0F12] border border-[#FF5A36]/30 text-center">
+      <div className="p-6 rounded-2xl bg-[#0F0F12] border border-[#BFAE85]/30 text-center">
         <CheckCircle2
           size={40}
-          className="mx-auto text-[#FF5A36] mb-3"
+          className="mx-auto text-[#BFAE85] mb-3"
         />
         <h3 className="text-white font-bold text-lg mb-2">
           ¡Comentario enviado!
@@ -91,7 +91,7 @@ export function CommentForm({ postSlug, onSuccess }: CommentFormProps) {
           onChange={(e) =>
             setFormData({ ...formData, authorName: e.target.value })
           }
-          className="w-full px-4 py-3 bg-[#050505] border border-white/10 rounded-lg text-white text-sm placeholder-white/30 focus:border-[#FF5A36] focus:outline-none transition-colors"
+          className="w-full px-4 py-3 bg-[#050505] border border-white/10 rounded-lg text-white text-sm placeholder-white/30 focus:border-[#BFAE85] focus:outline-none transition-colors"
           placeholder="Tu nombre"
         />
       </div>
@@ -112,7 +112,7 @@ export function CommentForm({ postSlug, onSuccess }: CommentFormProps) {
           onChange={(e) =>
             setFormData({ ...formData, authorEmail: e.target.value })
           }
-          className="w-full px-4 py-3 bg-[#050505] border border-white/10 rounded-lg text-white text-sm placeholder-white/30 focus:border-[#FF5A36] focus:outline-none transition-colors"
+          className="w-full px-4 py-3 bg-[#050505] border border-white/10 rounded-lg text-white text-sm placeholder-white/30 focus:border-[#BFAE85] focus:outline-none transition-colors"
           placeholder="tu@email.com"
         />
       </div>
@@ -135,7 +135,7 @@ export function CommentForm({ postSlug, onSuccess }: CommentFormProps) {
           onChange={(e) =>
             setFormData({ ...formData, content: e.target.value })
           }
-          className="w-full px-4 py-3 bg-[#050505] border border-white/10 rounded-lg text-white text-sm placeholder-white/30 focus:border-[#FF5A36] focus:outline-none transition-colors resize-none"
+          className="w-full px-4 py-3 bg-[#050505] border border-white/10 rounded-lg text-white text-sm placeholder-white/30 focus:border-[#BFAE85] focus:outline-none transition-colors resize-none"
           placeholder="Comparte tu opinión o pregunta..."
         />
         <p className="text-white/30 text-xs text-right">
@@ -151,7 +151,7 @@ export function CommentForm({ postSlug, onSuccess }: CommentFormProps) {
           onChange={(e) =>
             setFormData({ ...formData, wantsEmailReply: e.target.checked })
           }
-          className="mt-0.5 w-4 h-4 rounded border-white/20 bg-[#050505] text-[#FF5A36] focus:ring-[#FF5A36] focus:ring-offset-0"
+          className="mt-0.5 w-4 h-4 rounded border-white/20 bg-[#050505] text-[#BFAE85] focus:ring-[#BFAE85] focus:ring-offset-0"
         />
         <span className="text-white/60 text-xs leading-relaxed">
           Quiero recibir por email la respuesta a mi comentario
@@ -176,7 +176,7 @@ export function CommentForm({ postSlug, onSuccess }: CommentFormProps) {
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#FF5A36] text-white text-sm font-bold tracking-wide rounded-full hover:bg-[#FF5A36]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 btn-gold text-sm font-bold tracking-wide rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === 'loading' ? (
           <>

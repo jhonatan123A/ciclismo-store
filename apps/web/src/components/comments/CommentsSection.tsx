@@ -21,7 +21,7 @@ export function CommentsSection({
     <section className="space-y-10">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <MessagesSquare size={22} className="text-[#FF5A36]" />
+        <MessagesSquare size={22} className="text-[#BFAE85]" />
         <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white">
           Comentarios
           {comments.length > 0 && (

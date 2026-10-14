@@ -31,8 +31,8 @@ export function CommentsList({ comments }: CommentsListProps) {
           {/* Header del comentario */}
           <header className="flex items-start justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#FF5A36]/10 border border-[#FF5A36]/30 flex items-center justify-center">
-                <span className="text-[#FF5A36] text-sm font-bold">
+              <div className="w-10 h-10 rounded-full bg-[#BFAE85]/10 border border-[#BFAE85]/30 flex items-center justify-center">
+                <span className="text-[#BFAE85] text-sm font-bold">
                   {comment.authorName.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -54,8 +54,8 @@ export function CommentsList({ comments }: CommentsListProps) {
 
           {/* Respuesta del admin */}
           {comment.adminReply && (
-            <div className="mt-5 pl-4 border-l-2 border-[#FF5A36] bg-[#050505]/50 py-3 pr-4 rounded-r-lg">
-              <p className="text-[#FF5A36] text-xs font-bold tracking-wider uppercase mb-2">
+            <div className="mt-5 pl-4 border-l-2 border-[#BFAE85] bg-[#050505]/50 py-3 pr-4 rounded-r-lg">
+              <p className="text-[#BFAE85] text-xs font-bold tracking-wider uppercase mb-2">
                 Respuesta de BESTIGE
               </p>
               <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
