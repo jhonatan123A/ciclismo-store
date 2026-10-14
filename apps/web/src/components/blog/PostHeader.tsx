@@ -67,15 +67,15 @@ export function PostHeader({ post }: PostHeaderProps) {
         )}
       </div>
 
-      {/* Imagen de portada */}
+      {/* Imagen de portada — natural, sin recorte */}
       {post.coverImage && (
-        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl mt-8">
+        <div className="overflow-hidden rounded-2xl mt-8">
           <Image
             src={post.coverImage}
             alt={post.coverImageAlt || post.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 1200px"
+            width={1200}
+            height={1600}
+            className="w-full h-auto"
             priority
           />
         </div>

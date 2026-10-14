@@ -15,9 +15,9 @@ export function PostContent({ content }: PostContentProps) {
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
-            <h1 className="text-xl md:text-2xl font-bold tracking-widest uppercase text-[#BFAE85] mt-16 mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mt-16 mb-6 leading-tight">
               {children}
-            </h1>
+            </h2>
           ),
           h2: ({ children }) => (
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mt-16 mb-6 leading-tight">
@@ -112,7 +112,7 @@ export function PostContent({ content }: PostContentProps) {
               <img
                 src={typeof src === 'string' ? src : ''}
                 alt={alt || ''}
-                className="rounded-2xl w-full"
+                className="rounded-2xl w-full h-auto object-contain"
               />
               {alt && (
                 <span className="block text-center text-sm text-white/40 mt-3">
