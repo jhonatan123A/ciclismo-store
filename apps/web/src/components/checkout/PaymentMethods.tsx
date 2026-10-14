@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { CreditCard, Globe } from 'lucide-react';
+import { CreditCard, Globe, MessageCircle } from 'lucide-react';
 import { WompiButton } from './WompiButton';
-import { PayPalButton } from './PayPalButton';
 
 interface PaymentMethodsProps {
   totalPrice: number;
@@ -18,6 +17,9 @@ interface PaymentMethodsProps {
 
 type PaymentMethod = 'wompi' | 'paypal';
 
+// ✅ WhatsApp de atención internacional (mismo del footer y ShippingForm)
+const WHATSAPP_NUMBER = '573236398318';
+
 export function PaymentMethods({
   totalPrice,
   customerEmail = 'cliente@bestige.com',
@@ -28,6 +30,11 @@ export function PaymentMethods({
   onPaymentError,
 }: PaymentMethodsProps) {
   const [method, setMethod] = useState<PaymentMethod>('wompi');
+
+  // ✅ Link de WhatsApp para compra internacional
+  const internationalWhatsAppLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    'Hola BESTIGE 👋 Quiero hacer una compra internacional. ¿Me pueden ayudar a completarla?'
+  )}`;
 
   return (
     <div className="space-y-4">
@@ -70,13 +77,13 @@ export function PaymentMethods({
           </p>
         ) : (
           <p className="text-[10px] text-white/50 leading-relaxed tracking-wide">
-            <span className="text-white/70 font-medium">¿Compra internacional?</span>{' '}
-            Tarjetas de crédito/débito y saldo PayPal. Procesado por PayPal.
+            <span className="text-[#BFAE85] font-medium">Compra internacional:</span>{' '}
+            PayPal estará disponible muy pronto. Mientras tanto, escríbenos por WhatsApp y te ayudamos a completar tu compra.
           </p>
         )}
       </div>
 
-      {/* Botón correspondiente */}
+      {/* Contenido según método */}
       {method === 'wompi' ? (
         <WompiButton
           amountInPesos={totalPrice}
@@ -88,11 +95,40 @@ export function PaymentMethods({
           onError={onPaymentError}
         />
       ) : (
-        <PayPalButton
-          totalPrice={totalPrice}
-          onSuccess={onPaymentSuccess}
-          onError={onPaymentError}
-        />
+        <div className="rounded-2xl border border-[#BFAE85]/20 bg-[#BFAE85]/[0.03] p-5 space-y-4">
+          {/* Título */}
+          <div>
+            <p className="text-[10px] tracking-[0.25em] uppercase text-[#BFAE85]/70 font-semibold mb-2">
+              Compra internacional
+            </p>
+            <h3 className="text-white font-bold text-base leading-snug">
+              Termina tu compra por WhatsApp.
+            </h3>
+          </div>
+
+          {/* Texto explicativo */}
+          <p className="text-[11px] text-white/60 leading-relaxed">
+            Te acompañamos paso a paso para completar el pago internacional y coordinar el envío de tu equipamiento BESTIGE.
+          </p>
+
+          {/* Botón WhatsApp */}
+          <a
+            href={internationalWhatsAppLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-green-500 hover:bg-green-600 text-white text-[10px] tracking-[0.2em] uppercase font-semibold transition-all"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Contactar por WhatsApp
+          </a>
+
+          {/* Badge */}
+          <div className="flex items-center justify-center pt-2 border-t border-white/10">
+            <span className="text-[9px] tracking-[0.2em] uppercase text-[#BFAE85]/60">
+              PayPal · Próximamente
+            </span>
+          </div>
+        </div>
       )}
     </div>
   );

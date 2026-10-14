@@ -6,7 +6,6 @@ import { ArrowRight } from 'lucide-react';
 import { PostHeader } from '@/components/blog/PostHeader';
 import { PostContent } from '@/components/blog/PostContent';
 import { PostCard } from '@/components/blog/PostCard';
-import { NeuralFrame } from '@/components/neural/NeuralFrame';
 import { BlogReadingTip } from '@/components/conversion/BlogReadingTip';
 import {
   getPostBySlug,
@@ -115,91 +114,83 @@ export default async function PostPage({ params }: PageProps) {
   };
 
   return (
-    <>
+    <main className="min-h-screen pt-24 pb-32 px-6 relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <NeuralFrame />
 
-      <main className="min-h-screen pt-24 pb-32 px-6 relative">
-        {/* Fondo neuronal sutil */}
-        <div className="fixed inset-0 pointer-events-none opacity-20">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#FF5A36]/5 via-transparent to-transparent" />
+      <article className="relative max-w-3xl mx-auto">
+        {/* HEADER */}
+        <PostHeader post={post} />
+
+        {/* CONTENIDO (Markdown) */}
+        <div className="mt-16">
+          <PostContent content={post.content} />
         </div>
 
-        <article className="relative max-w-3xl mx-auto">
-          {/* HEADER */}
-          <PostHeader post={post} />
+        {/* COMENTARIOS */}
+        <div className="mt-24 pt-16 border-t border-white/5">
+          <CommentsSection
+            postSlug={post.slug}
+            initialComments={comments}
+          />
+        </div>
 
-          {/* CONTENIDO (Markdown) */}
-          <div className="mt-16">
-            <PostContent content={post.content} />
+        {/* CTA DESTACADO */}
+        <section className="mt-24 py-16 px-8 rounded-2xl bg-gradient-to-br from-[#0F0F12] to-[#050505] border border-[#BFAE85]/20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(191,174,133,0.15),_transparent_60%)]" />
+          <div className="relative text-center space-y-6">
+            <p className="text-[#BFAE85] text-xs tracking-[0.3em] uppercase font-medium">
+              Conoce BESTIGE
+            </p>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
+              Una nueva generación de prendas deportivas diseñadas desde la conexión entre piel y movimiento
+            </h2>
+            <p className="text-white/60 text-base max-w-xl mx-auto">
+              Diseñada por y para deportistas. Probada en condiciones reales
+              en Colombia, Europa y Norteamérica.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+              <Link
+                href="/products/cycling"
+                className="inline-flex items-center gap-2 px-6 py-3 btn-gold text-sm font-bold tracking-wide rounded-full transition-all hover:gap-3"
+              >
+                Badana de ciclismo
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/products/running"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white text-sm font-bold tracking-wide rounded-full hover:border-[#BFAE85] hover:text-[#BFAE85] transition-all"
+              >
+                Badana de running
+              </Link>
+            </div>
           </div>
+        </section>
+      </article>
 
-          {/* COMENTARIOS */}
-          <div className="mt-24 pt-16 border-t border-white/5">
-            <CommentsSection
-              postSlug={post.slug}
-              initialComments={comments}
-            />
+      {/* ARTÍCULOS RELACIONADOS */}
+      {relatedPosts.length > 0 && (
+        <section className="relative max-w-6xl mx-auto mt-24 pt-16 border-t border-white/5">
+          <div className="mb-10">
+            <p className="text-[#BFAE85] text-xs tracking-[0.3em] uppercase font-medium mb-3">
+              Sigue leyendo
+            </p>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white">
+              Artículos relacionados
+            </h2>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {relatedPosts.map((related) => (
+              <PostCard key={related.id} post={related} />
+            ))}
+          </div>
+        </section>
+      )}
 
-          {/* CTA DESTACADO */}
-          <section className="mt-24 py-16 px-8 rounded-2xl bg-gradient-to-br from-[#0F0F12] to-[#050505] border border-[#FF5A36]/20 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,90,54,0.15),_transparent_60%)]" />
-            <div className="relative text-center space-y-6">
-              <p className="text-[#FF5A36] text-xs tracking-[0.3em] uppercase font-medium">
-                Conoce BESTIGE
-              </p>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
-                La única del mundo con tecnología somatosensorial interna
-              </h2>
-              <p className="text-white/60 text-base max-w-xl mx-auto">
-                Diseñada por y para deportistas. Probada en condiciones reales
-                en Colombia, Europa y Norteamérica.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <Link
-                  href="/products/cycling"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF5A36] text-white text-sm font-bold tracking-wide rounded-full hover:bg-[#FF5A36]/90 transition-all hover:gap-3"
-                >
-                  Badana de ciclismo
-                  <ArrowRight size={16} />
-                </Link>
-                <Link
-                  href="/products/running"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white text-sm font-bold tracking-wide rounded-full hover:border-[#FF5A36] hover:text-[#FF5A36] transition-all"
-                >
-                  Badana de running
-                </Link>
-              </div>
-            </div>
-          </section>
-        </article>
-
-        {/* ARTÍCULOS RELACIONADOS */}
-        {relatedPosts.length > 0 && (
-          <section className="relative max-w-6xl mx-auto mt-24 pt-16 border-t border-white/5">
-            <div className="mb-10">
-              <p className="text-[#FF5A36] text-xs tracking-[0.3em] uppercase font-medium mb-3">
-                Sigue leyendo
-              </p>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white">
-                Artículos relacionados
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedPosts.map((related) => (
-                <PostCard key={related.id} post={related} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ✅ Tips flotantes durante la lectura del blog */}
-        <BlogReadingTip />
-      </main>
-    </>
+      {/* ✅ Tips flotantes durante la lectura del blog */}
+      <BlogReadingTip />
+    </main>
   );
 }
