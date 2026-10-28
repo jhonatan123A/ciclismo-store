@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { APP_VERSION } from '@/lib/app-config'; // <-- 1. IMPORTAMOS LA VERSIÓN
 
 export interface CookiePreferences {
   essential: true;
@@ -17,7 +18,7 @@ export interface ConsentData {
 }
 
 const CONSENT_KEY = 'bestige-cookie-consent';
-const CONSENT_VERSION = '1.0';
+const CONSENT_VERSION = APP_VERSION; // <-- 2. USAMOS LA VERSIÓN GLOBAL EN LUGAR DE '1.0'
 
 // Evento global para abrir el banner desde cualquier parte
 const OPEN_BANNER_EVENT = 'bestige-open-cookies-banner';
@@ -34,6 +35,7 @@ export function useCookieConsent() {
         if (parsed.version === CONSENT_VERSION) {
           setConsent(parsed);
         } else {
+          // Si la versión cambió (ej. de v1 a v2), borramos la cookie vieja
           localStorage.removeItem(CONSENT_KEY);
         }
       }
