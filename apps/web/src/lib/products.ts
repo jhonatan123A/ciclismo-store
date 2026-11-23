@@ -47,22 +47,22 @@ export const products: Product[] = [
     ],
     imagesByGender: {
       'Femenino': [
-        '/images/products/running/running-hero.png',      // ✅ Principal (Mujer corriendo fondo negro)
-        '/images/products/running/running-woman-1.jpg',   // ✅ Nuevas
-        // ❌ ELIMINADA running-woman-2.jpg (rompía la simetría por ser horizontal)
-        '/images/products/running/running-woman-3.jpg',
-        '/images/products/running/running-woman-4.jpg',
-        '/images/products/running/running-woman-5.jpg',
-        '/images/products/running/running-woman-6.jpg',
+        '/images/products/running/running-hero.png',
+        '/images/products/running/running-woman-1.jpg?v=2',   
+        // ❌ running-woman-2.jpg eliminada
+        '/images/products/running/running-woman-3.jpg?v=2',
+        '/images/products/running/running-woman-4.jpg?v=2',
+        '/images/products/running/running-woman-5.jpg?v=2',
+        '/images/products/running/running-woman-6.jpg?v=2',
       ],
       'Masculino': [
-        '/images/products/running/running-man-1.jpg',     // ✅ 6 Nuevas
-        '/images/products/running/running-man-2.jpg',
-        '/images/products/running/running-man-3.jpg',
-        '/images/products/running/running-man-4.jpg',
-        '/images/products/running/running-man-5.jpg',
-        '/images/products/running/running-man-6.jpg',
-        '/images/products/running/running-2.jpg',         // ✅ 5 Viejas
+        '/images/products/running/running-man-1.jpg?v=2',     
+        '/images/products/running/running-man-2.jpg?v=2',
+        '/images/products/running/running-man-3.jpg?v=2',
+        '/images/products/running/running-man-4.jpg?v=2',
+        '/images/products/running/running-man-5.jpg?v=2',
+        '/images/products/running/running-man-6.jpg?v=2',
+        '/images/products/running/running-2.jpg',         
         '/images/products/running/running-3.jpg',
         '/images/products/running/running-4.jpg',
         '/images/products/running/running-5.jpg',
