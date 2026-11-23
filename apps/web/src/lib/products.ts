@@ -16,6 +16,7 @@ export interface Product {
   originalPrice: number;
   discount: number;
   images: (string | ProductImage)[];
+  imagesByGender?: Record<ProductGender, (string | ProductImage)[]>;
   sizes: string[];
   colors: string[];
   genders: ProductGender[];
@@ -44,6 +45,30 @@ export const products: Product[] = [
       '/images/products/running/running-5.jpg',
       '/images/products/running/running-6.jpg',
     ],
+    imagesByGender: {
+      'Femenino': [
+        '/images/products/running/running-hero.png',      // ✅ Principal (Mujer corriendo fondo negro)
+        '/images/products/running/running-woman-1.jpg',   // ✅ Nuevas
+        // ❌ ELIMINADA running-woman-2.jpg (rompía la simetría por ser horizontal)
+        '/images/products/running/running-woman-3.jpg',
+        '/images/products/running/running-woman-4.jpg',
+        '/images/products/running/running-woman-5.jpg',
+        '/images/products/running/running-woman-6.jpg',
+      ],
+      'Masculino': [
+        '/images/products/running/running-man-1.jpg',     // ✅ 6 Nuevas
+        '/images/products/running/running-man-2.jpg',
+        '/images/products/running/running-man-3.jpg',
+        '/images/products/running/running-man-4.jpg',
+        '/images/products/running/running-man-5.jpg',
+        '/images/products/running/running-man-6.jpg',
+        '/images/products/running/running-2.jpg',         // ✅ 5 Viejas
+        '/images/products/running/running-3.jpg',
+        '/images/products/running/running-4.jpg',
+        '/images/products/running/running-5.jpg',
+        '/images/products/running/running-6.jpg',
+      ],
+    },
     sizes: ['XS', 'S', 'M', 'L'],
     colors: ['Negro'],
     genders: ['Masculino', 'Femenino'],

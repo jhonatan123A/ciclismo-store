@@ -23,21 +23,21 @@ export default function ProductClient() {
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
-  // ESTADO PARA CONTROLAR LA APARICIÓN DE LA INTERFAZ
   const [showUI, setShowUI] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
 
-  // TEMPORIZADOR: La interfaz aparece después de 1.8 segundos
+  const displayImages = product && product.imagesByGender 
+    ? product.imagesByGender[selectedGender] 
+    : product?.images || [];
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowUI(true);
     }, 1800);
-
     return () => clearTimeout(timer);
   }, []);
 
-  // ✅ Trackear vista del producto
   useEffect(() => {
     if (product) {
       trackViewItem({
@@ -64,7 +64,7 @@ export default function ProductClient() {
   const handleAddToCart = () => {
     setIsAdding(true);
     setTimeout(() => {
-      const firstImage = typeof product.images[0] === 'string' ? product.images[0] : product.images[0].src;
+      const firstImage = typeof displayImages[0] === 'string' ? displayImages[0] : displayImages[0].src;
 
       addItem({
         productId: product.id,
@@ -80,7 +80,6 @@ export default function ProductClient() {
         category: product.category,
       });
 
-      // ✅ Trackear agregar al carrito
       trackAddToCart({
         item_id: product.id,
         item_name: product.name,
@@ -99,10 +98,8 @@ export default function ProductClient() {
 
   return (
     <div className="relative min-h-screen pt-24 pb-16 px-6 md:px-10 overflow-hidden bg-black">
-      {/* Fondo negro sólido */}
       <div className="absolute inset-0 w-full h-full bg-black z-0" />
 
-      {/* INTERFAZ COMPLETA */}
       <div
         className={`relative z-10 max-w-7xl mx-auto transition-all duration-1000 ease-out ${
           showUI
@@ -119,10 +116,13 @@ export default function ProductClient() {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* Carrusel de imágenes + tarjetas de tecnología */}
+          {/* Carrusel de imágenes */}
           <div className="space-y-3">
-            <div className="relative">
+            {/* ✅ CAMBIO: Fondo negro puro (bg-black) y SIN bordes (border-none) para que la foto se fusione */}
+            <div className="relative rounded-2xl overflow-hidden bg-black">
               <Swiper
+                key={selectedGender}
+                initialSlide={0}
                 modules={[Navigation, Pagination]}
                 navigation={{
                   prevEl: '.swiper-button-prev-custom',
@@ -137,10 +137,17 @@ export default function ProductClient() {
                 slidesPerView={1}
                 className="relative aspect-square"
               >
-                {product.images.map((item, index) => {
+                {displayImages.map((item, index) => {
                   const src = typeof item === 'string' ? item : item.src;
                   const badge = typeof item === 'string' ? undefined : item.badge;
                   const isVideo = src.endsWith('.mp4');
+                  
+                  const isNewImage = src.includes('running-man');
+                  // ✅ CAMBIO: scale-95 aleja la foto un poco más para que no se vea tan pegada
+                  const imgClass = isNewImage 
+                    ? 'w-full h-full object-cover' 
+                    : 'w-full h-full object-contain scale-95'; 
+
                   return (
                     <SwiperSlide key={index}>
                       <div className="w-full h-full flex items-center justify-center relative">
@@ -155,7 +162,7 @@ export default function ProductClient() {
                             loop
                             muted
                             playsInline
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-cover"
                           >
                             <source src={src} type="video/mp4" />
                           </video>
@@ -163,7 +170,7 @@ export default function ProductClient() {
                           <img
                             src={src}
                             alt={`${product.name} - ${index + 1}`}
-                            className="w-full h-full object-contain brightness-125 contrast-110"
+                            className={imgClass}
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
                             }}
@@ -183,74 +190,77 @@ export default function ProductClient() {
               </Swiper>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              {product.images.map((item, index) => {
-                const src = typeof item === 'string' ? item : item.src;
-                const badge = typeof item === 'string' ? undefined : item.badge;
-                const isVideo = src.endsWith('.mp4');
-                return (
-                  <div
-                    key={index}
-                    className="aspect-square transition-opacity cursor-pointer opacity-90 hover:opacity-100 relative"
-                  >
-                    {badge && (
-                      <span className="absolute top-1.5 right-1.5 z-10 px-1.5 py-0.5 rounded bg-[#BFAE85]/95 text-black text-[7.5px] tracking-widest uppercase font-bold">
-                        {badge}
-                      </span>
-                    )}
-                    {isVideo ? (
-                      <video
-                        muted
-                        playsInline
-                        preload="metadata"
-                        className="w-full h-full object-contain"
-                      >
-                        <source src={src} type="video/mp4" />
-                      </video>
-                    ) : (
-                      <img
-                        src={src}
-                        alt={`Miniatura ${index + 1}`}
-                        className="w-full h-full object-contain brightness-125 contrast-110"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
-                        }}
-                      />
-                    )}
-                  </div>
-                );
-              })}
+            {/* Miniaturas */}
+            <div className="mt-3 relative">
+              <Swiper
+                key={`thumbs-${selectedGender}`}
+                initialSlide={0}
+                modules={[Navigation]}
+                navigation={{
+                  prevEl: '.swiper-thumbs-prev',
+                  nextEl: '.swiper-thumbs-next',
+                }}
+                spaceBetween={10}
+                slidesPerView={5}
+                className="w-full"
+              >
+                {displayImages.map((item, index) => {
+                  const src = typeof item === 'string' ? item : item.src;
+                  const badge = typeof item === 'string' ? undefined : item.badge;
+                  const isVideo = src.endsWith('.mp4');
+                  
+                  const isNewImage = src.includes('running-man');
+                  // ✅ CAMBIO: scale-95 en miniaturas también
+                  const thumbClass = isNewImage 
+                    ? 'w-full h-full object-cover' 
+                    : 'w-full h-full object-contain scale-95';
+
+                  return (
+                    <SwiperSlide key={index}>
+                      {/* ✅ CAMBIO: Fondo negro puro (bg-black) y sin bordes en miniaturas */}
+                      <div className="aspect-square transition-opacity cursor-pointer opacity-80 hover:opacity-100 relative rounded-lg overflow-hidden bg-black">
+                        {badge && (
+                          <span className="absolute top-1.5 right-1.5 z-10 px-1.5 py-0.5 rounded bg-[#BFAE85]/95 text-black text-[7.5px] tracking-widest uppercase font-bold">
+                            {badge}
+                          </span>
+                        )}
+                        {isVideo ? (
+                          <video muted playsInline preload="metadata" className="w-full h-full object-cover">
+                            <source src={src} type="video/mp4" />
+                          </video>
+                        ) : (
+                          <img
+                            src={src}
+                            alt={`Miniatura ${index + 1}`}
+                            className={thumbClass}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/images/products/placeholder.jpg';
+                            }}
+                          />
+                        )}
+                      </div>
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+              <button className="swiper-thumbs-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10">
+                <ChevronLeft className="w-3 h-3" />
+              </button>
+              <button className="swiper-thumbs-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10">
+                <ChevronRight className="w-3 h-3" />
+              </button>
             </div>
 
-            {/* Tarjetas de tecnología — 3 columnas */}
+            {/* Tarjetas de tecnología */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-8">
-              {/* Card 1: Tecnología para Running */}
               <div className="pt-4 px-5 pb-5 rounded-xl border border-[#BFAE85]/15 bg-[#0A0A0A] relative overflow-hidden">
-                <div
-                  className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none"
-                  style={{ background: '#BFAE85' }}
-                />
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none" style={{ background: '#BFAE85' }} />
                 <div className="relative">
-                  <p
-                    className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5"
-                    style={{ color: '#BFAE85' }}
-                  >
-                    Tecnología para Running
-                  </p>
-                  <h3 className="text-white text-base font-bold mb-3 leading-tight">
-                    Rendimiento y recuperación
-                  </h3>
+                  <p className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5" style={{ color: '#BFAE85' }}>Tecnología para Running</p>
+                  <h3 className="text-white text-base font-bold mb-3 leading-tight">Rendimiento y recuperación</h3>
                   <ul className="space-y-1.5">
-                    {[
-                      'Activación muscular.',
-                      'Estabilidad dinámica.',
-                      'Drenaje y recuperación.',
-                      'Menos fatiga, mejor respuesta.',
-                    ].map((item, i) => (
-                      <li
-                        key={i}
-                        className="text-white/60 text-[11.5px] leading-relaxed flex gap-2"
-                      >
+                    {['Activación muscular.', 'Estabilidad dinámica.', 'Drenaje y recuperación.', 'Menos fatiga, mejor respuesta.'].map((item, i) => (
+                      <li key={i} className="text-white/60 text-[11.5px] leading-relaxed flex gap-2">
                         <span className="text-[#BFAE85] flex-shrink-0">✓</span>
                         <span>{item}</span>
                       </li>
@@ -259,34 +269,14 @@ export default function ProductClient() {
                 </div>
               </div>
 
-              {/* Card 2: Ciencia aplicada al deporte */}
               <div className="pt-4 px-5 pb-5 rounded-xl border border-[#BFAE85]/15 bg-[#0A0A0A] relative overflow-hidden">
-                <div
-                  className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none"
-                  style={{ background: '#BFAE85' }}
-                />
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none" style={{ background: '#BFAE85' }} />
                 <div className="relative">
-                  <p
-                    className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5"
-                    style={{ color: '#BFAE85' }}
-                  >
-                    Ciencia aplicada al deporte
-                  </p>
-                  <h3 className="text-white text-base font-bold mb-3 leading-tight">
-                    Diseñada para el alto rendimiento
-                  </h3>
+                  <p className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5" style={{ color: '#BFAE85' }}>Ciencia aplicada al deporte</p>
+                  <h3 className="text-white text-base font-bold mb-3 leading-tight">Diseñada para el alto rendimiento</h3>
                   <ul className="space-y-1.5">
-                    {[
-                      'Tecnología patentada.',
-                      'Activación muscular.',
-                      'Estabilidad.',
-                      'Drenaje y recuperación.',
-                      'Protección en movimiento.',
-                    ].map((item, i) => (
-                      <li
-                        key={i}
-                        className="text-white/60 text-[11.5px] leading-relaxed flex gap-2"
-                      >
+                    {['Tecnología patentada.', 'Activación muscular.', 'Estabilidad.', 'Drenaje y recuperación.', 'Protección en movimiento.'].map((item, i) => (
+                      <li key={i} className="text-white/60 text-[11.5px] leading-relaxed flex gap-2">
                         <span className="text-[#BFAE85] flex-shrink-0">✓</span>
                         <span>{item}</span>
                       </li>
@@ -295,34 +285,14 @@ export default function ProductClient() {
                 </div>
               </div>
 
-              {/* Card 3: Detalles del producto */}
               <div className="pt-4 px-5 pb-5 rounded-xl border border-[#BFAE85]/15 bg-[#0A0A0A] relative overflow-hidden">
-                <div
-                  className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none"
-                  style={{ background: '#BFAE85' }}
-                />
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-[0.06] pointer-events-none" style={{ background: '#BFAE85' }} />
                 <div className="relative">
-                  <p
-                    className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5"
-                    style={{ color: '#BFAE85' }}
-                  >
-                    Detalles del producto
-                  </p>
-                  <h3 className="text-white text-base font-bold mb-3 leading-tight">
-                    Diseño pensado para el deporte
-                  </h3>
+                  <p className="text-[9px] tracking-[0.35em] uppercase font-semibold mb-2.5" style={{ color: '#BFAE85' }}>Detalles del producto</p>
+                  <h3 className="text-white text-base font-bold mb-3 leading-tight">Diseño pensado para el deporte</h3>
                   <ul className="space-y-1.5">
-                    {[
-                      'Compresión ligera.',
-                      'Secado rápido.',
-                      'Ajuste anatómico.',
-                      'Costuras planas.',
-                      'Diseñada para entrenamientos prolongados.',
-                    ].map((item, i) => (
-                      <li
-                        key={i}
-                        className="text-white/60 text-[11.5px] leading-relaxed flex gap-2"
-                      >
+                    {['Compresión ligera.', 'Secado rápido.', 'Ajuste anatómico.', 'Costuras planas.', 'Diseñada para entrenamientos prolongados.'].map((item, i) => (
+                      <li key={i} className="text-white/60 text-[11.5px] leading-relaxed flex gap-2">
                         <span className="text-[#BFAE85] flex-shrink-0">✓</span>
                         <span>{item}</span>
                       </li>
@@ -341,7 +311,6 @@ export default function ProductClient() {
                 Performance Running
               </p>
 
-              {/* ✅ Título con botón de wishlist */}
               <div className="flex items-start justify-between gap-4 mb-4">
                 <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
                   {product.name}
@@ -353,7 +322,7 @@ export default function ProductClient() {
                     slug: product.slug,
                     price: product.price,
                     originalPrice: product.originalPrice,
-                    image: typeof product.images[0] === 'string' ? product.images[0] : product.images[0].src,
+                    image: typeof displayImages[0] === 'string' ? displayImages[0] : displayImages[0].src,
                     category: product.category,
                   }}
                 />
@@ -363,7 +332,6 @@ export default function ProductClient() {
                 {product.description}
               </p>
 
-              {/* Precio */}
               <div className="mb-8 pb-8 border-b border-white/10">
                 <div className="flex items-baseline gap-3 mb-2 flex-wrap">
                   <span className="text-3xl font-bold text-white">
@@ -384,7 +352,6 @@ export default function ProductClient() {
                 </p>
               </div>
 
-              {/* Género */}
               <div className="mb-8 relative z-20">
                 <h3 className="text-eyebrow text-white/60 mb-4">Género</h3>
                 <div className="grid grid-cols-2 gap-2">
@@ -404,7 +371,6 @@ export default function ProductClient() {
                 </div>
               </div>
 
-              {/* Talla */}
               <div className="mb-8 relative z-20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-eyebrow text-white/60">Talla</h3>
@@ -429,7 +395,6 @@ export default function ProductClient() {
                 </div>
               </div>
 
-              {/* Color */}
               <div className="mb-8">
                 <h3 className="text-eyebrow text-white/60 mb-4">Color</h3>
                 <div className="flex items-center gap-3">
@@ -443,7 +408,6 @@ export default function ProductClient() {
                 </p>
               </div>
 
-              {/* Botón carrito */}
               <button
                 onClick={handleAddToCart}
                 disabled={isAdding || isAdded}
@@ -475,7 +439,6 @@ export default function ProductClient() {
                 )}
               </button>
 
-              {/* Envío */}
               <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/40 tracking-wider uppercase">
                 <Truck className="w-3.5 h-3.5 text-[#BFAE85]" />
                 Envío gratis a toda Colombia
@@ -484,14 +447,12 @@ export default function ProductClient() {
           </div>
         </div>
 
-        {/* ✅ Sección de reseñas */}
         <ReviewsSection
           productId={product.id}
           productName={product.name}
         />
       </div>
 
-      {/* ✅ Cross-sell tip: sugiere la badana de ciclismo */}
       <ProductCrossSellTip currentProduct="running" />
     </div>
   );
