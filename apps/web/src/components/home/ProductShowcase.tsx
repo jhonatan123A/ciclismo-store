@@ -1,8 +1,12 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useFadeInOnScroll } from '@/hooks/useFadeInOnScroll';
 import { formatPriceWithUsd, formatCop } from '@/lib/format-price';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 export function ProductShowcase() {
   useFadeInOnScroll();
@@ -18,7 +22,7 @@ export function ProductShowcase() {
       description: 'Tecnología somatosensorial diseñada para acompañar tu postura, estabilidad y rendimiento sobre la bicicleta.',
       href: '/products/cycling',
       icon: '/images/icons-bestige/bestige-01.png',
-      image: '/images/products/cards/cycling-card.jpg',
+      images: ['/images/products/cycling/cycling-hero.png'],
       tag: 'Performance Cycling',
       price: 640000,
       originalPrice: 719000,
@@ -31,7 +35,10 @@ export function ProductShowcase() {
       description: 'Tecnología somatosensorial diseñada para acompañar cada zancada y mejorar la percepción del movimiento.',
       href: '/products/running',
       icon: '/images/icons-bestige/bestige-02.png',
-      image: '/images/products/cards/running-card.jpg',
+      images: [
+        '/images/products/running/running-man-1.jpg', 
+        '/images/products/running/running-hero.png'
+      ],
       tag: 'Performance Running',
       price: 399000,
       originalPrice: 529000,
@@ -192,28 +199,59 @@ export function ProductShowcase() {
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: '320px',
+                  // ✅ CAMBIO: Redujimos la altura del cuadro a 260px para que la imagen encaje sin recortes
+                  height: '260px',
                   overflow: 'hidden',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '0.5rem',
                 }}
               >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="animate-float"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    filter: 'contrast(1.1) saturate(0.9)',
+                {/* CARRUSEL DE IMÁGENES CON FLECHITAS */}
+                <Swiper
+                  modules={[Navigation]}
+                  navigation={{
+                    prevEl: `.swiper-prev-${product.id}`,
+                    nextEl: `.swiper-next-${product.id}`,
                   }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+                  spaceBetween={0}
+                  slidesPerView={1}
+                  className="w-full h-full"
+                >
+                  {product.images.map((img, i) => (
+                    <SwiperSlide key={i}>
+                      <div className="w-full h-full flex items-center justify-center p-2">
+                        <img
+                          src={img}
+                          alt={`${product.name} - ${i + 1}`}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            // Usamos contain para evitar recortes
+                            objectFit: 'contain',
+                            filter: 'contrast(1.1) saturate(0.9)',
+                          }}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                {/* Flechas para deslizar */}
+                {product.images.length > 1 && (
+                  <>
+                    <button className={`swiper-prev-${product.id} absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10`}>
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button className={`swiper-next-${product.id} absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-black/60 hover:bg-[#BFAE85]/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#BFAE85] transition-all border border-white/10`}>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+
                 <div
                   style={{
                     position: 'absolute',
